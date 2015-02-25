@@ -1,4 +1,4 @@
 Achtung Panzer
 ==============
 
-Instruktioner för att komma igång med projektet här.
+Instruktioner fÃ¶r att komma igÃ¥ng med projektet hÃ¤r.
