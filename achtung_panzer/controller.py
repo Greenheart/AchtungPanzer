@@ -10,6 +10,8 @@ import os
 S_MENU = 1
 S_ARENA = 2
 S_UPGRADES = 3
+S_ABOUT = 4
+S_SETTINGS = 5
 
 class Controller():
     def __init__(self):
@@ -66,6 +68,18 @@ class Controller():
                             self.settings_button_state = BTN_ACTIVE
                         else:
                             self.settings_button_state = BTN_INACTIVE
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        x, y = event.pos
+                        if ( x in range(351, 649)) and ( y in range(325, 395)):
+                            print("Start")
+                            self.state = S_ARENA
+                        if ( x in range(351, 649)) and ( y in range(410, 480)):
+                            print("About")
+                            self.state = S_ABOUT
+                        if ( x in range(351, 649)) and ( y in range(495, 565)):
+                            print("Settings")
+                            self.state = S_SETTINGS
+
 
                 ## Blits background and logo
                 self.screen.blit(self.background, (0,0))
@@ -77,15 +91,34 @@ class Controller():
                 self.screen.blit(self.settings_button[self.settings_button_state], (351, 495))
 
 
-                pygame.display.flip()
-                self.clock.tick(60)
+            
 
             if self.state == S_ARENA:
-                pass
+                pygame.quit()
+                sys.exit()
 
             if self.state == S_UPGRADES:
-                pass
+                pygame.quit()
+                sys.exit()
+
+            if self.state == S_ABOUT:
+                for event in pygame.event.get():
+                    if event.type == QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == KEYDOWN:
+                        if event.key == K_ESCAPE:
+                            pygame.quit()
+                            sys.exit()
+                self.screen.blit(self.background, (0,0))
+                self.screen.blit(self.logo, (230, 100))
+
+            if self.state == S_SETTINGS:
+                pygame.quit()
+                sys.exit()
 
 
+            pygame.display.flip()
+            self.clock.tick(60)
                         
 
