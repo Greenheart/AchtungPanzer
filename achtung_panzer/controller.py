@@ -34,6 +34,9 @@ class Controller():
         self.logo = pygame.image.load("graphics/menu/logo.png")
         self.logo = pygame.transform.scale(self.logo, (int(540), int(150.3)))
 
+        self.about_description = pygame.image.load("graphics/menu/about_description.png")
+        self.about_description = pygame.transform.scale(self.about_description, (int(540), int(243.6)))
+
         self.start_button = (pygame.image.load("graphics/menu/startbutton.png"), pygame.image.load("graphics/menu/startbutton_hover.png"))
         self.start_button_state = BTN_INACTIVE
 
@@ -110,8 +113,12 @@ class Controller():
                         if event.key == K_ESCAPE:
                             pygame.quit()
                             sys.exit()
+                    if event.type == MOUSEBUTTONDOWN:
+                        self.state = S_MENU
                 self.screen.blit(self.background, (0,0))
                 self.screen.blit(self.logo, (230, 100))
+                self.screen.blit(self.about_description, (230, 325))
+
 
             if self.state == S_SETTINGS:
                 pygame.quit()
