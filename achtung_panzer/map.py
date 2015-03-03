@@ -8,10 +8,10 @@ class World():
         self.objects = []
 
         if map_type == "grass":
-        	#Create sprite for background --> grassishch
-        	self.ground_sprite = pygame.image.load("images/grass.png")
-        	image = None #FIX! Load a real image
-        	self.objects.append((image, (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
+            #Create sprite for background --> grassishch
+            self.ground_sprite = pygame.image.load("images/grass.png")
+            self.objects.append((pygame.image.load("images/busksten.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
+
         else: #Add more map_types here
         	pass
 
