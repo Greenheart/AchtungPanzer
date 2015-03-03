@@ -2,7 +2,7 @@
 This file contains all the constant variables
 When adding variables, make sure to place them in an alphabetical order
 '''
-CAPTION = "Achtung Panzer 0.001"
+CAPTION = "Achtung Panzer"
 FPS = 60
 SCREEN_SIZE = (1000, 700)
 SPEED = 2

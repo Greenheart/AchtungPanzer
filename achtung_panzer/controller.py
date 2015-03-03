@@ -1,10 +1,14 @@
-import pygame, sys
+import sys
+import pygame
+from pygame.locals import *
+from constants import *   # constants are CAPITALIZED
 from agent import Player
 from map import World
-from constants import *
 
+# Game States
 S_MENU = 1
 S_GAME = 2
+S_UPGRADES = 3
 
 class Controller():
 
@@ -56,6 +60,9 @@ class Controller():
 
                 pygame.display.flip()
                 self.clock.tick(self.fps)
+
+            if self.state == S_UPGRADES:
+                pass
 
     def quit(self, event):
         pygame.quit()
