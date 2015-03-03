@@ -72,4 +72,4 @@ class Controller():
         self.keymap[(event_key, event_type)] = callback
 
     def register_eventhandler(self, event_type, callback):
-        self.events[event_type, callback]
+        self.events[event_type] = callback
