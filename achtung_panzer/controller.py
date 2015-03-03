@@ -99,9 +99,11 @@ class Controller():
                         if ( x in range(351, 649)) and ( y in range(325, 395)):
                             print("Start")
                             self.state = S_GAME
+                            self.start_button_state = BTN_INACTIVE
                         if ( x in range(351, 649)) and ( y in range(410, 480)):
                             print("About")
                             self.state = S_ABOUT
+                            self.about_button_state = BTN_INACTIVE
                         if ( x in range(351, 649)) and ( y in range(495, 565)):
                             print("Settings")
                             self.state = S_SETTINGS
