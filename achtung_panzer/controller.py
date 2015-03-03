@@ -28,7 +28,7 @@ class Controller():
         self.clock = pygame.time.Clock()
 
         #SELF DEPENDANT
-        self.map = World(self.screen)
+        self.map = World(self.screen, "grass")
         self.agents = [Player(self.screen, self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w), Player(self.screen, self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP)]
 
         self.register_eventhandler(pygame.QUIT, self.quit)

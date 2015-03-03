@@ -5,11 +5,11 @@ class Player():
     def __init__(self, screen, controller, k_right, k_down, k_left, k_up):
         self.screen = screen
         self.x, self.y = 0,0
-        self.width, self.height = TANK_WIDTH, TANK_HEIGHT
-        self.sprite = pygame.image.load("images/tank.png")
-        self.speed = SPEED
+        self.speed = TANK_SPEED
         self.direction = 0
 
+        #Load and resize tank img
+       	self.sprite = pygame.transform.scale(pygame.image.load("images/tank.png"), (TANK_WIDTH, TANK_HEIGHT))
 
         controller.register_key(k_right, pygame.KEYUP, self.keypress_right)
         controller.register_key(k_right, pygame.KEYDOWN, self.keypress_right)
