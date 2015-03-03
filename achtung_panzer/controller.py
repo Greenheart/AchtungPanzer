@@ -15,9 +15,7 @@ S_SETTINGS = 5
 
 class Controller():
 
-    def __init__(self):
-        self.state = S_MENU
-        
+    def __init__(self):        
         ## Centers game window, needs to be before pygame.init()
         os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -29,22 +27,22 @@ class Controller():
 
         ## Load a lot of sprites
 
-        self.background = pygame.image.load("graphics/menu/background.png")
+        self.background = pygame.image.load("images/menu/background.png")
         self.background = pygame.transform.scale(self.background, (SCREEN_SIZE))
 
-        self.logo = pygame.image.load("graphics/menu/logo.png")
+        self.logo = pygame.image.load("images/menu/logo.png")
         self.logo = pygame.transform.scale(self.logo, (int(540), int(150.3)))
 
-        self.about_description = pygame.image.load("graphics/menu/about_description.png")
+        self.about_description = pygame.image.load("images/menu/about_description.png")
         self.about_description = pygame.transform.scale(self.about_description, (int(540), int(243.6)))
 
-        self.start_button = (pygame.image.load("graphics/menu/startbutton.png"), pygame.image.load("graphics/menu/startbutton_hover.png"))
+        self.start_button = (pygame.image.load("images/menu/startbutton.png"), pygame.image.load("images/menu/startbutton_hover.png"))
         self.start_button_state = BTN_INACTIVE
 
-        self.about_button = (pygame.image.load("graphics/menu/aboutbutton.png"), pygame.image.load("graphics/menu/aboutbutton_hover.png"))
+        self.about_button = (pygame.image.load("images/menu/aboutbutton.png"), pygame.image.load("images/menu/aboutbutton_hover.png"))
         self.about_button_state = BTN_INACTIVE
 
-        self.settings_button = (pygame.image.load("graphics/menu/settingsbutton.png"), pygame.image.load("graphics/menu/settingsbutton_hover.png"))
+        self.settings_button = (pygame.image.load("images/menu/settingsbutton.png"), pygame.image.load("images/menu/settingsbutton_hover.png"))
         self.settings_button_state = BTN_INACTIVE
 
         self.state = S_MENU
