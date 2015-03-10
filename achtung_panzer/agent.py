@@ -6,11 +6,13 @@ class Player():
     def __init__(self, screen, color, controller, k_right, k_backward, k_left, k_forward):
         self.screen = screen
         self.x, self.y = 0,0
-        self.speed = TANK_SPEED
-        self.direction = 0
+        self.max_speed = TANK_SPEED
+        self.acceleration = TANK_ACCELERATION
+        self.rotation_speed = TANK_ROTATION_SPEED
+        self.speed = 0
         self.rotation = 0
-        self.desired_rotation = 0
-        self.rotating = False
+
+        self.moving = False
 
         #Load and resize tank img with right color
         if color == 'blue':
@@ -29,30 +31,41 @@ class Player():
         if self.rotation == 0:
             self.rotation = 360
 
-        self.rotation -= ROTATION_SPEED
-        print self.rotation
+        self.rotation -= self.rotation_speed
 
     def keypress_left(self):
         if self.rotation == 360:
             self.rotation = 0
 
-        self.rotation += ROTATION_SPEED
-
-        print self.rotation
+        self.rotation += self.rotation_speed
 
     def keypress_backward(self):
-        self.x += math.cos(self.rotation * 0.0174532925) * TANK_SPEED
-        self.y -= math.sin(self.rotation * 0.0174532925) * TANK_SPEED
+        self.moving = True
+
+        if self.speed != self.max_speed:
+            self.speed += self.acceleration
+
+        self.x += math.cos(self.rotation * 0.0174532925) * self.speed
+        self.y -= math.sin(self.rotation * 0.0174532925) * self.speed
 
     def keypress_forward(self):
-        self.x -= math.cos(self.rotation * 0.0174532925) * TANK_SPEED
-        self.y += math.sin(self.rotation * 0.0174532925) * TANK_SPEED
+        self.moving = True
+
+        if self.speed != self.max_speed:
+            self.speed += self.acceleration
+
+        self.x -= math.cos(self.rotation * 0.0174532925) * self.speed
+        self.y += math.sin(self.rotation * 0.0174532925) * self.speed
         
 
     def update(self):
+        if self.moving == False:
+            self.speed = 0
 
         self.sprite = pygame.transform.rotozoom(self.MasterSprite, self.rotation, 1)
+        self.moving = False
 
+        print self.speed
 
     def draw(self):
         self.screen.blit(self.sprite, (self.x, self.y))
