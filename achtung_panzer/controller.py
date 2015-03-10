@@ -125,7 +125,3 @@ class Controller():
 
     def register_eventhandler(self, event_type, callback):
         self.events[event_type] = callback
-
-    def quit(self):
-        pygame.quit()
-        sys.exit()
