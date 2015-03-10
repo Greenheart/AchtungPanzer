@@ -63,16 +63,17 @@ class Controller():
                             callback(event)
 
                     # Handle keyboard events
-                    for event_key, event_type in self.keymap.iterkeys():
-                        if event.type == event_type and event.key == event_key:
-                            self.keymap[(event_key, event_type)](event)
+                    if event.type == pygame.KEYDOWN:
+                        for event_key in self.keymap_singlepress.iterkeys():
+                            if event.key == event_key:
+                                self.keymap_singlepress[(event_key)]()
 
             if self.state == S_GAME:
 
                 for event in pygame.event.get():
                     for event_type, callback in self.events.iteritems():
                         if event.type == event_type:
-                            callback()
+                            callback(event)
 
                     if event.type == pygame.KEYDOWN:
                         for event_key in self.keymap_singlepress.iterkeys():
