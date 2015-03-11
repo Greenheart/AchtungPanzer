@@ -54,6 +54,7 @@ class Menu():
         for button in self.buttons:
             button.draw()
 
+
         if self.state == S_MENU_ABOUT:
             self.screen.blit(self.logo, (230, 100))
             self.screen.blit(self.about_description, (230, 325))
@@ -69,6 +70,7 @@ class Menu():
 
     def return_to_main(self, event):
         self.state = S_MENU_MAIN
+
 
 
     def settings():
