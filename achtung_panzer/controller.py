@@ -78,7 +78,7 @@ class Controller():
                     if event.type == pygame.KEYDOWN:
                         for event_key in self.keymap_singlepress.iterkeys():
                             if event.key == event_key:
-                                self.keymap_singlepress[(event_key)]()
+                                self.keymap_singlepress[(event_key)](event)
 
                 for event_key in self.keymap.iterkeys():
                     if self.keys[event_key]:
