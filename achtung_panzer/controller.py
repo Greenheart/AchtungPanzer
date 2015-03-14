@@ -6,6 +6,7 @@ import os
 from agent import Player
 from map import World
 from menu import Menu
+from sound import *
 
 # Game States
 S_MENU = 1
@@ -44,6 +45,8 @@ class Controller():
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
 
         self.menu = Menu(self)
+        Sound.sounds_init()
+        Sound.Sounds["menumusic"].play()
 
 
     def run(self):
