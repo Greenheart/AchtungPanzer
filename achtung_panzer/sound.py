@@ -11,7 +11,7 @@ class Sound(object):
 
 		Sound.Sounds.update({
 			"hoverbutton" : MiscFX("hoverbutton.wav"),
-			"menumusic" : Music("iieoho.wav")
+			"menumusic" : Music("achtung.wav")
 			})
 	
 	def __init__(self, filename):
@@ -32,7 +32,7 @@ class Music(Sound):
 		self.path = "audio/music/"
 		self.channel = pygame.mixer.Channel(1)
 
-		self.channel.set_volume(0.1)
+		self.channel.set_volume(0.4)
 
 		super(Music, self).__init__(filename)
 
