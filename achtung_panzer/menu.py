@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from constants import *
+from sound import *
 import os, sys
 
 S_MENU_MAIN = 1
@@ -24,7 +25,6 @@ class Menu():
         self.buttons.append(Button(self, self.start_press, S_MENU_MAIN, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
         self.buttons.append(Button(self, self.about_press, S_MENU_MAIN, (351, 410, 649, 480), "images/menu/aboutbutton.png", "images/menu/aboutbutton_hover.png"))
         self.buttons.append(Button(self, self.settings_press, S_MENU_MAIN, (351, 495, 649, 565), "images/menu/settingsbutton.png", "images/menu/settingsbutton_hover.png"))
-
         self.buttons.append(Button(self, self.return_to_main, S_MENU_ABOUT, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
 
 
@@ -61,6 +61,8 @@ class Menu():
 
     def start_press(self, event):
         self.controller.start_game()
+        self.state = None
+        Sound.Sounds["menumusic"].stop()
 
     def about_press(self, event):
         self.state = S_MENU_ABOUT
@@ -70,8 +72,6 @@ class Menu():
 
     def return_to_main(self, event):
         self.state = S_MENU_MAIN
-
-
 
     def settings():
         pygame.quit()
@@ -98,6 +98,8 @@ class Button():
     def mousemotion(self, event):
         x, y = event.pos
         if self.menu.state == self.active_state and x >= self.x1 and x < self.x2 and y >= self.y1 and y < self.y2:
+            if not self.hover:
+                Sound.Sounds["hoverbutton"].play()
             self.hover = True
         else:
             self.hover = False
