@@ -6,7 +6,7 @@ class Player():
     def __init__(self, screen, color, controller, k_right, k_backward, k_left, k_forward, k_shoot):
         self.screen = screen
         self.x, self.y = 0,0
-        self.health = 100
+        self.health = 100 
         self.max_speed = TANK_SPEED
         self.acceleration = TANK_ACCELERATION
         self.rotation_speed = TANK_ROTATION_SPEED
@@ -98,10 +98,18 @@ class Player():
         if self.health <= 0:
             controller.agents.remove(self)
 
+
     def draw(self):
+
+        if self.health < 40:
+            self.COLOR = (181, 53, 53)
+        elif self.health < 60:
+            self.COLOR = (232, 148, 14)
+        else:
+            self.COLOR = (90, 200, 100)
 
         for bullet in self.bullets:
             pygame.draw.rect(self.screen, (0,0,0), (bullet[0], bullet[1], BULLET_SIZE, BULLET_SIZE))
 
         self.screen.blit(self.sprite, (self.x - self.sprite.get_width()/2, self.y - self.sprite.get_height()/2))
-        pygame.draw.rect(self.screen, (90, 200, 100), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
+        pygame.draw.rect(self.screen, (self.COLOR), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
