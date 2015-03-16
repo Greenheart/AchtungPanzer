@@ -1,6 +1,7 @@
 import pygame
 import math
 from constants import *
+from sound import *
 
 class Player():
     def __init__(self, screen, color, controller, k_right, k_backward, k_left, k_forward, k_shoot):
@@ -89,6 +90,9 @@ class Player():
 
     def die(self, controller):
         self.dead = True
+
+        if self.explosionindex == 1:
+            Sound.Sounds["explosion"].play()
 
         if self.explosionindex != (len(self.explosionsprites) - 1) * EXPLOSION_SPEED:
             self.sprite = self.explosionsprites[self.explosionindex/EXPLOSION_SPEED]

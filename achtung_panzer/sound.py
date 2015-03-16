@@ -11,7 +11,8 @@ class Sound(object):
 
 		Sound.Sounds.update({
 			"hoverbutton" : MiscFX("hoverbutton.wav"),
-			"menumusic" : Music("achtung.wav")
+			"menumusic" : Music("achtung.wav"),
+			"explosion" : gameFX("explosion.wav")			
 			})
 	
 	def __init__(self, filename):
@@ -45,7 +46,7 @@ class gameFX(Sound):
 		for channel in self.channels:
 			channel.set_volume(0.5)
 
-		super(SpellFX, self).__init__(filename)
+		super(gameFX, self).__init__(filename)
 
 	def play(self):
 		if not self.channels[0].get_busy():
