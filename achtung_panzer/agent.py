@@ -56,14 +56,14 @@ class Player():
         self.moving = True #Set moving variable to true for the update method
         self.direction = "Backward"
 
-        if self.speed != self.max_speed_back: #Add acceleration to speed if max speed is not reached
+        if self.speed < self.max_speed_back: #Add acceleration to speed if max speed is not reached
             self.speed += self.acceleration
 
     def keypress_forward(self):
         self.moving = True
         self.direction = "Forward"
 
-        if self.speed != self.max_speed:
+        if self.speed < self.max_speed:
             self.speed += self.acceleration
 
     def shoot(self, event):
