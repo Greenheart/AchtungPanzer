@@ -79,9 +79,7 @@ class Controller():
             """-------------------------------GAME------------------------------------"""
 
             if self.state == S_GAME:
-
                 if not self.paused:
-
                     for event in pygame.event.get():
                         for event_type, callback in self.events.iteritems():
                             if event.type == event_type:
@@ -95,15 +93,15 @@ class Controller():
                     for event_key in self.keymap.iterkeys():
                         if self.keys[event_key]:
                             self.keymap[(event_key)]()
-
+                            
                 else:
                     pass
+
+                self.map.draw()
 
                 for player in self.agents:
                     player.update(self)
                     player.draw()
-
-                self.map.draw()
 
             """-------------------------------UPGRADES------------------------------------"""
 
