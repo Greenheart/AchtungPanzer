@@ -14,10 +14,10 @@ class Menu():
         self.controller = controller
         self.events = []
 
-        self.background = pygame.image.load("images/menu/background.png")
+        self.background = pygame.image.load("images/menu/background2.jpg")
         self.background = pygame.transform.scale(self.background, (SCREEN_SIZE))
 
-        self.logo = pygame.image.load("images/menu/logo.png")
+        self.logo = pygame.image.load("images/menu/logo2.png")
 
         self.about_description = pygame.image.load("images/menu/about_description.png")
 
