@@ -27,6 +27,7 @@ class Menu():
         self.buttons.append(Button(self, self.settings_press, S_MENU_MAIN, (351, 495, 649, 565), "images/menu/settingsbutton.png", "images/menu/settingsbutton_hover.png"))
         self.buttons.append(Button(self, self.return_to_main, S_MENU_ABOUT, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
         self.buttons.append(Button(self, self.return_to_main, S_MENU_SETTINGS, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
+        self.buttons.append(Button(self, self.display_time_press, S_MENU_SETTINGS, (351, 475, 649, 545), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
 
         self.sliders = []
         self.sliders.append(Slider(self, self.set_music_volume, S_MENU_SETTINGS, 351, 100, MUSIC_DEFAULT_VOLUME, "Music Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
@@ -36,7 +37,6 @@ class Menu():
 
 
         self.state = S_MENU_MAIN
-
 
         # Register event at controller
         self.controller.register_eventhandler(pygame.MOUSEMOTION, self.mouse_event)
@@ -68,9 +68,11 @@ class Menu():
         for slider in self.sliders:
             slider.draw()
 
-
         if self.state == S_MENU_ABOUT:
             self.screen.blit(self.about_description, (230, 325))
+
+        for button in self.buttons:
+            button.active = True if self.state == button.active_state else False
 
     def start_press(self, event):
         self.controller.start_game()
@@ -85,6 +87,12 @@ class Menu():
 
     def return_to_main(self, event):
         self.state = S_MENU_MAIN
+
+    def display_time_press(self, event):
+        if self.controller.displaytime:
+            self.controller.displaytime = False
+        else:
+            self.controller.displaytime = True
 
     def set_music_volume(self, volume):
         Sound.set_volume(volume, MUSIC_CHANNELS)
@@ -108,6 +116,7 @@ class Button():
         self.menu = menu
         self.screen = menu.screen
         self.callback = callback
+        self.active = False
         self.active_state = active_state
         self.x1, self.y1, self.x2, self.y2 = coords
 
@@ -122,16 +131,17 @@ class Button():
 
     def mousemotion(self, event):
         x, y = event.pos
-        if self.menu.state == self.active_state and x >= self.x1 and x < self.x2 and y >= self.y1 and y < self.y2:
+        if self.active and x >= self.x1 and x < self.x2 and y >= self.y1 and y < self.y2:
             if not self.hover:
                 Sound.Sounds["hoverbutton"].play()
             self.hover = True
         else:
             self.hover = False
 
+
     def mousebuttondown(self, event):
         x, y = event.pos
-        if self.menu.state == self.active_state and x >= self.x1 and x < self.x2 and y >= self.y1 and y < self.y2:
+        if self.active and x >= self.x1 and x < self.x2 and y >= self.y1 and y < self.y2:
             self.pressed = True
             self.callback(event)
         else:
