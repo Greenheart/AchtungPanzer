@@ -24,6 +24,7 @@ class Controller():
 
         self.state = S_MENU
         self.fps = FPS
+        self.paused = False
 
         self.keymap = {} #REGISTER KEPRESS CONSTANTLY
         self.keymap_singlepress = {} #REGISTER KEYPRESS ONE TIME
@@ -55,6 +56,8 @@ class Controller():
 
         while True:
 
+            """-------------------------------MENU------------------------------------"""
+
             if self.state == S_MENU:
                 self.menu.draw()
 
@@ -73,37 +76,48 @@ class Controller():
                             if event.key == event_key:
                                 self.keymap_singlepress[(event_key)](event)
 
-            if self.state == S_GAME:
-
-                for event in pygame.event.get():
-                    for event_type, callback in self.events.iteritems():
-                        if event.type == event_type:
-                            callback(event)
-
-                    if event.type == pygame.KEYDOWN:
-                        for event_key in self.keymap_singlepress.iterkeys():
-                            if event.key == event_key:
-                                self.keymap_singlepress[(event_key)](event)
-
-                for event_key in self.keymap.iterkeys():
-                    if self.keys[event_key]:
-                        self.keymap[(event_key)]()
+            """-------------------------------GAME------------------------------------"""
 
             if self.state == S_GAME:
-                self.map.draw()
+
+                if not self.paused:
+
+                    for event in pygame.event.get():
+                        for event_type, callback in self.events.iteritems():
+                            if event.type == event_type:
+                                callback(event)
+
+                        if event.type == pygame.KEYDOWN:
+                            for event_key in self.keymap_singlepress.iterkeys():
+                                if event.key == event_key:
+                                    self.keymap_singlepress[(event_key)](event)
+
+                    for event_key in self.keymap.iterkeys():
+                        if self.keys[event_key]:
+                            self.keymap[(event_key)]()
+
+                else:
+                    pass
 
                 for player in self.agents:
                     player.update(self)
                     player.draw()
 
+                self.map.draw()
+
+            """-------------------------------UPGRADES------------------------------------"""
+
             if self.state == S_UPGRADES:
                 pygame.quit()
                 sys.exit()
+
+            """-------------------------------ABOUT------------------------------------"""
 
             if self.state == S_ABOUT:
                 self.menu = Menu()
                 self.menu.about()
 
+            """-------------------------------SETTINGS------------------------------------"""
 
             if self.state == S_SETTINGS:
                 self.menu = Menu()
@@ -111,6 +125,7 @@ class Controller():
             
             if self.displaytime:
                 self.screen.blit(self.font.render(str(self.clock.get_rawtime()), True, (255,255,255)), (10,10))
+
             pygame.display.flip()
             self.clock.tick(60)
 
