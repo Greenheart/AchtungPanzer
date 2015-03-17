@@ -69,7 +69,9 @@ class Player():
     def shoot(self, event):
         speedx = -math.cos(math.radians(self.rotation)) * BULLET_SPEED
         speedy = math.sin(math.radians(self.rotation)) * BULLET_SPEED
-        self.bullets.append([self.x, self.y, speedx, speedy])
+        x = self.x - math.cos(math.radians(self.rotation)) * self.MasterSprite.get_width()/2
+        y = self.y + math.sin(math.radians(self.rotation)) * self.MasterSprite.get_height()/2
+        self.bullets.append([x, y, speedx, speedy])
 
 
     def move(self):
