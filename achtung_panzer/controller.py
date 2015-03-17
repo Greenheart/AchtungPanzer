@@ -23,7 +23,6 @@ class Controller():
 
 
         self.state = S_MENU
-        self.caption = CAPTION
         self.fps = FPS
 
         self.keymap = {} #REGISTER KEPRESS CONSTANTLY
@@ -33,6 +32,7 @@ class Controller():
         #PYGAME INIT REQUIRED
         pygame.init()
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
+        pygame.display.set_caption(CAPTION)
         self.font = pygame.font.Font("fonts/8bitwonder.ttf", 14)
         self.keys = pygame.key.get_pressed()
         self.clock = pygame.time.Clock()
