@@ -93,7 +93,7 @@ class Controller():
                     for event_key in self.keymap.iterkeys():
                         if self.keys[event_key]:
                             self.keymap[(event_key)]()
-
+                            
                 else:
                     pass
 
@@ -123,6 +123,7 @@ class Controller():
             
             if self.displaytime:
                 self.screen.blit(self.font.render(str(self.clock.get_rawtime()), True, (255,255,255)), (10,10))
+
             pygame.display.flip()
             self.clock.tick(60)
 
