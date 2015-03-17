@@ -29,10 +29,10 @@ class Menu():
         self.buttons.append(Button(self, self.return_to_main, S_MENU_SETTINGS, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
 
         self.sliders = []
-        self.sliders.append(Slider(self, self.set_music_volume, S_MENU_SETTINGS, 351, 100, MUSIC_DEFAULT_VOLUME, "Music Volume:", "images/menu/knob.png", "images/menu/sliderbg.png"))
-        self.sliders.append(Slider(self, self.set_gamefx_volume, S_MENU_SETTINGS, 351, 200, GAMEFX_DEFAULT_VOLUME, "GameFX Volume:", "images/menu/knob.png", "images/menu/sliderbg.png"))
-        self.sliders.append(Slider(self, self.set_miscfx_volume, S_MENU_SETTINGS, 351, 300, MISCFX_DEFAULT_VOLUME, "MiscFX Volume:", "images/menu/knob.png", "images/menu/sliderbg.png"))
-        self.sliders.append(Slider(self, self.set_master_volume, S_MENU_SETTINGS, 351, 400, 1, "Master Volume:", "images/menu/knob.png", "images/menu/sliderbg.png"))
+        self.sliders.append(Slider(self, self.set_music_volume, S_MENU_SETTINGS, 351, 100, MUSIC_DEFAULT_VOLUME, "Music Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
+        self.sliders.append(Slider(self, self.set_gamefx_volume, S_MENU_SETTINGS, 351, 200, GAMEFX_DEFAULT_VOLUME, "GameFX Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
+        self.sliders.append(Slider(self, self.set_miscfx_volume, S_MENU_SETTINGS, 351, 300, MISCFX_DEFAULT_VOLUME, "MiscFX Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
+        self.sliders.append(Slider(self, self.set_master_volume, S_MENU_SETTINGS, 351, 400, 1, "Master Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
 
 
         self.state = S_MENU_MAIN
@@ -198,4 +198,4 @@ class Slider():
         if self.menu.state == self.active_state:
             self.screen.blit(self.bg_image, (self.bg_x, self.bg_y))
             self.screen.blit(self.knob_image, (self.x, self.y))
-            self.screen.blit(self.menu.controller.font.render(self.caption + " " + str(int(self.get_value())), True, (255,255,255)), (self.bg_x + self.bg_image.get_width()/2 - 5 * len(self.caption), self.bg_y - self.bg_image.get_height()/2))
+            self.screen.blit(self.menu.controller.font.render(self.caption + " " + str(int(self.get_value())), True, (0,0,0)), (self.bg_x + self.bg_image.get_width()/2 - 8 * len(self.caption), self.bg_y - self.bg_image.get_height()/2))

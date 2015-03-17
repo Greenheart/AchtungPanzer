@@ -33,7 +33,7 @@ class Controller():
         #PYGAME INIT REQUIRED
         pygame.init()
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
-        self.font = pygame.font.SysFont('monospace', 14)
+        self.font = pygame.font.Font("fonts/8bitwonder.ttf", 14)
         self.keys = pygame.key.get_pressed()
         self.clock = pygame.time.Clock()
 
