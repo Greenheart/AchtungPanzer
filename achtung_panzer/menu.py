@@ -137,6 +137,8 @@ class Button():
         else:
             self.pressed = False
 
+        self.hover = False
+
     def draw(self):
         if self.menu.state == self.active_state:
             image = self.image_hover if self.hover else self.image_normal
