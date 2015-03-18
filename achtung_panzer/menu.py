@@ -7,6 +7,7 @@ import os, sys
 S_MENU_MAIN = 1
 S_MENU_ABOUT = 2
 S_MENU_SETTINGS = 3
+S_MENU_LOBBY = 4
 
 class Menu():
     def __init__(self, controller):
@@ -22,12 +23,20 @@ class Menu():
         self.about_description = pygame.image.load("images/menu/about_description.png")
 
         self.buttons = []
-        self.buttons.append(Button(self, self.start_press, S_MENU_MAIN, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+        self.buttons.append(Button(self, self.lobby_press, S_MENU_MAIN, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
         self.buttons.append(Button(self, self.about_press, S_MENU_MAIN, (351, 410, 649, 480), "images/menu/aboutbutton.png", "images/menu/aboutbutton_hover.png"))
         self.buttons.append(Button(self, self.settings_press, S_MENU_MAIN, (351, 495, 649, 565), "images/menu/settingsbutton.png", "images/menu/settingsbutton_hover.png"))
         self.buttons.append(Button(self, self.return_to_main, S_MENU_ABOUT, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
         self.buttons.append(Button(self, self.return_to_main, S_MENU_SETTINGS, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
         self.buttons.append(Button(self, self.display_time_press, S_MENU_SETTINGS, (351, 475, 649, 545), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+        self.buttons.append(Button(self, self.return_to_main, S_MENU_LOBBY, (351, 475, 649, 545), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
+        self.buttons.append(Button(self, self.start_press, S_MENU_LOBBY, (25, 100, 325, 300), "images/menu/button_grass.png", "images/menu/button_grass_hover.png"))
+        self.buttons.append(Button(self, self.start_press, S_MENU_LOBBY, (350, 100, 650, 300), "images/menu/button_sand.png", "images/menu/button_sand_hover.png"))
+        self.buttons.append(Button(self, self.start_press, S_MENU_LOBBY, (675, 100, 975, 300), "images/menu/button_moon.png", "images/menu/button_moon_hover.png"))
+
+
+
+
 
         self.sliders = []
         self.sliders.append(Slider(self, self.set_music_volume, S_MENU_SETTINGS, 351, 100, MUSIC_DEFAULT_VOLUME, "Music Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
@@ -59,7 +68,7 @@ class Menu():
 
         self.screen.blit(self.background, (0,0))
 
-        if self.state != S_MENU_SETTINGS:
+        if self.state != S_MENU_SETTINGS and self.state != S_MENU_LOBBY:
             self.screen.blit(self.logo, (230,100))
 
         for button in self.buttons:
@@ -74,6 +83,8 @@ class Menu():
         for button in self.buttons:
             button.active = True if self.state == button.active_state else False
 
+
+
     def start_press(self, event):
         self.controller.start_game()
         self.state = None
@@ -85,6 +96,9 @@ class Menu():
     def settings_press(self, event):
         self.state = S_MENU_SETTINGS
 
+    def lobby_press(self, event):
+    	self.state = S_MENU_LOBBY
+
     def return_to_main(self, event):
         self.state = S_MENU_MAIN
 
@@ -93,6 +107,9 @@ class Menu():
             self.controller.displaytime = False
         else:
             self.controller.displaytime = True
+
+    def sand_press(self, event):
+    	self.map_type = "sand"
 
     def set_music_volume(self, volume):
         Sound.set_volume(volume, MUSIC_CHANNELS)
