@@ -27,7 +27,7 @@ class Menu():
         self.buttons.append(Button(self, self.settings_press, S_MENU_MAIN, (351, 495, 649, 565), "images/menu/settingsbutton.png", "images/menu/settingsbutton_hover.png"))
         self.buttons.append(Button(self, self.return_to_main, S_MENU_ABOUT, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
         self.buttons.append(Button(self, self.return_to_main, S_MENU_SETTINGS, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
-        self.buttons.append(Button(self, self.display_time_press, S_MENU_SETTINGS, (351, 475, 649, 545), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+        self.buttons.append(Button(self, self.display_time_press, S_MENU_SETTINGS, (351, 475, 649, 545), "images/menu/displaytimebutton.png", "images/menu/displaytimebutton_hover.png"))
 
         self.sliders = []
         self.sliders.append(Slider(self, self.set_music_volume, S_MENU_SETTINGS, 351, 100, MUSIC_DEFAULT_VOLUME, "Music Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
@@ -93,6 +93,11 @@ class Menu():
             self.controller.displaytime = False
         else:
             self.controller.displaytime = True
+
+            
+
+
+
 
     def set_music_volume(self, volume):
         Sound.set_volume(volume, MUSIC_CHANNELS)
