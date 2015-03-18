@@ -14,7 +14,6 @@ S_GAME = 2
 S_UPGRADES = 3
 S_ABOUT = 4
 S_SETTINGS = 5
-S_LOBBY = 6
 
 class Controller():
 
@@ -40,6 +39,7 @@ class Controller():
         self.clock = pygame.time.Clock()
 
         #SELF DEPENDANT
+        self.map = World(self.screen, "sand")
         self.agents = [Player(self.screen, 'blue', self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f), Player(self.screen, 'green', self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k)]
 
         self.register_eventhandler(pygame.QUIT, self.quit)
@@ -76,7 +76,7 @@ class Controller():
                             if event.key == event_key:
                                 self.keymap_singlepress[(event_key)](event)
 
-            """-------------------------------GAME---------------------------------------"""
+            """-------------------------------GAME------------------------------------"""
 
             if self.state == S_GAME:
                 if not self.paused:
@@ -97,8 +97,6 @@ class Controller():
                 else:
                     pass
 
-                self.map = World(self.screen, self.map_type)
-
                 self.map.draw()
 
                 for player in self.agents:
@@ -111,14 +109,7 @@ class Controller():
                 pygame.quit()
                 sys.exit()
 
-            """-------------------------------LOBBY----------------------------------------"""
-            # When you press play, you get to the lobby, where you choose map, tank etc.
-
-            if self.state == S_LOBBY:
-                self.menu = Menu()
-                self.menu.lobby()
-
-            """-------------------------------ABOUT----------------------------------------"""
+            """-------------------------------ABOUT------------------------------------"""
 
             if self.state == S_ABOUT:
                 self.menu = Menu()
