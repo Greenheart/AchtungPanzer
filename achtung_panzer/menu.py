@@ -77,7 +77,7 @@ class Menu():
     def start_press(self, event):
         self.controller.start_game()
         self.state = None
-        Sound.Sounds["menumusic"].fadeout()
+        #Sound.Sounds["menumusic"].fadeout()
 
     def about_press(self, event):
         self.state = S_MENU_ABOUT

@@ -16,6 +16,7 @@ class Player():
         self.rotation = 0
         self.direction = None
         self.moving = False
+        self.rotating = False
         self.bullets = []
 
         self.explosionsprites = [
@@ -27,12 +28,14 @@ class Player():
         self.dead = False
 
         #Load and resize tank img with right color
-        if color == 'blue':
-       	    self.MasterSprite = pygame.transform.scale(pygame.image.load("images/tankblue.png"), (TANK_WIDTH, TANK_HEIGHT))
+        if color == 'green':
+       	    self.MasterSprites = [pygame.transform.scale(pygame.image.load("images/tankgreen1.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankgreen2.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankgreen3.png"), (TANK_WIDTH, TANK_HEIGHT))]
         else:
-            self.MasterSprite = pygame.transform.scale(pygame.image.load("images/tankgreen.png"), (TANK_WIDTH, TANK_HEIGHT))
+            self.MasterSprites = [pygame.transform.scale(pygame.image.load("images/tankpurple1.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankpurple2.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankpurple3.png"), (TANK_WIDTH, TANK_HEIGHT))]
 
-        self.sprite = self.MasterSprite
+        self.sprite = self.MasterSprites[0]
+
+        self.animationindex = 0
 
         controller.register_key(k_right, self.keypress_right)
         controller.register_key(k_forward, self.keypress_forward)
@@ -45,32 +48,41 @@ class Player():
             self.rotation = 360
 
         self.rotation -= self.rotation_speed
+        self.rotating = True
 
     def keypress_left(self):
         if self.rotation == 360:
             self.rotation = 0
 
         self.rotation += self.rotation_speed
+        self.rotating = True
 
     def keypress_backward(self):
         self.moving = True #Set moving variable to true for the update method
-        self.direction = "Backward"
 
-        if self.speed < self.max_speed_back: #Add acceleration to speed if max speed is not reached
-            self.speed += self.acceleration
+        if self.direction == "Forward":
+            self.speed -= self.acceleration
+        else:
+            self.direction = "Backward"
+            if self.speed < self.max_speed_back: #Add acceleration to speed if max speed is not reached
+                self.speed += self.acceleration
+
 
     def keypress_forward(self):
         self.moving = True
-        self.direction = "Forward"
 
-        if self.speed < self.max_speed:
-            self.speed += self.acceleration
+        if self.direction == "Backward":
+            self.speed -= self.acceleration
+        else:
+            self.direction = "Forward"
+            if self.speed < self.max_speed:
+                self.speed += self.acceleration
 
     def shoot(self, event):
         speedx = -math.cos(math.radians(self.rotation)) * BULLET_SPEED
         speedy = math.sin(math.radians(self.rotation)) * BULLET_SPEED
-        x = self.x - math.cos(math.radians(self.rotation)) * self.MasterSprite.get_width()/2
-        y = self.y + math.sin(math.radians(self.rotation)) * self.MasterSprite.get_height()/2
+        x = self.x - math.cos(math.radians(self.rotation)) * self.MasterSprites[0].get_width()/2
+        y = self.y + math.sin(math.radians(self.rotation)) * self.MasterSprites[0].get_height()/2
         self.bullets.append([x, y, speedx, speedy])
 
 
@@ -89,6 +101,7 @@ class Player():
             self.direction = None
 
         self.moving = False
+        self.rotating = False
 
     def die(self, controller):
         self.dead = True
@@ -106,8 +119,15 @@ class Player():
     def update(self, controller):
 
         if not self.dead:
+            
+            if self.moving or self.rotating:
+                if self.animationindex != (len(self.MasterSprites) - 1) * ANIMATION_SPEED:
+                    self.animationindex += 1
+                else:
+                    self.animationindex = 0
+
             self.move()
-            self.sprite = pygame.transform.rotate(self.MasterSprite, self.rotation)
+            self.sprite = pygame.transform.rotate(self.MasterSprites[self.animationindex/ANIMATION_SPEED], self.rotation)
 
             for bullet in self.bullets:
                 bullet[0] += bullet[2]
