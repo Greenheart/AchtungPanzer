@@ -40,7 +40,7 @@ class Controller():
 
         #SELF DEPENDANT
         self.map = World(self.screen, "sand")
-        self.agents = [Player(self.screen, 'blue', self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f), Player(self.screen, 'green', self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k)]
+        self.agents = [Player(self.screen, 'green', self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f), Player(self.screen, 'purple', self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k)]
 
         self.register_eventhandler(pygame.QUIT, self.quit)
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
