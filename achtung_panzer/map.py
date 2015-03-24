@@ -33,11 +33,15 @@ class World():
         else: #Add more map_types here
         	pass
 
-    """def draw(self):
+    def draw(self):
+
+        for x in range(0, SCREEN_SIZE[0], self.ground_sprite.get_width()):
+            for y in range(0, SCREEN_SIZE[1], self.ground_sprite.get_height()):
+                self.screen.blit(self.ground_sprite, (x,y))
     	
 
         for obj in self.objects:
-        	self.screen.blit(*obj)"""
+        	self.screen.blit(*obj)
 
     def draw_objects(self):
         for obj in WorldObject.List:
