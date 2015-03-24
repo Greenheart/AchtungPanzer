@@ -29,7 +29,7 @@ class Player():
 
         #Load and resize tank img with right color
         if color == 'green':
-       	    self.MasterSprites = [pygame.transform.scale(pygame.image.load("images/tankgreen1.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankgreen2.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankgreen3.png"), (TANK_WIDTH, TANK_HEIGHT))]
+            self.MasterSprites = [pygame.transform.scale(pygame.image.load("images/tankgreen1.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankgreen2.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankgreen3.png"), (TANK_WIDTH, TANK_HEIGHT))]
         else:
             self.MasterSprites = [pygame.transform.scale(pygame.image.load("images/tankpurple1.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankpurple2.png"), (TANK_WIDTH, TANK_HEIGHT)), pygame.transform.scale(pygame.image.load("images/tankpurple3.png"), (TANK_WIDTH, TANK_HEIGHT))]
 
@@ -84,6 +84,7 @@ class Player():
         x = self.x - math.cos(math.radians(self.rotation)) * self.MasterSprites[0].get_width()/2
         y = self.y + math.sin(math.radians(self.rotation)) * self.MasterSprites[0].get_height()/2
         self.bullets.append([x, y, speedx, speedy])
+        Sound.Sounds["shoot"].play()
 
 
     def move(self):
