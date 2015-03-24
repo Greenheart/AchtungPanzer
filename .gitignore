@@ -163,3 +163,4 @@ venv
 *.sln
 *.pyproj
 *.pyc
+*.dmp
