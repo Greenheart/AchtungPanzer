@@ -122,7 +122,7 @@ class Controller():
                 self.menu.settings()
             
             if self.displaytime:
-                self.screen.blit(self.font.render(str(self.clock.get_rawtime()), True, (255,255,255)), (10,10))
+                self.screen.blit(self.font.render(str(int(self.clock.get_fps())), True, (255,255,255)), (10,10))
 
             pygame.display.flip()
             self.clock.tick(60)
