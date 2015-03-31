@@ -149,7 +149,7 @@ class Player():
                     if player != self:
                         if bullet[0] > player.x - self.sprite.get_width()/2 and bullet[0] < player.x + player.sprite.get_width()/2 and bullet[1] > player.y - player.sprite.get_height()/2 and bullet[1] < player.y + player.sprite.get_height()/2:
                             self.bullets.remove(bullet)
-                            player.health -= 10
+                            player.health -= 3
 
             for missil in self.missils:
                 missil[0] += missil[2]
