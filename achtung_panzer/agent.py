@@ -4,7 +4,7 @@ from constants import *
 from sound import *
 
 class Player():
-    def __init__(self, screen, color, controller, k_right, k_backward, k_left, k_forward, k_shoot):
+    def __init__(self, screen, color, controller, k_right, k_backward, k_left, k_forward, k_shoot, k_shoot_missil):###########
         self.screen = screen
         self.x, self.y = 300,100
         self.health = 100
@@ -18,6 +18,7 @@ class Player():
         self.moving = False
         self.rotating = False
         self.bullets = []
+        self.missils = []
 
         self.explosionsprites = [
         pygame.transform.scale(pygame.image.load("images/1.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)), pygame.transform.scale(pygame.image.load("images/2.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)),
@@ -42,6 +43,7 @@ class Player():
         controller.register_key(k_left, self.keypress_left)
         controller.register_key(k_backward, self.keypress_backward)
         controller.register_key(k_shoot, self.shoot, singlepress=True)
+        controller.register_key(k_shoot_missil, self.shoot_missil, singlepress=True)
 
     def keypress_right(self):
         if self.rotation == 0:
@@ -86,6 +88,15 @@ class Player():
         self.bullets.append([x, y, speedx, speedy])
         Sound.Sounds["shoot"].play()
 
+    def shoot_missil(self, event):
+        speedx = -math.cos(math.radians(self.rotation)) * MISSIL_SPEED
+        speedy = math.sin(math.radians(self.rotation)) * MISSIL_SPEED
+        x = self.x - math.cos(math.radians(self.rotation)) * self.MasterSprites[0].get_width()/2
+        y = self.y + math.sin(math.radians(self.rotation)) * self.MasterSprites[0].get_height()/2
+        start_x = self.x
+        start_y = self.y
+        lenght = 0
+        self.missils.append([x, y, speedx, speedy, lenght, start_x, start_y])
 
     def move(self):
         if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
@@ -140,6 +151,21 @@ class Player():
                             self.bullets.remove(bullet)
                             player.health -= 10
 
+            for missil in self.missils:
+                missil[0] += missil[2]
+                missil[1] += missil[3]
+                missil[4] = math.sqrt((math.fabs(missil[5] - missil[0]))**2 + (math.fabs(missil[6] - missil[1])**2))
+
+                if missil[4] >= MISSIL_LENGHT:
+                    self.missils.remove(missil)
+
+
+                for player in controller.agents:
+                    if player != self:
+                        if missil[0] > player.x - self.sprite.get_width()/2 and missil[0] < player.x + player.sprite.get_width()/2 and missil[1] > player.y - player.sprite.get_height()/2 and missil[1] < player.y + player.sprite.get_height()/2:##########
+                            self.missils.remove(missil)
+                            player.health -= 15
+
         if self.health <= 0:
             self.die(controller)
 
@@ -155,6 +181,9 @@ class Player():
 
         for bullet in self.bullets:
             pygame.draw.rect(self.screen, (0,0,0), (bullet[0], bullet[1], BULLET_SIZE, BULLET_SIZE))
+
+        for missil in self.missils:
+            pygame.draw.rect(self.screen, (0,0,0),(missil[0], missil[1], MISSIL_SIZE, MISSIL_SIZE))
 
         self.screen.blit(self.sprite, (self.x - self.sprite.get_width()/2, self.y - self.sprite.get_height()/2))
 
