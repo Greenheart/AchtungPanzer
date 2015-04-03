@@ -12,8 +12,6 @@ from sound import *
 S_MENU = 1
 S_GAME = 2
 S_UPGRADES = 3
-S_ABOUT = 4
-S_SETTINGS = 5
 
 class Controller():
 
@@ -100,7 +98,7 @@ class Controller():
                 self.map.draw()
 
                 for player in self.agents:
-                    player.update(self)
+                    player.update()
                     player.draw()
 
             """-------------------------------UPGRADES------------------------------------"""
@@ -109,23 +107,12 @@ class Controller():
                 pygame.quit()
                 sys.exit()
 
-            """-------------------------------ABOUT------------------------------------"""
-
-            if self.state == S_ABOUT:
-                self.menu = Menu()
-                self.menu.about()
-
-            """-------------------------------SETTINGS------------------------------------"""
-
-            if self.state == S_SETTINGS:
-                self.menu = Menu()
-                self.menu.settings()
             
             if self.displaytime:
                 self.screen.blit(self.font.render(str(int(self.clock.get_fps())), True, (255,255,255)), (10,10))
 
             pygame.display.flip()
-            self.clock.tick(60)
+            self.clock.tick(self.fps)
 
 
     def quit(self, event):

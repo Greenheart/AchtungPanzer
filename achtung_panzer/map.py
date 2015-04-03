@@ -1,5 +1,6 @@
 import pygame
 import random
+from powerup import *
 from constants import *
 
 class World():
@@ -33,6 +34,14 @@ class World():
         else: #Add more map_types here
         	pass
 
+
+        self.powerups = []
+
+        for pup in range(0, random.randint(0, 10)):
+            self.powerups.append(Mine(self, "random", "random"))
+
+
+
     def draw(self):
 
         for x in range(0, SCREEN_SIZE[0], self.ground_sprite.get_width()):
@@ -42,6 +51,9 @@ class World():
 
         for obj in self.objects:
         	self.screen.blit(*obj)
+
+        for powerup in self.powerups:
+            powerup.draw()
 
     def draw_objects(self):
         for obj in WorldObject.List:

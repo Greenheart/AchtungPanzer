@@ -5,6 +5,7 @@ from sound import *
 
 class Player():
     def __init__(self, screen, color, controller, k_right, k_backward, k_left, k_forward, k_shoot):
+        self.controller = controller
         self.screen = screen
         self.x, self.y = 300,100
         self.health = 100
@@ -79,8 +80,8 @@ class Player():
                 self.speed += self.acceleration
 
     def shoot(self, event):
-        speedx = -math.cos(math.radians(self.rotation)) * BULLET_SPEED
-        speedy = math.sin(math.radians(self.rotation)) * BULLET_SPEED
+        speedx = -math.cos(math.radians(self.rotation))
+        speedy = math.sin(math.radians(self.rotation))
         x = self.x - math.cos(math.radians(self.rotation)) * self.MasterSprites[0].get_width()/2
         y = self.y + math.sin(math.radians(self.rotation)) * self.MasterSprites[0].get_height()/2
         self.bullets.append([x, y, speedx, speedy])
@@ -104,7 +105,7 @@ class Player():
         self.moving = False
         self.rotating = False
 
-    def die(self, controller):
+    def die(self):
         self.dead = True
 
         if self.explosionindex == 1:
@@ -114,10 +115,10 @@ class Player():
             self.sprite = self.explosionsprites[self.explosionindex/EXPLOSION_SPEED]
             self.explosionindex += 1
         else:
-            controller.agents.remove(self)
+            self.controller.agents.remove(self)
 
         
-    def update(self, controller):
+    def update(self):
 
         if not self.dead:
             
@@ -134,24 +135,29 @@ class Player():
                 bullet[0] += bullet[2]
                 bullet[1] += bullet[3]
 
-                for player in controller.agents:
+                for player in self.controller.agents:
                     if player != self:
                         if bullet[0] > player.x - self.sprite.get_width()/2 and bullet[0] < player.x + player.sprite.get_width()/2 and bullet[1] > player.y - player.sprite.get_height()/2 and bullet[1] < player.y + player.sprite.get_height()/2:
                             self.bullets.remove(bullet)
                             player.health -= 10
 
         if self.health <= 0:
-            self.die(controller)
+            self.die()
+
+
+        for pUp in self.controller.map.powerups:
+            if self.x > pUp.x and self.x < pUp.x + pUp.image.get_width() and self.y > pUp.y and self.y < pUp.y + pUp.image.get_height():
+                pUp.pickup(self)
 
 
     def draw(self):
 
         if self.health < 40:
-            self.COLOR = (181, 53, 53)
+            COLOR = (181, 53, 53)
         elif self.health < 60:
-            self.COLOR = (232, 148, 14)
+            COLOR = (232, 148, 14)
         else:
-            self.COLOR = (90, 200, 100)
+            COLOR = (90, 200, 100)
 
         for bullet in self.bullets:
             pygame.draw.rect(self.screen, (0,0,0), (bullet[0], bullet[1], BULLET_SIZE, BULLET_SIZE))
@@ -159,5 +165,5 @@ class Player():
         self.screen.blit(self.sprite, (self.x - self.sprite.get_width()/2, self.y - self.sprite.get_height()/2))
 
         if not self.dead:
-            pygame.draw.rect(self.screen, (self.COLOR), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
+            pygame.draw.rect(self.screen, (COLOR), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
 

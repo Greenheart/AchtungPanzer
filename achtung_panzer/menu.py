@@ -155,7 +155,7 @@ class Button():
         self.hover = False
 
     def draw(self):
-        if self.menu.state == self.active_state:
+        if self.active:
             image = self.image_hover if self.hover else self.image_normal
             self.screen.blit(image, (self.x1, self.y1))
 
