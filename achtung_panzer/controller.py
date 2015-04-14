@@ -5,7 +5,7 @@ from constants import *   # constants are CAPITALIZED
 import os
 from agent import Player
 from map import World
-from menu import Menu
+from menu import MainMenu
 from sound import *
 
 # Game States
@@ -45,7 +45,7 @@ class Controller():
         self.register_eventhandler(pygame.QUIT, self.quit)
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
 
-        self.menu = Menu(self)
+        self.menu = MainMenu(self)
         Sound.sounds_init()
         Sound.Sounds["menumusic"].play()
 
