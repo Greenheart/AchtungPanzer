@@ -4,10 +4,6 @@ from constants import *
 from sound import *
 import os, sys
 
-S_MENU_MAIN = 1
-S_MENU_ABOUT = 2
-S_MENU_SETTINGS = 3
-
 class Menu():
     def __init__(self, controller):
         self.screen = controller.screen
@@ -17,32 +13,10 @@ class Menu():
         self.background = pygame.image.load("images/menu/background2.jpg")
         self.background = pygame.transform.scale(self.background, (SCREEN_SIZE))
 
-        self.logo = pygame.image.load("images/menu/logo2.png")
-
-        self.about_description = pygame.image.load("images/menu/about_description.png")
-
-        self.buttons = []
-        self.buttons.append(Button(self, self.start_press, S_MENU_MAIN, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
-        self.buttons.append(Button(self, self.about_press, S_MENU_MAIN, (351, 410, 649, 480), "images/menu/aboutbutton.png", "images/menu/aboutbutton_hover.png"))
-        self.buttons.append(Button(self, self.settings_press, S_MENU_MAIN, (351, 495, 649, 565), "images/menu/settingsbutton.png", "images/menu/settingsbutton_hover.png"))
-        self.buttons.append(Button(self, self.return_to_main, S_MENU_ABOUT, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
-        self.buttons.append(Button(self, self.return_to_main, S_MENU_SETTINGS, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
-        self.buttons.append(Button(self, self.display_time_press, S_MENU_SETTINGS, (351, 475, 649, 545), "images/menu/displaytimebutton.png", "images/menu/displaytimebutton_hover.png"))
-
-        self.sliders = []
-        self.sliders.append(Slider(self, self.set_music_volume, S_MENU_SETTINGS, 351, 100, MUSIC_DEFAULT_VOLUME, "Music Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
-        self.sliders.append(Slider(self, self.set_gamefx_volume, S_MENU_SETTINGS, 351, 200, GAMEFX_DEFAULT_VOLUME, "GameFX Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
-        self.sliders.append(Slider(self, self.set_miscfx_volume, S_MENU_SETTINGS, 351, 300, MISCFX_DEFAULT_VOLUME, "MiscFX Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
-        self.sliders.append(Slider(self, self.set_master_volume, S_MENU_SETTINGS, 351, 400, 1, "Master Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
-
-
-        self.state = S_MENU_MAIN
-
         # Register event at controller
         self.controller.register_eventhandler(pygame.MOUSEMOTION, self.mouse_event)
         self.controller.register_eventhandler(pygame.MOUSEBUTTONDOWN, self.mouse_event)
         self.controller.register_eventhandler(pygame.MOUSEBUTTONUP, self.mouse_event)
-
 
     def register_eventhandler(self, event_type, state, callback):
         self.events.append((event_type, state, callback))
@@ -53,13 +27,48 @@ class Menu():
             if event.type == event_type and state == self.state:
                 callback(event)
 
-
     def draw(self):
         ## Blits background and logo
 
         self.screen.blit(self.background, (0,0))
 
-        if self.state != S_MENU_SETTINGS:
+
+class MainMenu(Menu):
+    S_MENU_MAIN = 1
+    S_MENU_ABOUT = 2
+    S_MENU_SETTINGS = 3
+
+    def __init__(self, controller):
+        Menu.__init__(self, controller)
+ 
+        self.logo = pygame.image.load("images/menu/logo2.png")
+
+        self.about_description = pygame.image.load("images/menu/about_description.png")
+
+        self.buttons = []
+        self.buttons.append(Button(self, self.start_press, MainMenu.S_MENU_MAIN, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+        self.buttons.append(Button(self, self.about_press, MainMenu.S_MENU_MAIN, (351, 410, 649, 480), "images/menu/aboutbutton.png", "images/menu/aboutbutton_hover.png"))
+        self.buttons.append(Button(self, self.settings_press, MainMenu.S_MENU_MAIN, (351, 495, 649, 565), "images/menu/settingsbutton.png", "images/menu/settingsbutton_hover.png"))
+        self.buttons.append(Button(self, self.return_to_main, MainMenu.S_MENU_ABOUT, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
+        self.buttons.append(Button(self, self.return_to_main, MainMenu.S_MENU_SETTINGS, (351, 575, 649, 645), "images/menu/backbutton.png", "images/menu/backbutton_hover.png"))
+        self.buttons.append(Button(self, self.display_time_press, MainMenu.S_MENU_SETTINGS, (351, 475, 649, 545), "images/menu/displaytimebutton.png", "images/menu/displaytimebutton_hover.png"))
+
+        self.sliders = []
+        self.sliders.append(Slider(self, self.set_music_volume, MainMenu.S_MENU_SETTINGS, 351, 100, MUSIC_DEFAULT_VOLUME, "Music Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
+        self.sliders.append(Slider(self, self.set_gamefx_volume, MainMenu.S_MENU_SETTINGS, 351, 200, GAMEFX_DEFAULT_VOLUME, "GameFX Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
+        self.sliders.append(Slider(self, self.set_miscfx_volume, MainMenu.S_MENU_SETTINGS, 351, 300, MISCFX_DEFAULT_VOLUME, "MiscFX Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
+        self.sliders.append(Slider(self, self.set_master_volume, MainMenu.S_MENU_SETTINGS, 351, 400, 1, "Master Volume", "images/menu/knob.png", "images/menu/sliderbg.png"))
+
+
+        self.state = MainMenu.S_MENU_MAIN
+
+
+    def draw(self):
+        ## Blits background and logo
+
+        Menu.draw(self)
+
+        if self.state != MainMenu.S_MENU_SETTINGS:
             self.screen.blit(self.logo, (230,100))
 
         for button in self.buttons:
@@ -68,7 +77,7 @@ class Menu():
         for slider in self.sliders:
             slider.draw()
 
-        if self.state == S_MENU_ABOUT:
+        if self.state == MainMenu.S_MENU_ABOUT:
             self.screen.blit(self.about_description, (230, 325))
 
         for button in self.buttons:
@@ -80,13 +89,13 @@ class Menu():
         #Sound.Sounds["menumusic"].fadeout()
 
     def about_press(self, event):
-        self.state = S_MENU_ABOUT
+        self.state = MainMenu.S_MENU_ABOUT
 
     def settings_press(self, event):
-        self.state = S_MENU_SETTINGS
+        self.state = MainMenu.S_MENU_SETTINGS
 
     def return_to_main(self, event):
-        self.state = S_MENU_MAIN
+        self.state = MainMenu.S_MENU_MAIN
 
     def display_time_press(self, event):
         if self.controller.displaytime:
@@ -95,10 +104,6 @@ class Menu():
             self.controller.displaytime = True
 
             
-
-
-
-
     def set_music_volume(self, volume):
         Sound.set_volume(volume, MUSIC_CHANNELS)
 
