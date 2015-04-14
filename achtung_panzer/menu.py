@@ -120,6 +120,20 @@ class MainMenu(Menu):
         pygame.quit()
         sys.exit()
 
+class PreGameMenu(Menu):
+
+    def __init__(self, controller):
+        Menu.__init__(self, controller)
+
+class BetweenGameMenu(Menu):
+
+    def __init__(self, controller):
+        Menu.__init__(self, controller)
+
+class AfterGameMenu(Menu):
+
+    def __init__(self, controller):
+        Menu.__init__(self, controller)
 
 class Button():
     def __init__(self, menu, callback, active_state, coords, image_normal, image_hover):
