@@ -151,18 +151,19 @@ class Player():
                             self.bullets.remove(bullet)
                             player.health -= 3
 
+
             for missil in self.missils:
                 missil[0] += missil[2]
                 missil[1] += missil[3]
                 missil[4] = math.sqrt((math.fabs(missil[5] - missil[0]))**2 + (math.fabs(missil[6] - missil[1])**2))
 
-                if missil[4] >= MISSIL_LENGHT:
+                if missil[4] >= MISSIL_LENGHT:                                  
                     self.missils.remove(missil)
 
 
                 for player in controller.agents:
                     if player != self:
-                        if missil[0] > player.x - self.sprite.get_width()/2 and missil[0] < player.x + player.sprite.get_width()/2 and missil[1] > player.y - player.sprite.get_height()/2 and missil[1] < player.y + player.sprite.get_height()/2:##########
+                        if missil[0] > player.x - self.sprite.get_width()/2 and missil[0] < player.x + player.sprite.get_width()/2 and missil[1] > player.y - player.sprite.get_height()/2 and missil[1] < player.y + player.sprite.get_height()/2:
                             self.missils.remove(missil)
                             player.health -= 15
 
