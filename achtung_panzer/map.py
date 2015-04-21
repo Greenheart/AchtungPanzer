@@ -14,6 +14,8 @@ class World():
         if self.map_type == "grass":
             #Create sprite for ground
             self.ground_sprite = pygame.image.load("images/grass.png")
+            self.sea = Water()
+            self.sea.area()
             
 
             # TODO
@@ -28,7 +30,8 @@ class World():
             self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
             self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
             self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
-
+            self.sea = Water()
+            self.sea.area()
         else: #Add more map_types here
         	pass
 
@@ -38,6 +41,11 @@ class World():
         """for pup in range(0, random.randint(0, 10)):
             self.powerups.append(Mine(self, "random", "random"))"""
 
+    def collision(self, object):
+        collision_with = []
+
+
+        return collison_with
 
 
     def draw(self):
@@ -99,8 +107,7 @@ class Water(Area):
         for circle in self.circles:
             pygame.draw.circle(screen, self.color, (int(circle[0]), int(circle[1])), circle[3], 0)
 
-    def collision(self):
-        pass
+
         
 
 
