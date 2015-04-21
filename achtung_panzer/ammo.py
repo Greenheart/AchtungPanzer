@@ -83,7 +83,7 @@ class Mine(Bullet):
 		damage = 50
 		width = 20
 		height = 20
-		sprite = pygame.image.load("images/ammo/basic_bullet.png")
+		sprite = pygame.image.load("images/ammo/mine.png")
 
 		super(Mine, self).__init__(player, speed, damage, width, height, sprite)	
 
@@ -95,6 +95,6 @@ class AtomicBomb(Bullet):
 		damage = 70
 		width = 50
 		height = 50
-		sprite = pygame.image.load("images/ammo/basic_bullet.png")
+		sprite = pygame.image.load("images/ammo/mine.png")
 
 		super(Mine, self).__init__(player, speed, damage, width, height, sprite)
