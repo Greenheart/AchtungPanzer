@@ -5,9 +5,9 @@ from sound import *
 from ammo import *
 
 class Player():
-    def __init__(self, screen, color, controller, k_right, k_backward, k_left, k_forward, k_shoot):
+    def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_shoot, k_shoot_missil):
         self.controller = controller
-        self.screen = screen
+        self.screen = self.controller.screen
         self.x, self.y = 300,100
         self.health = 100
         self.max_speed = TANK_SPEED
@@ -83,7 +83,6 @@ class Player():
         self.controller.ammo.append(NormalShot(self))
         Sound.Sounds["shoot"].play()
 
-
     def move(self):
         if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
             self.x -= math.cos(math.radians(self.rotation)) * self.speed
@@ -129,7 +128,6 @@ class Player():
 
         if self.health <= 0:
             self.die()
-
 
         for pUp in self.controller.map.powerups:
             if self.x > pUp.x and self.x < pUp.x + pUp.image.get_width() and self.y > pUp.y and self.y < pUp.y + pUp.image.get_height():

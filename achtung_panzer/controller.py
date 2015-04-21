@@ -4,8 +4,8 @@ from pygame.locals import *
 from constants import *   # constants are CAPITALIZED
 import os
 from agent import Player
-from map import World
-from menu import Menu
+from map import *
+from menu import MainMenu
 from sound import *
 
 # Game States
@@ -37,13 +37,15 @@ class Controller():
         self.clock = pygame.time.Clock()
 
         #SELF DEPENDANT
-        self.map = World(self.screen, "sand")
-        self.agents = [Player(self.screen, 'green', self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f), Player(self.screen, 'purple', self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k)]
-
+        self.map = World(self.screen)
+        self.sea = Water()
+        self.sea.area()
+        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l)]
+       
         self.register_eventhandler(pygame.QUIT, self.quit)
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
 
-        self.menu = Menu(self)
+        self.menu = MainMenu(self)
         Sound.sounds_init()
         Sound.Sounds["menumusic"].play()
 
@@ -97,6 +99,7 @@ class Controller():
                     pass
 
                 self.map.draw()
+                self.sea.draw(self.screen)
 
                 for player in self.agents:
                     player.update()
