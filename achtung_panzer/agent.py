@@ -2,6 +2,7 @@ import pygame
 import math
 from constants import *
 from sound import *
+from ammo import *
 
 class Player():
     def __init__(self, screen, color, controller, k_right, k_backward, k_left, k_forward, k_shoot):
@@ -18,7 +19,6 @@ class Player():
         self.direction = None
         self.moving = False
         self.rotating = False
-        self.bullets = []
 
         self.explosionsprites = [
         pygame.transform.scale(pygame.image.load("images/1.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)), pygame.transform.scale(pygame.image.load("images/2.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)),
@@ -80,11 +80,7 @@ class Player():
                 self.speed += self.acceleration
 
     def shoot(self, event):
-        speedx = -math.cos(math.radians(self.rotation))
-        speedy = math.sin(math.radians(self.rotation))
-        x = self.x - math.cos(math.radians(self.rotation)) * self.MasterSprites[0].get_width()/2
-        y = self.y + math.sin(math.radians(self.rotation)) * self.MasterSprites[0].get_height()/2
-        self.bullets.append([x, y, speedx, speedy])
+        self.controller.ammo.append(NormalShot(self))
         Sound.Sounds["shoot"].play()
 
 
@@ -131,16 +127,6 @@ class Player():
             self.move()
             self.sprite = pygame.transform.rotate(self.MasterSprites[self.animationindex/ANIMATION_SPEED], self.rotation)
 
-            for bullet in self.bullets:
-                bullet[0] += bullet[2]
-                bullet[1] += bullet[3]
-
-                for player in self.controller.agents:
-                    if player != self:
-                        if bullet[0] > player.x - self.sprite.get_width()/2 and bullet[0] < player.x + player.sprite.get_width()/2 and bullet[1] > player.y - player.sprite.get_height()/2 and bullet[1] < player.y + player.sprite.get_height()/2:
-                            self.bullets.remove(bullet)
-                            player.health -= 10
-
         if self.health <= 0:
             self.die()
 
@@ -159,11 +145,7 @@ class Player():
         else:
             COLOR = (90, 200, 100)
 
-        for bullet in self.bullets:
-            pygame.draw.rect(self.screen, (0,0,0), (bullet[0], bullet[1], BULLET_SIZE, BULLET_SIZE))
-
         self.screen.blit(self.sprite, (self.x - self.sprite.get_width()/2, self.y - self.sprite.get_height()/2))
 
         if not self.dead:
             pygame.draw.rect(self.screen, (COLOR), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
-

@@ -32,7 +32,7 @@ class Controller():
         pygame.init()
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         pygame.display.set_caption(CAPTION)
-        self.font = pygame.font.Font("fonts/8bitwonder.ttf", 14)
+        self.font = pygame.font.Font("fonts/8BITWONDER.TTF", 14)
         self.keys = pygame.key.get_pressed()
         self.clock = pygame.time.Clock()
 
@@ -48,6 +48,7 @@ class Controller():
         Sound.Sounds["menumusic"].play()
 
         self.displaytime = False
+        self.ammo = []
 
 
     def run(self):
@@ -100,6 +101,10 @@ class Controller():
                 for player in self.agents:
                     player.update()
                     player.draw()
+
+                for bullet in self.ammo:
+                    bullet.update()
+                    bullet.draw()
 
             """-------------------------------UPGRADES------------------------------------"""
 

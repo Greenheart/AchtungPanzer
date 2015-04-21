@@ -3,8 +3,6 @@
 This file contains all the constant variables
 When adding variables, make sure to place them in an alphabetical order
 '''
-BULLET_SIZE = 5
-BULLET_SPEED = 5
 CAPTION = "Achtung Panzer"
 EXPLOSION_SIZE = 65
 EXPLOSION_SPEED = 8

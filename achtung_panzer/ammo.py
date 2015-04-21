@@ -1,44 +1,80 @@
 import pygame
+import math
 from constants import *
 
 
 class Ammo(object):
 
-	def __init__(self, x, y, sx, sy, player):
+	def __init__(self, player):
 
 		self.speed = 1
 		self.damage = 1
 
-		self.x = x
-		self.y = y
-		self.sx = sx * self.speed
-		self.sy = sy * self.speed
+		self.x = 1
+		self.y = 1
+		self.sx = 1
+		self.sy = 1
+
+		self.width, self.height = 1, 1
+
+		self.sprite = pygame.image.load("images/ammo/default.png")
 
 		self.player = player
 		self.controller = self.player.controller
 
 	def update(self):
+		pass
+
+	def draw(self):
+		self.player.screen.blit(self.sprite, (self.x, self.y))
+
+
+"""-------------------------------------------------AMMO TYPES-----------------------------------------------------------"""
+
+
+class Bullet(Ammo):
+
+	def __init__(self, player, speed, damage, width, height, sprite):
+
+		super(Bullet, self).__init__(player)
+
+		self.x, self.y = player.x, player.y
+
+		self.speed = speed
+		self.damage = damage
+		self.width, self.height = width, height
+		self.sprite = sprite
+		self.sprite = pygame.transform.scale(self.sprite, (self.width, self.height))
+		self.sprite = pygame.transform.rotate(self.sprite, self.player.rotation)
+
+		self.sx = -math.cos(math.radians(self.player.rotation)) * self.speed
+		self.sy = math.sin(math.radians(self.player.rotation)) * self.speed
+
+	def update(self):		
 		self.x += self.sx
 		self.y += self.sy
 
 		for player in self.controller.agents:
 			if player != self.player:
-				if self.x > player.x - self.sprite.get_width()/2 and self.x < player.x + player.sprite.get_width()/2 and self.y > player.y - player.sprite.get_height()/2 and self.y < player.y + player.sprite.get_height()/2:
+				if self.x > player.x - player.sprite.get_width()/2 and self.x < player.x + player.sprite.get_width()/2 and self.y > player.y - player.sprite.get_height()/2 and self.y < player.y + player.sprite.get_height()/2:
 					self.controller.ammo.remove(self)
-                    player.health -= self.damage
-
-	def draw(self):
-		self.player.screen.blit(self.image, (self.x, self.y))
+					player.health -= self.damage
 
 
-class Bullet(Ammo):
+"""-------------------------------------------------AMMO ENDPOINT-----------------------------------------------------------"""
 
-	def __init__(self, x, y, sx, sy, player):
 
-		self.speed = 5
-		self.damage = 10
+class NormalShot(Bullet):
 
-		super(Bullet, Ammo).__init__(x, y, sx, sy, player)
+	def __init__(self, player):
 
-	def draw(self):
-		pygame.draw.rect(self.player.screen, (self.x, self.y))
+		speed = 8
+		damage = 10
+		width = 5
+		height = 5
+		sprite = pygame.image.load("images/ammo/basic_bullet.png")
+
+		super(NormalShot, self).__init__(player, speed, damage, width, height, sprite)
+
+
+

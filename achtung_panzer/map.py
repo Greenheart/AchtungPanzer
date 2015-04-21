@@ -37,8 +37,8 @@ class World():
 
         self.powerups = []
 
-        for pup in range(0, random.randint(0, 10)):
-            self.powerups.append(Mine(self, "random", "random"))
+        """for pup in range(0, random.randint(0, 10)):
+            self.powerups.append(Mine(self, "random", "random"))"""
 
 
 
