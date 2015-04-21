@@ -5,7 +5,7 @@ from constants import *   # constants are CAPITALIZED
 import os
 from agent import Player
 from map import World
-from menu import MainMenu
+from menu import MainMenu, PreGameMenu
 from sound import *
 
 # Game States
@@ -14,6 +14,7 @@ S_GAME = 2
 S_UPGRADES = 3
 S_ABOUT = 4
 S_SETTINGS = 5
+S_PREGAME = 6
 
 class Controller():
 
@@ -39,9 +40,7 @@ class Controller():
         self.clock = pygame.time.Clock()
 
         #SELF DEPENDANT
-        self.map = World(self.screen, "sand")
-        self.agents = [Player(self.screen, 'green', self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g), Player(self.screen, 'purple', self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l)]
-
+        
         self.register_eventhandler(pygame.QUIT, self.quit)
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
 
@@ -64,6 +63,26 @@ class Controller():
             self.keys = pygame.key.get_pressed()
 
             if self.state == S_MENU:
+                for event in pygame.event.get():
+                    # Handle generic events
+                    for event_type, callback in self.events.iteritems():
+                        if event.type == event_type:
+                            callback(event)
+
+                    # Handle keyboard events
+                    if event.type == pygame.KEYDOWN:
+                        for event_key in self.keymap_singlepress.iterkeys():
+                            if event.key == event_key:
+                                self.keymap_singlepress[(event_key)](event)
+
+            """-------------------------------PREGAME MENU-----------------------------"""
+
+            if self.state == S_PREGAME:
+                self.pregame_menu.draw()
+
+            self.keys = pygame.key.get_pressed()
+
+            if self.state == S_PREGAME:
                 for event in pygame.event.get():
                     # Handle generic events
                     for event_type, callback in self.events.iteritems():
@@ -131,10 +150,15 @@ class Controller():
     def quit(self, event):
         pygame.quit()
         sys.exit()
-                   
 
-    def start_game(self):
+    def start_game(self, map_type):
+        self.agents = [Player(self.screen, 'green', self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g), Player(self.screen, 'purple', self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l)]
+        self.map = World(self.screen, map_type)
         self.state = S_GAME
+
+    def start_pregame(self):
+        self.pregame_menu = PreGameMenu(self)
+        self.state = S_PREGAME
 
     def register_key(self, event_key, callback, singlepress = False):
         if singlepress == False:

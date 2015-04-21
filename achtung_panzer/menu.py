@@ -84,9 +84,8 @@ class MainMenu(Menu):
             button.active = True if self.state == button.active_state else False
 
     def start_press(self, event):
-        self.controller.start_game()
+        self.controller.start_pregame()
         self.state = None
-        #Sound.Sounds["menumusic"].fadeout()
 
     def about_press(self, event):
         self.state = MainMenu.S_MENU_ABOUT
@@ -121,9 +120,48 @@ class MainMenu(Menu):
         sys.exit()
 
 class PreGameMenu(Menu):
-
+    S_PREGAME = 1
     def __init__(self, controller):
         Menu.__init__(self, controller)
+
+        self.buttons = []
+        self.buttons.append(Button(self, self.startmap_grass, PreGameMenu.S_PREGAME, (25, 100, 325, 300), "images/menu/button_grass.png", "images/menu/button_grass_hover.png"))
+        self.buttons.append(Button(self, self.startmap_sand, PreGameMenu.S_PREGAME, (350, 100, 650, 300), "images/menu/button_sand.png", "images/menu/button_sand_hover.png"))
+
+        self.controller.register_eventhandler(pygame.KEYDOWN, self.keydown)
+
+        self.state = PreGameMenu.S_PREGAME
+
+        self.string = ""
+
+    def draw(self):
+
+        Menu.draw(self)
+
+        for button in self.buttons:
+            button.draw()
+
+#        for slider in self.sliders:
+#            slider.draw()
+
+        for button in self.buttons:
+            button.active = True if self.state == button.active_state else False
+
+        pygame.draw.rect(self.screen, (0,0,0), (100, 400, 250, 50))
+        self.controller.screen.blit(self.controller.font.render(self.string, True, (255, 255, 255)), (110, 420))
+
+    def startmap_grass(self, event):
+        self.map_type = "grass"
+        self.controller.start_game(self.map_type)
+        self.state = None
+
+    def startmap_sand(self, event):
+        self.map_type = "sand"
+        self.controller.start_game(self.map_type)
+        self.state = None
+
+    def keydown(self, event):
+        self.string += str(event.key.name)
 
 class BetweenGameMenu(Menu):
 
