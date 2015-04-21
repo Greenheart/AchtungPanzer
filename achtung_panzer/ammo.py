@@ -60,26 +60,6 @@ class Bullet(Ammo):
 					self.controller.ammo.remove(self)
 					player.health -= self.damage
 
-class Trap(Ammo):
-	def __init__(self, player, damage, width, height, sprite):
-
-		super(Bullet, self).__init__(player)
-
-		self.x, self.y = player.x, player.y
-
-		self.damage = damage
-		self.height = height
-
-		self.sprite = pygame.transform.scale(self.sprite, (self.width, self.height))
-		self.sprite = pygame.transform.rotate(self.sprite, self.player.rotation)		
-
-
-		def update(self):
-			for player in self.controller.agents:
-				if player != self.player:
-					if self.x > player.x - player.sprite.get_width()/2 and self.x < player.x + player.sprite.get_width()/2 and self.y > player.y - player.sprite.get_height()/2 and self.y < player.y + player.sprite.get_height()/2:
-						self.controller.ammo.remove(self)
-						player.health -= self.damage
 
 """-------------------------------------------------AMMO ENDPOINT-----------------------------------------------------------"""
 
@@ -96,14 +76,25 @@ class NormalShot(Bullet):
 
 		super(NormalShot, self).__init__(player, speed, damage, width, height, sprite)
 
-class Mine(Trap):
+class Mine(Bullet):
 	def __init__(self, player):
 
+		speed = 0
 		damage = 50
-		width = 5
-		height = 5
+		width = 20
+		height = 20
 		sprite = pygame.image.load("images/ammo/basic_bullet.png")
 
-		super(NormalShot, self).__init__(player, damage, width, height, sprite)	
+		super(Mine, self).__init__(player, speed, damage, width, height, sprite)	
 
 
+class AtomicBomb(Bullet):
+	def __init__(self, player):
+
+		speed = 0
+		damage = 70
+		width = 50
+		height = 50
+		sprite = pygame.image.load("images/ammo/basic_bullet.png")
+
+		super(Mine, self).__init__(player, speed, damage, width, height, sprite)

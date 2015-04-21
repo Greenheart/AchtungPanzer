@@ -5,7 +5,7 @@ from sound import *
 from ammo import *
 
 class Player():
-    def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_shoot, k_shoot_missil):
+    def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_weapon1, k_weapon2):
         self.controller = controller
         self.screen = self.controller.screen
         self.x, self.y = 300,100
@@ -42,7 +42,8 @@ class Player():
         controller.register_key(k_forward, self.keypress_forward)
         controller.register_key(k_left, self.keypress_left)
         controller.register_key(k_backward, self.keypress_backward)
-        controller.register_key(k_shoot, self.shoot, singlepress=True)
+        controller.register_key(k_weapon1, self.weapon1, singlepress=True)
+        controller.register_key(k_weapon2, self.weapon2, singlepress=True)
 
     def keypress_right(self):
         if self.rotation == 0:
@@ -79,9 +80,12 @@ class Player():
             if self.speed < self.max_speed:
                 self.speed += self.acceleration
 
-    def shoot(self, event):
+    def weapon1(self, event):
         self.controller.ammo.append(NormalShot(self))
         Sound.Sounds["shoot"].play()
+
+    def weapon2(self, event):
+        self.controller.ammo.append(Mine(self))
 
     def move(self):
         if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
