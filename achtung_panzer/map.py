@@ -36,10 +36,8 @@ class World():
             hypotenuse = math.sqrt((math.fabs(float(obj[1][0] - agent.x))) + (math.fabs(float(obj[1][1] - agent.y))))
             if hypotenuse <= radius:    #collision with object
                 collision_with.append(obj)
-            else:
-                pass
 
-        return collison_with
+        return collison_with if len(collison_with) > 0 else None
 
     def draw(self):
 

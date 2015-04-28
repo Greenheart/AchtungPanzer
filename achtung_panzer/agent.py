@@ -128,6 +128,12 @@ class Player():
             if self.x > pUp.x and self.x < pUp.x + pUp.image.get_width() and self.y > pUp.y and self.y < pUp.y + pUp.image.get_height():
                 pUp.pickup(self)
 
+    def collision(self, collisions):
+        
+        for obj in collisions:
+            pass
+
+            #if obj.type == water
 
     def draw(self):
 
