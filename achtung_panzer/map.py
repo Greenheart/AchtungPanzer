@@ -12,47 +12,34 @@ class World():
         self.map_type = random.choice(['grass', 'sand'])
 
         if self.map_type == "grass":
-            #Create sprite for ground
             self.ground_sprite = pygame.image.load("images/grass.png")
             sea = Water()
             sea.area()
             self.objects.append(sea)
             bush_1 = Bush()
             bush_2 = Bush()
-            
 
-            # TODO
-            # 1. Store which WorldObjects and how many of each type that shall be used 
-            #    in this map_type
-            # 2. Create subclasses for each object
-            # 3. Draw background/ environment/ map/ terrain/ WHATEVER
         elif self.map_type == "sand":
             self.ground_sprite = pygame.image.load("images/sand.png")
             sea = Water()
             sea.area()
             self.objects.append(sea)
 
-
-        else: #Add more map_types here
-        	pass
-
-
         self.powerups = []
-
         """for pup in range(0, random.randint(0, 10)):
             self.powerups.append(Mine(self, "random", "random"))"""
 
     def collision(self, agent):
         collision_with = []
-        for object in self.objects:
-            radius = object[3] + agent.radius
-            hypotenuse = math.sqrt((math.fabs(float(object[1][0] - agent.x))) + (math.fabs(float(object[1][1] - agent.y))))
-            if hypotenuse <= radius:
+        for obj in self.objects:
+            radius = obj[3] + agent.radius
+            hypotenuse = math.sqrt((math.fabs(float(obj[1][0] - agent.x))) + (math.fabs(float(obj[1][1] - agent.y))))
+            if hypotenuse <= radius:    #collision with object
+                collision_with.append(obj)
+            else:
                 pass
 
-
         return collison_with
-
 
     def draw(self):
 
