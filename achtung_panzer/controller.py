@@ -7,6 +7,7 @@ from agent import Player
 from map import *
 from menu import MainMenu
 from sound import *
+from animation import *
 
 # Game States
 S_MENU = 1
@@ -101,13 +102,17 @@ class Controller():
                 self.map.draw()
                 self.sea.draw(self.screen)
 
+                for bullet in self.ammo:
+                    bullet.update()
+                    bullet.draw()
+
                 for player in self.agents:
                     player.update()
                     player.draw()
 
-                for bullet in self.ammo:
-                    bullet.update()
-                    bullet.draw()
+                for animation in Animation.List:
+                    animation.animate()
+                    animation.draw()
 
             """-------------------------------UPGRADES------------------------------------"""
 
