@@ -10,6 +10,7 @@ class Player():
         self.screen = self.controller.screen
         self.x, self.y = 300,100
         self.health = 100
+        self.radius = TANK_WIDTH/2
         self.max_speed = TANK_SPEED
         self.max_speed_back = TANK_SPEED_BACK
         self.acceleration = TANK_ACCELERATION

@@ -8,12 +8,17 @@ from constants import *
 class World():
     def __init__(self, screen):
         self.screen = screen
-        self.objects = []
+        self.objects = []       # World objects = (image, (x, y), phi, radius, obj_type) State 0=water, 1=deadtree
         self.map_type = random.choice(['grass', 'sand'])
 
         if self.map_type == "grass":
             #Create sprite for ground
             self.ground_sprite = pygame.image.load("images/grass.png")
+            sea = Water()
+            sea.area()
+            self.objects.append(sea)
+            bush_1 = Bush()
+            bush_2 = Bush()
             
 
             # TODO
@@ -21,13 +26,12 @@ class World():
             #    in this map_type
             # 2. Create subclasses for each object
             # 3. Draw background/ environment/ map/ terrain/ WHATEVER
-
         elif self.map_type == "sand":
             self.ground_sprite = pygame.image.load("images/sand.png")
-            self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
-            self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
-            self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
-            self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
+            sea = Water()
+            sea.area()
+            self.objects.append(sea)
+
 
         else: #Add more map_types here
         	pass
@@ -38,6 +42,16 @@ class World():
         """for pup in range(0, random.randint(0, 10)):
             self.powerups.append(Mine(self, "random", "random"))"""
 
+    def collision(self, agent):
+        collision_with = []
+        for object in self.objects:
+            radius = object[3] + agent.radius
+            hypotenuse = math.sqrt((math.fabs(float(object[1][0] - agent.x))) + (math.fabs(float(object[1][1] - agent.y))))
+            if hypotenuse <= radius:
+                pass
+
+
+        return collison_with
 
 
     def draw(self):
@@ -47,7 +61,10 @@ class World():
                 self.screen.blit(self.ground_sprite,(x,y))
 
         for obj in self.objects:
-        	self.screen.blit(*obj)
+            if obj.type == 0:
+                self.screen.blit(*obj)
+            else:
+                obj.draw(self.screen)
 
         for powerup in self.powerups:
             powerup.draw()
@@ -67,12 +84,14 @@ class WorldObject(object):
 class Object(WorldObject):
     def __init__(self):
         WorldObject.__init__(self)
+        self.type = 0 #worldobject
         self.x, self.y = random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1])
         
 
 class Area(WorldObject):
     def __init__(self):
         WorldObject.__init__(self)
+        self.type = 1 #area
         self.circles = []
 
     def area(self):
@@ -80,15 +99,16 @@ class Area(WorldObject):
         y = random.randint(0, SCREEN_SIZE[1])
         radius = 40
         phi = random.random() * 2 * math.pi
-        circle = (x, y, phi, radius)
+        circle = (None, (x, y), phi, radius, 0)
         self.circles.append(circle)
 
         for i in range(0, 15):
             phi = random.randint(int((self.circles[-1][2] - math.radians(50))), int((self.circles[-1][2] + math.radians(50))))
-            x = self.circles[-1][0] + math.sin(phi) * radius
-            y = self.circles[-1][1] + math.cos(phi) * radius
-            circle = (x, y, phi, radius)
+            x = self.circles[-1][1][0] + math.sin(phi) * radius
+            y = self.circles[-1][1][1] + math.cos(phi) * radius
+            circle = (None, (x, y), phi, radius, 0)
             self.circles.append(circle)
+
 
 class Water(Area):
     def __init__(self):
@@ -97,18 +117,22 @@ class Water(Area):
 
     def draw(self, screen):
         for circle in self.circles:
-            pygame.draw.circle(screen, self.color, (int(circle[0]), int(circle[1])), circle[3], 0)
-
-    def collision(self):
-        pass
-        
+            pygame.draw.circle(screen, self.color, (int(circle[1][0]), int(circle[1][1])), circle[3], 0)
 
 
-class Bush(Object):
+class DeadBush(Object):
 
-    def __init__(self, filename):
+    def __init__(self):
         Object.__init__(self)
 
-        self.name = "Bush"
-        self.sprite = pygame.image.load(self.path + filename)
+        self.name = "DeadBush"
+        self.image = pygame.image.load("images/deadtree.png")
+        self.x = random.randint(0, SCREEN_SIZE[0])
+        self.y = random.randint(0, SCREEN_SIZE[0])
 
+class Bush(DeadBush):
+
+    def __init__(self):
+        DeadBush.__init__(self)
+        self.name = 'Bush'
+        self.image = pygame.image.load('images/busksten.png')
