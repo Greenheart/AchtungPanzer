@@ -64,6 +64,9 @@ class Bullet(Ammo):
 					player.health -= self.damage
 					Animation(self.player.screen, "explosion", (self.x, self.y), 4)
 
+		if self.x > SCREEN_SIZE[0] or self.x < 0 or self.y > SCREEN_SIZE[0] or self.y < 0:
+			self.controller.ammo.remove(self)
+
 
 
 """-------------------------------------------------AMMO ENDPOINT-----------------------------------------------------------"""
@@ -73,7 +76,7 @@ class NormalShot(Bullet):
 
 	def __init__(self, player):
 
-		speed = 8
+		speed = 100
 		damage = 10
 		width = 5
 		height = 5
