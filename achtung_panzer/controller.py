@@ -97,7 +97,6 @@ class Controller():
                     pass
 
                 self.map.draw()
-                self.map.sea.draw(self.screen)
 
                 for player in self.agents:
                     player.update()
