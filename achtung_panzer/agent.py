@@ -21,12 +21,6 @@ class Player():
         self.moving = False
         self.rotating = False
 
-        self.explosionsprites = [
-        pygame.transform.scale(pygame.image.load("images/1.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)), pygame.transform.scale(pygame.image.load("images/2.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)),
-        pygame.transform.scale(pygame.image.load("images/3.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)), pygame.transform.scale(pygame.image.load("images/4.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)),
-        pygame.transform.scale(pygame.image.load("images/5.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE)), pygame.transform.scale(pygame.image.load("images/6.png"), (EXPLOSION_SIZE, EXPLOSION_SIZE))]
-
-        self.explosionindex = 0
         self.dead = False
 
         #Load and resize tank img with right color
@@ -82,11 +76,13 @@ class Player():
                 self.speed += self.acceleration
 
     def weapon1(self, event):
-        self.controller.ammo.append(NormalShot(self))
-        Sound.Sounds["shoot"].play()
+        if not self.dead:
+            self.controller.ammo.append(NormalShot(self))
+            Sound.Sounds["shoot"].play()
 
     def weapon2(self, event):
-        self.controller.ammo.append(Mine(self))
+        if not self.dead:
+            self.controller.ammo.append(Mine(self))
 
     def move(self):
         if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
@@ -107,15 +103,9 @@ class Player():
 
     def die(self):
         self.dead = True
-
-        if self.explosionindex == 1:
-            Sound.Sounds["explosion"].play()
-
-        if self.explosionindex != (len(self.explosionsprites) - 1) * EXPLOSION_SPEED:
-            self.sprite = self.explosionsprites[self.explosionindex/EXPLOSION_SPEED]
-            self.explosionindex += 1
-        else:
-            self.controller.agents.remove(self)
+        Animation(self.screen, "explosion", (self.x, self.y), 9)
+        Sound.Sounds["explosion"].play()
+        self.controller.agents.remove(self)
 
         
     def update(self):

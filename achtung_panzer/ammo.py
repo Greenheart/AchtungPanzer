@@ -1,6 +1,7 @@
 import pygame
 import math
 from constants import *
+from animation import *
 
 
 class Ammo(object):
@@ -47,6 +48,8 @@ class Bullet(Ammo):
 		self.sprite = pygame.transform.scale(self.sprite, (self.width, self.height))
 		self.sprite = pygame.transform.rotate(self.sprite, self.player.rotation)
 
+#		self.sprite.set_alpha(100)
+
 		self.sx = -math.cos(math.radians(self.player.rotation)) * self.speed
 		self.sy = math.sin(math.radians(self.player.rotation)) * self.speed
 
@@ -59,6 +62,8 @@ class Bullet(Ammo):
 				if self.x > player.x - player.sprite.get_width()/2 and self.x < player.x + player.sprite.get_width()/2 and self.y > player.y - player.sprite.get_height()/2 and self.y < player.y + player.sprite.get_height()/2:
 					self.controller.ammo.remove(self)
 					player.health -= self.damage
+					Animation(self.player.screen, "explosion", (self.x, self.y), 4)
+
 
 
 """-------------------------------------------------AMMO ENDPOINT-----------------------------------------------------------"""
@@ -76,6 +81,9 @@ class NormalShot(Bullet):
 
 		super(NormalShot, self).__init__(player, speed, damage, width, height, sprite)
 
+		self.sprite.set_alpha(200)
+
+
 class Mine(Bullet):
 	def __init__(self, player):
 
@@ -85,7 +93,7 @@ class Mine(Bullet):
 		height = 20
 		sprite = pygame.image.load("images/ammo/mine.png")
 
-		super(Mine, self).__init__(player, speed, damage, width, height, sprite)	
+		super(Mine, self).__init__(player, speed, damage, width, height, sprite)
 
 
 class AtomicBomb(Bullet):
