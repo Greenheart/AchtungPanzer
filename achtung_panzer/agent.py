@@ -5,10 +5,10 @@ from sound import *
 from ammo import *
 
 class Player():
-    def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_weapon1, k_weapon2):
+    def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_weapon1, k_weapon2, x, y):
         self.controller = controller
         self.screen = self.controller.screen
-        self.x, self.y = 300,100
+        self.x, self.y = x, y
         self.health = 100
         self.radius = TANK_WIDTH/2
         self.max_speed = TANK_SPEED

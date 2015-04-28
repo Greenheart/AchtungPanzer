@@ -76,7 +76,7 @@ class NormalShot(Bullet):
 
 	def __init__(self, player):
 
-		speed = 100
+		speed = 13
 		damage = 10
 		width = 5
 		height = 5

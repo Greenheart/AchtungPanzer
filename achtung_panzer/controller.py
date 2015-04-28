@@ -39,7 +39,7 @@ class Controller():
 
         #SELF DEPENDANT
         self.map = map.World(self.screen)
-        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l)]
+        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
        
         self.register_eventhandler(pygame.QUIT, self.quit)
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
@@ -97,11 +97,11 @@ class Controller():
                 else:
                     pass
 
-                for agent in self.agents:
+                """for agent in self.agents:
                     collision_with = self.map.collision(agent)
 
                     if collision_with is not None:
-                        agent.collision(collision_with)
+                        agent.collision(collision_with)"""
 
                 self.map.draw()
 
