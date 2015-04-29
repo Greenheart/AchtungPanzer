@@ -97,12 +97,6 @@ class Controller():
                 else:
                     pass
 
-                """for agent in self.agents:
-                    collision_with = self.map.collision(agent)
-
-                    if collision_with is not None:
-                        agent.collision(collision_with)"""
-
                 self.map.draw()
 
                 for bullet in self.ammo:
@@ -111,6 +105,11 @@ class Controller():
 
                 for player in self.agents:
                     player.update()
+
+                    collision_with = self.map.collision(player)
+                    if collision_with:
+                        player.collision(collision_with)
+
                     player.draw()
 
                 for animation in Animation.List:

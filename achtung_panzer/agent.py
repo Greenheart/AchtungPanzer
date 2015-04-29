@@ -10,7 +10,6 @@ class Player():
         self.screen = self.controller.screen
         self.x, self.y = x, y
         self.health = 100
-        self.radius = TANK_WIDTH/2
         self.max_speed = TANK_SPEED
         self.max_speed_back = TANK_SPEED_BACK
         self.acceleration = TANK_ACCELERATION
@@ -22,6 +21,11 @@ class Player():
         self.rotating = False
 
         self.dead = False
+
+        if TANK_WIDTH > TANK_HEIGHT:
+            self.radius = int(TANK_WIDTH * 0.6)
+        else:
+            self.radius = int(TANK_HEIGHT * 0.6)
 
         #Load and resize tank img with right color
         if color == 'green':
@@ -110,6 +114,8 @@ class Player():
         
     def update(self):
 
+        self.rotation_speed = TANK_ROTATION_SPEED
+
         if not self.dead:
             
             if self.moving or self.rotating:
@@ -131,9 +137,16 @@ class Player():
     def collision(self, collisions):
         
         for obj in collisions:
-            pass
+            #Collision-detection-testing
+            #print "collision with --> {} - {}".format(obj.name, obj.type)
 
-            #if obj.type == water
+            if obj.type == 1:   #area-object
+                if obj.name == "Water":
+                    self.speed = 1
+                    self.rotation_speed = 1
+            else:   #normal object"""
+                pass
+
 
     def draw(self):
 
@@ -148,3 +161,6 @@ class Player():
 
         if not self.dead:
             pygame.draw.rect(self.screen, (COLOR), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
+
+        #Collision-detection-testing
+        #pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)

@@ -13,17 +13,22 @@ class World():
 
         if self.map_type == "grass":
             self.ground_sprite = pygame.image.load("images/grass.png")
-            sea = Water()
-            sea.area()
-            self.objects.append(sea)
-            bush_1 = Bush()
-            bush_2 = Bush()
+            for i in range(random.randint(1, 4)):
+                self.objects.append(Water(self))
+            
+            for i in range(random.randint(1, 10)):
+                self.objects.append(Bush(self))
 
         elif self.map_type == "sand":
             self.ground_sprite = pygame.image.load("images/sand.png")
-            sea = Water()
-            sea.area()
-            self.objects.append(sea)
+            for i in range(random.randint(1, 4)):
+                self.objects.append(Water(self))
+
+            for i in range(random.randint(1, 2)):
+                self.objects.append(Bush(self))
+
+            for i in range(random.randint(1, 10)):
+                self.objects.append(DeadBush(self))
 
         self.powerups = []
         """for pup in range(0, random.randint(0, 10)):
@@ -32,17 +37,24 @@ class World():
     def collision(self, agent):
         collision_with = []
         for obj in self.objects:
-            radius = obj.radius + agent.radius
 
             if obj.type == 1: #area-object
-                hypotenuse = math.sqrt((math.fabs(float(obj - agent.x))) + (math.fabs(float(obj.y - agent.y))))
-            else:   #normal object
-                hypotenuse = math.sqrt((math.fabs(float(obj.x - agent.x))) + (math.fabs(float(obj.y - agent.y))))
+                for circle in obj.circles:
+                    radius = circle[2] + agent.radius
+                    hypotenuse = math.sqrt((math.fabs(float(circle[0][0] - agent.x)))**2 + (math.fabs(float(circle[0][1] - agent.y)))**2)
+                
+                    if hypotenuse <= radius:    #collision with object
+                        collision_with.append(obj)
+                        break
 
-            if hypotenuse <= radius:    #collision with object
-                collision_with.append(obj)
+            else:   #normal object, type=0
+                radius = obj.radius + agent.radius
+                hypotenuse = math.sqrt((math.fabs(float(obj.x - agent.x)))**2 + (math.fabs(float(obj.y - agent.y)))**2)
 
-        return collison_with if len(collison_with) > 0 else None
+                if hypotenuse <= radius:    #collision with object
+                    collision_with.append(obj)
+
+        return collision_with if len(collision_with) > 0 else None
 
     def draw(self):
 
@@ -52,16 +64,17 @@ class World():
 
         for obj in self.objects:
             if obj.type == 0:
-                self.screen.blit(*obj)
+                obj.draw()
             else:
-                obj.draw(self.screen)
+                obj.draw()
 
         for powerup in self.powerups:
             powerup.draw()
 
 class WorldObject(object):
 
-    def __init__(self):
+    def __init__(self, world):
+        self.screen= world.screen
         self.path = "images/"
         self.x, self.y = 0,0
         self.name = "Undefined WorldObject"
@@ -69,20 +82,25 @@ class WorldObject(object):
         self.destroyable = False
 
     def draw(self):
-        self.screen.blit(self.sprite, (self.x, self.y))
+        self.screen.blit(self.image, (self.x-self.image.get_width()/2, self.y-self.image.get_height()/2))
+        #Collision-detection-testing
+        #pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)
 
 class Object(WorldObject):
-    def __init__(self):
-        WorldObject.__init__(self)
+    def __init__(self, world):
+        WorldObject.__init__(self, world)
         self.type = 0 #worldobject
         self.x, self.y = random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1])
-        
+        self.name = "Undefined Standard-object"
 
 class Area(WorldObject):
-    def __init__(self):
-        WorldObject.__init__(self)
+    def __init__(self, world):
+        WorldObject.__init__(self, world)
         self.type = 1 #area
         self.circles = []
+        self.name = "Undefined Area-object"
+        self.area()
+
 
     def area(self):
         radius = 40
@@ -94,7 +112,6 @@ class Area(WorldObject):
 
         for i in range(0, random.randint(15, 30)):
             phi = random.randint(int((self.circles[-1][2] - math.radians(random.randint(1, 360)))), int((self.circles[-1][2] + math.radians(random.randint(1, 360)))))
-            print phi
             x = self.circles[-1][0][0] + math.sin(phi) * radius
             y = self.circles[-1][0][1] + math.cos(phi) * radius
 
@@ -108,30 +125,32 @@ class Area(WorldObject):
             circle = ((x, y), phi, radius, 0)
             self.circles.append(circle)
 
-
 class Water(Area):
-    def __init__(self):
-        Area.__init__(self)
+    def __init__(self, world):
+        Area.__init__(self, world)
         self.color = (0, random.randint(0, 100), random.randint(110, 255))
+        self.name = "Water"
 
-    def draw(self, screen):
+    def draw(self):
         for circle in self.circles:
-            pygame.draw.circle(screen, self.color, (int(circle[0][0]), int(circle[0][1])), circle[2], 0)
-
+            pygame.draw.circle(self.screen, self.color, (int(circle[0][0]), int(circle[0][1])), circle[2], 0)
 
 class DeadBush(Object):
 
-    def __init__(self):
-        Object.__init__(self)
+    def __init__(self, world):
+        Object.__init__(self, world)
 
         self.name = "DeadBush"
-        self.image = pygame.image.load("images/deadtree.png")
+        self.image = pygame.transform.scale(pygame.image.load("images/deadtree.png"), (80, 80))
         self.x = random.randint(0, SCREEN_SIZE[0])
         self.y = random.randint(0, SCREEN_SIZE[0])
+        self.radius = self.image.get_width()/3
+        self.draw()
 
 class Bush(DeadBush):
 
-    def __init__(self):
-        DeadBush.__init__(self)
+    def __init__(self, world):
+        DeadBush.__init__(self, world)
         self.name = 'Bush'
         self.image = pygame.image.load('images/busksten.png')
+        self.radius = self.image.get_width()/2
