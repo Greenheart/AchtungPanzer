@@ -1,3 +1,4 @@
+import logging
 import pygame
 import random
 from constants import *

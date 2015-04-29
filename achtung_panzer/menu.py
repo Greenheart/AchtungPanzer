@@ -1,3 +1,4 @@
+import logging
 import pygame
 from pygame.locals import *
 from constants import *
@@ -18,12 +19,21 @@ class Menu():
         self.controller.register_eventhandler(pygame.MOUSEBUTTONDOWN, self.mouse_event)
         self.controller.register_eventhandler(pygame.MOUSEBUTTONUP, self.mouse_event)
 
+    def __del__(self):
+        # Register event at controller
+        self.controller.unregister_eventhandler(pygame.MOUSEMOTION, self.mouse_event)
+        self.controller.unregister_eventhandler(pygame.MOUSEBUTTONDOWN, self.mouse_event)
+        self.controller.unregister_eventhandler(pygame.MOUSEBUTTONUP, self.mouse_event)
+
     def register_eventhandler(self, event_type, state, callback):
+        logging.debug('{}: Registering eventhandler ({}, {}, {})'.format(self.__class__.__name__, event_type, state, callback))
         self.events.append((event_type, state, callback))
 
 
     def mouse_event(self, event):
+        logging.debug('{}: mouse event ({})'.format(self.__class__.__name__, event.type))
         for event_type, state, callback in self.events:
+            logging.debug('{}: matching event ({}=={}, {}=={})'.format(self.__class__.__name__, event.type, event_type, state, self.state))
             if event.type == event_type and state == self.state:
                 callback(event)
 
@@ -121,6 +131,7 @@ class MainMenu(Menu):
 
 class PreGameMenu(Menu):
     S_PREGAME = 1
+
     def __init__(self, controller):
         Menu.__init__(self, controller)
 
@@ -128,7 +139,7 @@ class PreGameMenu(Menu):
         self.buttons.append(Button(self, self.startmap_grass, PreGameMenu.S_PREGAME, (25, 100, 325, 300), "images/menu/button_grass.png", "images/menu/button_grass_hover.png"))
         self.buttons.append(Button(self, self.startmap_sand, PreGameMenu.S_PREGAME, (350, 100, 650, 300), "images/menu/button_sand.png", "images/menu/button_sand_hover.png"))
 
-        self.controller.register_eventhandler(pygame.KEYDOWN, self.keydown)
+#        self.controller.register_eventhandler(pygame.KEYDOWN, self.keydown)
 
         self.state = PreGameMenu.S_PREGAME
 
@@ -202,6 +213,7 @@ class Button():
 
 
     def mousebuttondown(self, event):
+        logging.debug('{} button pressed'.format(id(self)))
         x, y = event.pos
         if self.active and x >= self.x1 and x < self.x2 and y >= self.y1 and y < self.y2:
             self.pressed = True
@@ -271,3 +283,4 @@ class Slider():
             self.screen.blit(self.bg_image, (self.bg_x, self.bg_y))
             self.screen.blit(self.knob_image, (self.x, self.y))
             self.screen.blit(self.menu.controller.font.render(self.caption + " " + str(int(self.get_value())), True, (0,0,0)), (self.bg_x + self.bg_image.get_width()/2 - 8 * len(self.caption), self.bg_y - self.bg_image.get_height()/2))
+

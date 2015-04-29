@@ -1,3 +1,4 @@
+import logging
 import sys
 import pygame
 from pygame.locals import *
@@ -45,6 +46,7 @@ class Controller():
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
 
         self.menu = MainMenu(self)
+        self.pregame_menu = False
         Sound.sounds_init()
         Sound.Sounds["menumusic"].play()
 
@@ -78,6 +80,11 @@ class Controller():
             """-------------------------------PREGAME MENU-----------------------------"""
 
             if self.state == S_PREGAME:
+                if self.pregame_menu == False:
+                    del(self.menu)
+                    self.menu = False
+                    self.pregame_menu = PreGameMenu(self)
+
                 self.pregame_menu.draw()
 
             self.keys = pygame.key.get_pressed()
@@ -148,6 +155,7 @@ class Controller():
 
 
     def quit(self, event):
+        logging.info('Quitting!')
         pygame.quit()
         sys.exit()
 
@@ -157,7 +165,6 @@ class Controller():
         self.state = S_GAME
 
     def start_pregame(self):
-        self.pregame_menu = PreGameMenu(self)
         self.state = S_PREGAME
 
     def register_key(self, event_key, callback, singlepress = False):
@@ -168,4 +175,11 @@ class Controller():
 
 
     def register_eventhandler(self, event_type, callback):
+        logging.debug('{}: Registering eventhandler ({}, {})'.format(self.__class__.__name__, event_type, callback))
         self.events[event_type] = callback
+
+    def unregister_eventhandler(self, event_type, callback):
+        value = self.events.get(event_type)
+        if value is not None and value == callback:
+            logging.debug('{}: Unregistering eventhandler ({}, {})'.format(self.__class__.__name__, event_type, callback))
+            del(self.events[event_type])
