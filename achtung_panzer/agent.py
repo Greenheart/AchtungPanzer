@@ -19,6 +19,7 @@ class Player():
         self.direction = None
         self.moving = False
         self.rotating = False
+        self.can_drive = True
 
         self.dead = False
 
@@ -138,15 +139,21 @@ class Player():
         
         for obj in collisions:
             #Collision-detection-testing
-            #print "collision with --> {} - {}".format(obj.name, obj.type)
+            print "collision with --> {} - {}".format(obj.name, obj.type)
 
-            if obj.type == 1:   #area-object
-                if obj.name == "Water":
-                    self.speed = 1
-                    self.rotation_speed = 1
-            else:   #normal object"""
+            if not obj.drive_through:
+                if obj.type == 1:   #area-object
+                    if obj.name == "Water":
+                        self.speed = 1
+                        self.rotation_speed = 1
+                
+                else:   #normal object"""
+                    if obj.name == "Stone":
+                        self.can_drive = False
+                        #This needs to be fixed so that player cant move
+                        #through a stone but still can move in other directions
+            else:   #player can drive through object
                 pass
-
 
     def draw(self):
 

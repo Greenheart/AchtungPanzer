@@ -19,9 +19,12 @@ class World():
             for i in range(random.randint(1, 10)):
                 self.objects.append(Bush(self))
 
+            for i in range(random.randint(1, 15)):
+                self.objects.append(Stone(self))
+
         elif self.map_type == "sand":
             self.ground_sprite = pygame.image.load("images/sand.png")
-            for i in range(random.randint(1, 4)):
+            for i in range(random.randint(1, 3)):
                 self.objects.append(Water(self))
 
             for i in range(random.randint(1, 2)):
@@ -29,6 +32,9 @@ class World():
 
             for i in range(random.randint(1, 10)):
                 self.objects.append(DeadBush(self))
+
+            for i in range(random.randint(1, 10)):
+                self.objects.append(Stone(self))
 
         self.powerups = []
         """for pup in range(0, random.randint(0, 10)):
@@ -63,10 +69,7 @@ class World():
                 self.screen.blit(self.ground_sprite,(x,y))
 
         for obj in self.objects:
-            if obj.type == 0:
-                obj.draw()
-            else:
-                obj.draw()
+            obj.draw()
 
         for powerup in self.powerups:
             powerup.draw()
@@ -75,7 +78,6 @@ class WorldObject(object):
 
     def __init__(self, world):
         self.screen= world.screen
-        self.path = "images/"
         self.x, self.y = 0,0
         self.name = "Undefined WorldObject"
         self.drive_through = False
@@ -90,8 +92,18 @@ class Object(WorldObject):
     def __init__(self, world):
         WorldObject.__init__(self, world)
         self.type = 0 #worldobject
-        self.x, self.y = random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1])
         self.name = "Undefined Standard-object"
+
+    def check_spawn_point(self, radius):
+        while True: #Only spawn object on screen
+            self.x = random.randint(radius, SCREEN_SIZE[0])
+            self.y = random.randint(radius, SCREEN_SIZE[0])
+            
+            if self.x > SCREEN_SIZE[0]-radius or self.x < radius or self.y > SCREEN_SIZE[1]-radius or self.y < radius:
+                self.x = random.randint(radius, SCREEN_SIZE[0])
+                self.y = random.randint(radius, SCREEN_SIZE[0])
+            else:   #object IS spawning on screen
+                break
 
 class Area(WorldObject):
     def __init__(self, world):
@@ -139,13 +151,11 @@ class DeadBush(Object):
 
     def __init__(self, world):
         Object.__init__(self, world)
-
         self.name = "DeadBush"
-        self.image = pygame.transform.scale(pygame.image.load("images/deadtree.png"), (80, 80))
-        self.x = random.randint(0, SCREEN_SIZE[0])
-        self.y = random.randint(0, SCREEN_SIZE[0])
+        self.drive_through = True
+        self.image = pygame.transform.scale(pygame.image.load("images/deadtree.png"), (DEAD_BUSH_SIZE, DEAD_BUSH_SIZE))
         self.radius = self.image.get_width()/3
-        self.draw()
+        self.check_spawn_point(self.radius)
 
 class Bush(DeadBush):
 
@@ -154,3 +164,22 @@ class Bush(DeadBush):
         self.name = 'Bush'
         self.image = pygame.image.load('images/busksten.png')
         self.radius = self.image.get_width()/2
+        self.check_spawn_point(self.radius)
+
+class Stone(Object):
+    def __init__(self, world):
+        Object.__init__(self, world)
+        self.name = "Stone"
+        self.width = random.randint(100, STONE_MAX_SIZE)
+        self.height = self.width #values are the same to not trash image quality or collisions
+
+        folder = 'images/stones/'
+        image = random.choice(['a10010.png', 'a10011.png', 'a10015.png', 'a10002.png'])
+        full_path = folder + image
+        
+        self.image = pygame.transform.scale(pygame.image.load(full_path), (self.width, self.height))
+        self.radius = self.image.get_width()/4
+
+        self.check_spawn_point(self.radius)
+
+
