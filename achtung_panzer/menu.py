@@ -139,7 +139,7 @@ class PreGameMenu(Menu):
         self.buttons.append(Button(self, self.startmap_grass, PreGameMenu.S_PREGAME, (25, 100, 325, 300), "images/menu/button_grass.png", "images/menu/button_grass_hover.png"))
         self.buttons.append(Button(self, self.startmap_sand, PreGameMenu.S_PREGAME, (350, 100, 650, 300), "images/menu/button_sand.png", "images/menu/button_sand_hover.png"))
 
-#        self.controller.register_eventhandler(pygame.KEYDOWN, self.keydown)
+        self.controller.register_eventhandler(pygame.KEYDOWN, self.keydown)
 
         self.state = PreGameMenu.S_PREGAME
 
@@ -172,7 +172,16 @@ class PreGameMenu(Menu):
         self.state = None
 
     def keydown(self, event):
-        self.string += str(event.key.name)
+        if (pygame.key.name(event.key) == "backspace") or (pygame.key.name(event.key) == "space"):
+            pass
+        else:
+            self.string += pygame.key.name(event.key)
+
+        if pygame.key.name(event.key) == "backspace":
+            self.string = self.string[:-1]
+
+        if pygame.key.name(event.key) == "space":
+            self.string += " "
 
 class BetweenGameMenu(Menu):
 
