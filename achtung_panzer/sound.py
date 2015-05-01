@@ -13,6 +13,7 @@ class Sound(object):
 
         Sound.Sounds.update({
             "hoverbutton" : MiscFX("hoverbutton.wav"),
+            "typewriter" : MiscFX("typewriter.wav"),
             "menumusic" : Music("achtung.wav"),
             "explosion" : gameFX("explosion.wav"),
             "shoot" : gameFX("shoot.wav")

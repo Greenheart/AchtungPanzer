@@ -159,9 +159,9 @@ class Controller():
         pygame.quit()
         sys.exit()
 
-    def start_game(self, map_type):
+    def start_game(self, map_type, player1, player2):
         self.agents = [Player(self.screen, 'green', self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g), Player(self.screen, 'purple', self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l)]
-        self.map = World(self.screen, map_type)
+        self.map = World(self.screen, map_type, player1, player2)
         self.state = S_GAME
 
     def start_pregame(self):

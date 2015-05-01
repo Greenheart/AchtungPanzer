@@ -1,17 +1,23 @@
 import logging
 import pygame
 import random
+from pygame.locals import *
+from menu import MainMenu, PreGameMenu
 from constants import *
 
+
 class World():
-    def __init__(self, screen, map_type):
+    def __init__(self, screen, map_type, player1, player2):
         self.screen = screen
         self.objects = []
         self.map_type = map_type
+        self.font = pygame.font.Font("fonts/8bitwonder.ttf", 14)
 
         if map_type == "grass":
+            print player1 + " vs " + player2
             #Create sprite for ground
             self.ground_sprite = pygame.image.load("images/grass.png")
+            
 
             #Draw ground sprites
             for x in range(0, SCREEN_SIZE[0], self.ground_sprite.get_width()):
@@ -25,11 +31,13 @@ class World():
             # 3. Draw background/ environment/ map/ terrain/ WHATEVER
 
         elif map_type == "sand":
+            print player1 + " vs " + player2
             self.ground_sprite = pygame.image.load("images/sand.png")
             self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
             self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
             self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
             self.objects.append((pygame.image.load("images/deadtree.png"), (random.randint(0, SCREEN_SIZE[0]), random.randint(0, SCREEN_SIZE[1]))))
+
 
         else: #Add more map_types here
         	pass

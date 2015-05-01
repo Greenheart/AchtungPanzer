@@ -143,8 +143,9 @@ class PreGameMenu(Menu):
 
         self.state = PreGameMenu.S_PREGAME
 
-        self.player1_string = ""
-        self.player2_string = "Player 2"
+        self.player_choice = 1        
+        self.player1 = ""
+        self.player2 = ""
 
     def draw(self):
 
@@ -159,35 +160,56 @@ class PreGameMenu(Menu):
         for button in self.buttons:
             button.active = True if self.state == button.active_state else False
 
-        pygame.draw.rect(self.screen, (0,0,0), (100, 400, 250, 50))
-        pygame.draw.rect(self.screen, (0,0,0), (600, 400, 250, 50))
-        self.controller.screen.blit(self.controller.font.render(self.player1_string, True, (255, 255, 255)), (110, 420))
-        self.controller.screen.blit(self.controller.font.render(self.player2_string, True, (255, 255, 255)), (610, 420))
+        pygame.draw.rect(self.screen, (0,0,0), (25, 400, 300, 50))
+        pygame.draw.rect(self.screen, (0,0,0), (350, 400, 300, 50))
+        self.controller.screen.blit(self.controller.font.render(self.player1, True, (255, 255, 255)), (30, 420))
+        self.controller.screen.blit(self.controller.font.render(self.player2, True, (255, 255, 255)), (355, 420))
 
     def startmap_grass(self, event):
         self.map_type = "grass"
-        self.controller.start_game(self.map_type)
+        self.controller.start_game(self.map_type, self.player1, self.player2)
         self.state = None
 
     def startmap_sand(self, event):
         self.map_type = "sand"
-        self.controller.start_game(self.map_type)
+        self.controller.start_game(self.map_type, self.player1, self.player2)
         self.state = None
 
     def keydown(self, event):
-        if pygame.key.name(event.key) not in ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"):
+        if pygame.key.name(event.key) not in ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"):
             pass
         else:
-            self.player1_string += pygame.key.name(event.key)
+            if self.player_choice == 1:
+                Sound.Sounds["typewriter"].play()
+                self.player1 += pygame.key.name(event.key)
+            elif self.player_choice == 2:
+                Sound.Sounds["typewriter"].play()
+                self.player2 += pygame.key.name(event.key)
+            else:
+                pass
 
         if pygame.key.name(event.key) == "backspace":
-            self.player1_string = self.player1_string[:-1]
+            if self.player_choice == 1:
+                Sound.Sounds["typewriter"].play()
+                self.player1 = self.player1[:-1]
+            elif self.player_choice == 2:
+                Sound.Sounds["typewriter"].play()
+                self.player2 = self.player2[:-1]
+            else:
+                pass
 
         if pygame.key.name(event.key) == "space":
-            self.player1_string += " "
+            if self.player_choice == 1:
+                Sound.Sounds["typewriter"].play()
+                self.player1 += " "
+            elif self.player_choice == 2:
+                Sound.Sounds["typewriter"].play()
+                self.player2 += " "
+            else:
+                pass
 
-        if pygame.key.name(event.key) == "return":
-            print("You have pressed return.")
+        if pygame.key.name(event.key) == "return" or pygame.key.name(event.key) == "tab":
+            self.player_choice += 1
 
 class BetweenGameMenu(Menu):
 
