@@ -143,7 +143,8 @@ class PreGameMenu(Menu):
 
         self.state = PreGameMenu.S_PREGAME
 
-        self.string = ""
+        self.player1_string = ""
+        self.player2_string = "Player 2"
 
     def draw(self):
 
@@ -159,7 +160,9 @@ class PreGameMenu(Menu):
             button.active = True if self.state == button.active_state else False
 
         pygame.draw.rect(self.screen, (0,0,0), (100, 400, 250, 50))
-        self.controller.screen.blit(self.controller.font.render(self.string, True, (255, 255, 255)), (110, 420))
+        pygame.draw.rect(self.screen, (0,0,0), (600, 400, 250, 50))
+        self.controller.screen.blit(self.controller.font.render(self.player1_string, True, (255, 255, 255)), (110, 420))
+        self.controller.screen.blit(self.controller.font.render(self.player2_string, True, (255, 255, 255)), (610, 420))
 
     def startmap_grass(self, event):
         self.map_type = "grass"
@@ -172,16 +175,19 @@ class PreGameMenu(Menu):
         self.state = None
 
     def keydown(self, event):
-        if (pygame.key.name(event.key) == "backspace") or (pygame.key.name(event.key) == "space"):
+        if pygame.key.name(event.key) not in ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"):
             pass
         else:
-            self.string += pygame.key.name(event.key)
+            self.player1_string += pygame.key.name(event.key)
 
         if pygame.key.name(event.key) == "backspace":
-            self.string = self.string[:-1]
+            self.player1_string = self.player1_string[:-1]
 
         if pygame.key.name(event.key) == "space":
-            self.string += " "
+            self.player1_string += " "
+
+        if pygame.key.name(event.key) == "return":
+            print("You have pressed return.")
 
 class BetweenGameMenu(Menu):
 
