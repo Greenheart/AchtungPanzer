@@ -180,11 +180,17 @@ class PreGameMenu(Menu):
             pass
         else:
             if self.player_choice == 1:
-                Sound.Sounds["typewriter"].play()
-                self.player1 += pygame.key.name(event.key)
+                if (len(self.player1) < 20):
+                    Sound.Sounds["typewriter"].play()
+                    self.player1 += pygame.key.name(event.key)
+                else:
+                    pass
             elif self.player_choice == 2:
-                Sound.Sounds["typewriter"].play()
-                self.player2 += pygame.key.name(event.key)
+                if (len(self.player2) < 20):
+                    Sound.Sounds["typewriter"].play()
+                    self.player2 += pygame.key.name(event.key)
+                else:
+                    pass
             else:
                 pass
 
