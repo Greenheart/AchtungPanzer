@@ -144,7 +144,7 @@ class Player():
             if not obj.drive_through:
                 if obj.type == 1:   #area-object
                     if obj.name == "Water":
-                        self.speed = 1
+                        self.speed = -1
                         self.rotation_speed = 1
                 
                 else:   #normal object"""
