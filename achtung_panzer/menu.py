@@ -139,7 +139,7 @@ class PreGameMenu(Menu):
         self.buttons.append(Button(self, self.startmap_grass, PreGameMenu.S_PREGAME, (25, 100, 325, 300), "images/menu/button_grass.png", "images/menu/button_grass_hover.png"))
         self.buttons.append(Button(self, self.startmap_sand, PreGameMenu.S_PREGAME, (350, 100, 650, 300), "images/menu/button_sand.png", "images/menu/button_sand_hover.png"))
 
-        self.controller.register_eventhandler(pygame.KEYDOWN, self.keydown)
+        self.controller.register_eventhandler(pygame.KEYDOWN, self.checkwrite)
 
         self.state = PreGameMenu.S_PREGAME
 
@@ -175,7 +175,7 @@ class PreGameMenu(Menu):
         self.controller.start_game(self.map_type, self.player1, self.player2)
         self.state = None
 
-    def keydown(self, event):
+    def checkwrite(self, event):
         if pygame.key.name(event.key) not in ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"):
             pass
         else:
