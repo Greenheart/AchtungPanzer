@@ -223,9 +223,30 @@ class BetweenGameMenu(Menu):
         Menu.__init__(self, controller)
 
 class AfterGameMenu(Menu):
+    S_AFTERGAME = 1
 
     def __init__(self, controller):
         Menu.__init__(self, controller)
+
+        self.buttons = []
+        self.buttons.append(Button(self, AfterGameMenu.start_press, AfterGameMenu.S_AFTERGAME, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+
+
+        self.state = AfterGameMenu.S_AFTERGAME
+
+    def draw(self):
+
+        Menu.draw(self)
+
+        for buttons in self.buttons:
+            buttons.draw()
+
+        for button in self.buttons:
+            button.active = True if self.state == button.active_state else False
+
+    def start_press(self, event):
+        self.controller.start_pregame()
+        self.state = None
 
 class Button():
     def __init__(self, menu, callback, active_state, coords, image_normal, image_hover):

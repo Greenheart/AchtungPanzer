@@ -6,7 +6,7 @@ from constants import *   # constants are CAPITALIZED
 import os
 from agent import Player
 from map import World
-from menu import MainMenu, PreGameMenu
+from menu import MainMenu, PreGameMenu, AfterGameMenu
 from sound import *
 
 # Game States
@@ -16,6 +16,8 @@ S_UPGRADES = 3
 S_ABOUT = 4
 S_SETTINGS = 5
 S_PREGAME = 6
+S_BETWEENGAME = 7
+S_AFTERGAME = 8
 
 class Controller():
 
@@ -47,6 +49,7 @@ class Controller():
 
         self.menu = MainMenu(self)
         self.pregame_menu = False
+        self.aftergame_menu = False
         Sound.sounds_init()
         Sound.Sounds["menumusic"].play()
 
@@ -128,6 +131,32 @@ class Controller():
                 for player in self.agents:
                     player.update(self)
                     player.draw()
+
+                if len(self.agents) == 1:
+                    self.state = S_AFTERGAME
+
+            """------------------------------AFTERGAME-----------------------------------"""
+            if self.state == S_AFTERGAME:
+                if self.aftergame_menu == False:
+                    del(self.menu)
+                    self.menu = False
+                    self.aftergame_menu = AfterGameMenu(self)
+
+                self.aftergame_menu.draw()
+
+            self.keys = pygame.key.get_pressed()
+
+            if self.state == S_AFTERGAME:
+                for event in pygame.event.get():
+                    for event_type, callback in self.events.iteritems():
+                        if event.type == event_type:
+                            callback(event)
+
+
+                if event.type == pygame.KEYDOWN:
+                    for event_key in self.keymap_singlepress.iterkeys():
+                        if event.key == event_key:
+                            self.keymap_singlepress[(event_key)](event)
 
             """-------------------------------UPGRADES------------------------------------"""
 
