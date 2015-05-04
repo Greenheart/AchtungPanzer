@@ -170,4 +170,5 @@ class Player():
             pygame.draw.rect(self.screen, (COLOR), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
 
         #Collision-detection-testing
-        #pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)
+        if self.controller.debug:
+            pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)

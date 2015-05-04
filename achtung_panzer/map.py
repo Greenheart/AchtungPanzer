@@ -6,8 +6,9 @@ from agent import Player
 from constants import *
 
 class World():
-    def __init__(self, screen):
-        self.screen = screen
+    def __init__(self, controller):
+        self.screen = controller.screen
+        self.controller = controller
         self.objects = []       # World objects = (image, (x, y), phi, radius, obj_type) State 0=water, 1=deadtree
         self.map_type = random.choice(['grass', 'sand'])
 
@@ -78,6 +79,7 @@ class WorldObject(object):
 
     def __init__(self, world):
         self.screen= world.screen
+        self.controller = world.controller
         self.x, self.y = 0,0
         self.name = "Undefined WorldObject"
         self.drive_through = False
@@ -86,7 +88,9 @@ class WorldObject(object):
     def draw(self):
         self.screen.blit(self.image, (self.x-self.image.get_width()/2, self.y-self.image.get_height()/2))
         #Collision-detection-testing
-        #pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)
+
+        if self.controller.debug:
+            pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)
 
 class Object(WorldObject):
     def __init__(self, world):
