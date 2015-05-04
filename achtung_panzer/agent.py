@@ -8,6 +8,7 @@ class Player():
     def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_weapon1, k_weapon2, x, y):
         self.controller = controller
         self.screen = self.controller.screen
+        self.type = "agent"
         self.x, self.y = x, y
         self.health = 100
         self.max_speed = TANK_SPEED
