@@ -49,28 +49,6 @@ class World():
         """for pup in range(0, random.randint(0, 10)):
             self.powerups.append(Mine(self, "random", "random"))"""
 
-    def collision(self, agent):
-        collision_with = []
-        for obj in self.objects:
-
-            if obj.type == 1: #area-object
-                for circle in obj.circles:
-                    radius = circle.phi + agent.radius
-                    hypotenuse = math.sqrt((math.fabs(float(circle.x - agent.x)))**2 + (math.fabs(float(circle.y - agent.y)))**2)
-                
-                    if hypotenuse <= radius:    #collision with object
-                        collision_with.append(obj)
-                        break
-
-            else:   #normal object, type=0
-                radius = obj.radius + agent.radius
-                hypotenuse = math.sqrt((math.fabs(float(obj.x - agent.x)))**2 + (math.fabs(float(obj.y - agent.y)))**2)
-
-                if hypotenuse <= radius:    #collision with object
-                    collision_with.append(obj)
-
-        return collision_with if len(collision_with) > 0 else None
-
     def draw(self):
 
         for x in range(0, SCREEN_SIZE[0], self.ground_sprite.get_width()):

@@ -9,7 +9,8 @@ class Player():
     def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_weapon1, k_weapon2, x, y):
         self.controller = controller
         self.screen = self.controller.screen
-        self.type = "agent"
+        self.name = "Agent"
+        self.type = 0
         self.x, self.y = x, y
         self.health = 100
         self.max_speed = TANK_SPEED
@@ -22,6 +23,7 @@ class Player():
         self.moving = False
         self.rotating = False
         self.can_drive = True
+        self.drive_through = False
 
         self.dead = False
 
@@ -147,14 +149,15 @@ class Player():
             if not obj.drive_through:
                 if obj.type == 1:   #area-object
                     if obj.name == "Water":
-                        self.speed = -1
-                        self.rotation_speed = 1
+                        self.speed = 0
                 
                 else:   #normal object"""
                     if obj.name == "Stone":
-                        self.can_drive = False
-                        #This needs to be fixed so that player cant move
-                        #through a stone but still can move in other directions
+                        self.speed = 0
+
+                    elif obj.name == "Agent":
+                        self.speed = 0
+
             else:   #player can drive through object
                 pass
 
