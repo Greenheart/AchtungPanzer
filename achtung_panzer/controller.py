@@ -109,21 +109,28 @@ class Controller():
                     bullet.update()
                     bullet.draw()
 
+                current_player_index = 1
                 for player in self.agents:
                     player.update()
 
-                    collision_with = self.map.collision(player)
+                    collision_with = []
+                    for obj in self.map.objects:
+                        if detect_collision(player, obj):
+                            collision_with.append(obj)
+
+                    if detect_collision(player, self.agents[current_player_index]):
+                        collision_with.append(self.agents[current_player_index])
+
                     if collision_with:
                         player.collision(collision_with)
 
                     player.draw()
+                    current_player_index = 0
 
+                current_player_index = 1    #Reset variable
                 for animation in Animation.List:
                     animation.animate()
                     animation.draw()
-
-                if detect_collision(self.agents[0], self.agents[1]):
-                    print "PLAYERS COLLIDING MAHGAAAAADDDDDD"
 
             """-------------------------------UPGRADES------------------------------------"""
 
