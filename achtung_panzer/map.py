@@ -47,8 +47,8 @@ class World():
 
             if obj.type == 1: #area-object
                 for circle in obj.circles:
-                    radius = circle[2] + agent.radius
-                    hypotenuse = math.sqrt((math.fabs(float(circle[0][0] - agent.x)))**2 + (math.fabs(float(circle[0][1] - agent.y)))**2)
+                    radius = circle.phi + agent.radius
+                    hypotenuse = math.sqrt((math.fabs(float(circle.x - agent.x)))**2 + (math.fabs(float(circle.y - agent.y)))**2)
                 
                     if hypotenuse <= radius:    #collision with object
                         collision_with.append(obj)
@@ -98,7 +98,7 @@ class Object(WorldObject):
         self.type = 0 #worldobject
         self.name = "Undefined Standard-object"
 
-    def check_spawn_point(self, radius):
+    def check_spawn_point(self, radius):    #Add collision det. between worldobjects here instead of collison()
         while True: #Only spawn object on screen
             self.x = random.randint(radius, SCREEN_SIZE[0])
             self.y = random.randint(radius, SCREEN_SIZE[0])
@@ -117,29 +117,35 @@ class Area(WorldObject):
         self.name = "Undefined Area-object"
         self.area()
 
-
     def area(self):
         radius = 40
         x = random.randint(radius, SCREEN_SIZE[0]-radius)
         y = random.randint(radius, SCREEN_SIZE[1]-radius)
         phi = random.randint(1,10) * 2 * math.pi
-        circle = ((x, y), phi, radius, 0)
+        circle = Circle(x, y, phi, radius)
         self.circles.append(circle)
 
         for i in range(0, random.randint(15, 30)):
-            phi = random.randint(int((self.circles[-1][2] - math.radians(random.randint(1, 360)))), int((self.circles[-1][2] + math.radians(random.randint(1, 360)))))
-            x = self.circles[-1][0][0] + math.sin(phi) * radius
-            y = self.circles[-1][0][1] + math.cos(phi) * radius
+            phi = random.randint(int((self.circles[-1].phi - math.radians(random.randint(1, 360)))), int((self.circles[-1].phi + math.radians(random.randint(1, 360)))))
+            x = self.circles[-1].x + math.sin(phi) * radius
+            y = self.circles[-1].y + math.cos(phi) * radius
 
             while True: #Only spawn next circle on screen
                 if x > SCREEN_SIZE[0]-radius or x < radius or y > SCREEN_SIZE[1]-radius or y < radius:
-                    phi = random.randint(int((self.circles[-1][2] - math.radians(random.randint(1, 360)))), int((self.circles[-1][2] + math.radians(random.randint(1, 360)))))
-                    x = self.circles[-1][0][0] + math.sin(phi) * radius
-                    y = self.circles[-1][0][1] + math.cos(phi) * radius
+                    phi = random.randint(int((self.circles[-1].phi - math.radians(random.randint(1, 360)))), int((self.circles[-1].phi + math.radians(random.randint(1, 360)))))
+                    x = self.circles[-1].x + math.sin(phi) * radius
+                    y = self.circles[-1].y + math.cos(phi) * radius
                 else:   #next pos for circle is on the screen, continue
                     break
-            circle = ((x, y), phi, radius, 0)
+            circle = Circle(x, y, phi, radius)
             self.circles.append(circle)
+
+class Circle():
+    def __init__(self, x, y, phi, radius):
+        self.x = x
+        self.y = y
+        self.phi = phi
+        self.radius = radius
 
 class Water(Area):
     def __init__(self, world):
@@ -149,7 +155,7 @@ class Water(Area):
 
     def draw(self):
         for circle in self.circles:
-            pygame.draw.circle(self.screen, self.color, (int(circle[0][0]), int(circle[0][1])), circle[2], 0)
+            pygame.draw.circle(self.screen, self.color, (int(circle.x), int(circle.y)), int(circle.radius), 0)
 
 class DeadBush(Object):
 
