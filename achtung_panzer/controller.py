@@ -8,6 +8,7 @@ import map
 from menu import MainMenu
 from sound import *
 from animation import *
+from functions import *
 
 # Game States
 S_MENU = 1
@@ -120,6 +121,9 @@ class Controller():
                 for animation in Animation.List:
                     animation.animate()
                     animation.draw()
+
+                if detect_collision(self.agents[0], self.agents[1]):
+                    print "PLAYERS COLLIDING MAHGAAAAADDDDDD"
 
             """-------------------------------UPGRADES------------------------------------"""
 
