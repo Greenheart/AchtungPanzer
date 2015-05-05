@@ -2,6 +2,7 @@ import pygame
 import math
 
 def detect_collision(obj1, obj2):
+	"""General collision-detection that can take any 2 game-objects"""
 	if obj1.type == 1: #If the object is an area object
 		for circle in obj1.circles:
 			minimal_distance = circle.radius + obj2.radius

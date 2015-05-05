@@ -16,7 +16,7 @@ S_GAME = 2
 S_UPGRADES = 3
 
 class Controller():
-
+    """The core game logic that switches states and connects all other internal modules"""
     def __init__(self, debug=False):        
 
         self.debug = debug
@@ -59,7 +59,7 @@ class Controller():
             self.displaytime = True
 
     def run(self):
-
+        """The main game loop"""
         while True:
 
             """-------------------------------MENU------------------------------------"""
@@ -117,9 +117,9 @@ class Controller():
                     for obj in self.map.objects:
                         if detect_collision(player, obj):
                             collision_with.append(obj)
-
-                    if detect_collision(player, self.agents[current_player_index]):
-                        collision_with.append(self.agents[current_player_index])
+                    if len(self.agents) == 2:
+                        if detect_collision(player, self.agents[current_player_index]):
+                            collision_with.append(self.agents[current_player_index])
 
                     if collision_with:
                         player.collision(collision_with)
@@ -150,11 +150,11 @@ class Controller():
         pygame.quit()
         sys.exit()
                    
-
     def start_game(self):
         self.state = S_GAME
 
     def register_key(self, event_key, callback, singlepress = False):
+        """Binds keys to callback-functions"""
         if singlepress == False:
             self.keymap[(event_key)] = callback
         else:
@@ -162,4 +162,5 @@ class Controller():
 
 
     def register_eventhandler(self, event_type, callback):
+        """Binds events to callback-functions"""
         self.events[event_type] = callback

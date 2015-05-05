@@ -5,6 +5,7 @@ from sound import *
 from ammo import *
 
 class Player():
+    """The tank controlled by players"""
     def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_weapon1, k_weapon2, x, y):
         self.controller = controller
         self.screen = self.controller.screen
@@ -22,14 +23,15 @@ class Player():
         self.moving = False
         self.rotating = False
         self.can_drive = True
-        self.drive_through = False
+        self.solid = 100
+        self.current_collisions = []
 
         self.dead = False
 
         if TANK_WIDTH > TANK_HEIGHT:
-            self.radius = int(TANK_WIDTH * 0.6)
+            self.radius = int(TANK_WIDTH * 0.5)
         else:
-            self.radius = int(TANK_HEIGHT * 0.6)
+            self.radius = int(TANK_HEIGHT * 0.5)
 
         #Load and resize tank img with right color
         if color == 'green':
@@ -47,6 +49,8 @@ class Player():
         controller.register_key(k_backward, self.keypress_backward)
         controller.register_key(k_weapon1, self.weapon1, singlepress=True)
         controller.register_key(k_weapon2, self.weapon2, singlepress=True)
+
+    """Keypress-functions are use to handle movement"""
 
     def keypress_right(self):
         if self.rotation == 0:
@@ -72,7 +76,6 @@ class Player():
             if self.speed < self.max_speed_back: #Add acceleration to speed if max speed is not reached
                 self.speed += self.acceleration
 
-
     def keypress_forward(self):
         self.moving = True
 
@@ -84,32 +87,40 @@ class Player():
                 self.speed += self.acceleration
 
     def weapon1(self, event):
+        """Fire weapon from slot 1"""
         if not self.dead:
             self.controller.ammo.append(NormalShot(self))
             Sound.Sounds["shoot"].play()
 
     def weapon2(self, event):
+        """Fire weapon from slot 2"""
         if not self.dead:
             self.controller.ammo.append(Mine(self))
 
     def move(self):
-        if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
-            self.x -= math.cos(math.radians(self.rotation)) * self.speed
-            self.y += math.sin(math.radians(self.rotation)) * self.speed
-        elif self.direction == "Backward": #If the player is moving backward, add to x, subtract from y
-            self.x += math.cos(math.radians(self.rotation)) * self.speed
-            self.y -= math.sin(math.radians(self.rotation)) * self.speed
+        """Updates posisition of player. Use different rules for movement when player is colliding"""
+        if not self.current_collisions:
+            if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
+                self.x -= math.cos(math.radians(self.rotation)) * self.speed
+                self.y += math.sin(math.radians(self.rotation)) * self.speed
+            elif self.direction == "Backward": #If the player is moving backward, add to x, subtract from y
+                self.x += math.cos(math.radians(self.rotation)) * self.speed
+                self.y -= math.sin(math.radians(self.rotation)) * self.speed
 
-        if self.moving == False and self.speed > 0: #Deaccelerate if player isnt pressing keys
-            self.speed -= self.acceleration
+            if self.moving == False and self.speed > 0: #Retardate if player isnt pressing keys
+                self.speed -= self.acceleration
 
-        if self.speed == 0: #If the players current speed is 0, set the moving direction to None
-            self.direction = None
+            if self.speed == 0: #If the players current speed is 0, set the moving direction to None
+                self.direction = None
 
-        self.moving = False
-        self.rotating = False
+            self.moving = False
+            self.rotating = False
+
+        else: #Movement when colliding with objects
+            pass
 
     def die(self):
+        """Animate death and play sound"""
         self.dead = True
         Animation(self.screen, "explosion", (self.x, self.y), 9)
         Sound.Sounds["explosion"].play()
@@ -117,8 +128,9 @@ class Player():
 
         
     def update(self):
-
-        self.rotation_speed = TANK_ROTATION_SPEED
+        """Update the player's attributes, move player, check if still alive"""
+        self.rotation_speed = TANK_ROTATION_SPEED   #Reset attributes each frame
+        self.current_collisions = []
 
         if not self.dead:
             
@@ -139,28 +151,14 @@ class Player():
                 pUp.pickup(self)
 
     def collision(self, collisions):
-        
-        for obj in collisions:
-            #Collision-detection-testing
+        """Handle collisions between the player and other object/player"""
+        self.current_collisions = collisions
+
+        for obj in collisions:  #Used for collision-detection-testing
             print "collision with --> {} - {}".format(obj.name, obj.type)
 
-            if not obj.drive_through:
-                if obj.type == 1:   #area-object
-                    if obj.name == "Water":
-                        self.speed = 0
-                
-                else:   #normal object"""
-                    if obj.name == "Stone":
-                        self.speed = 0
-
-                    elif obj.name == "Agent":
-                        self.speed = 0
-
-            else:   #player can drive through object
-                pass
-
     def draw(self):
-
+        """Render the player and other connected graphics (like health-bar or hitbox) on the screen"""
         if self.health < 40:
             COLOR = (181, 53, 53)
         elif self.health < 60:
@@ -173,6 +171,5 @@ class Player():
         if not self.dead:
             pygame.draw.rect(self.screen, (COLOR), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
 
-        #Collision-detection-testing
-        if self.controller.debug:
+        if self.controller.debug:   #Collision-detection-testing
             pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)

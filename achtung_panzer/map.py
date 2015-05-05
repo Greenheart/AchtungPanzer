@@ -6,10 +6,11 @@ from agent import Player
 from constants import *
 
 class World():
+    """The game world. Connects """
     def __init__(self, controller):
         self.screen = controller.screen
         self.controller = controller
-        self.objects = []       # World objects = (image, (x, y), phi, radius, obj_type) State 0=water, 1=deadtree
+        self.objects = []       # Collection of all current World Objects
         self.map_type = random.choice(['grass', 'sand'])
 
         if self.map_type == "grass":
@@ -42,7 +43,7 @@ class World():
             self.powerups.append(Mine(self, "random", "random"))"""
 
     def draw(self):
-
+        """Draw the game-world and all it's obejcts"""
         for x in range(0, SCREEN_SIZE[0], self.ground_sprite.get_width()):
             for y in range(0, SCREEN_SIZE[1], self.ground_sprite.get_height()):
                 self.screen.blit(self.ground_sprite,(x,y))
@@ -54,30 +55,32 @@ class World():
             powerup.draw()
 
 class WorldObject(object):
-
+    """General attributes and methods for all WorldObjects"""
     def __init__(self, world):
         self.screen= world.screen
         self.controller = world.controller
         self.x, self.y = 0,0
         self.name = "Undefined WorldObject"
-        self.drive_through = False
+        self.solid = 0
         self.destroyable = False
 
     def draw(self):
+        """General drawing-function for normal objects"""
         self.screen.blit(self.image, (self.x-self.image.get_width()/2, self.y-self.image.get_height()/2))
-        #Collision-detection-testing
 
-        if self.controller.debug:
+        if self.controller.debug:   #Collision-detection-testing
             pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)
 
 class Object(WorldObject):
+    """Normal objects -> An image that only exists on one coordinate"""
     def __init__(self, world):
         WorldObject.__init__(self, world)
         self.type = 0 #worldobject
         self.name = "Undefined Standard-object"
 
     def check_spawn_point(self, radius):    #Add collision det. between worldobjects here instead of collison()
-        while True: #Only spawn object on screen
+        """Makes sure that Normal Objects only spawn on the screen"""
+        while True:
             self.x = random.randint(radius, SCREEN_SIZE[0])
             self.y = random.randint(radius, SCREEN_SIZE[0])
             
@@ -88,14 +91,17 @@ class Object(WorldObject):
                 break
 
 class Area(WorldObject):
+    """Area Objects that is made out of several smaller circle-objets to take up an area"""
     def __init__(self, world):
         WorldObject.__init__(self, world)
         self.type = 1 #area
         self.circles = []
         self.name = "Undefined Area-object"
         self.area()
+        self.solid = 50
 
     def area(self):
+        """Generate area and only do so on screen"""
         radius = 40
         x = random.randint(radius, SCREEN_SIZE[0]-radius)
         y = random.randint(radius, SCREEN_SIZE[1]-radius)
@@ -119,6 +125,7 @@ class Area(WorldObject):
             self.circles.append(circle)
 
 class Circle():
+    """These circle-objects make up Area-objects"""
     def __init__(self, x, y, phi, radius):
         self.x = x
         self.y = y
@@ -126,6 +133,7 @@ class Circle():
         self.radius = radius
 
 class Water(Area):
+    """Spawns in various sizes, shapes and colors"""
     def __init__(self, world):
         Area.__init__(self, world)
         self.color = (0, random.randint(0, 100), random.randint(110, 255))
@@ -136,17 +144,17 @@ class Water(Area):
             pygame.draw.circle(self.screen, self.color, (int(circle.x), int(circle.y)), int(circle.radius), 0)
 
 class DeadBush(Object):
-
+    """Only spawning on sand-maps"""
     def __init__(self, world):
         Object.__init__(self, world)
         self.name = "DeadBush"
-        self.drive_through = True
+        self.solid = 100
         self.image = pygame.transform.scale(pygame.image.load("images/deadtree.png"), (DEAD_BUSH_SIZE, DEAD_BUSH_SIZE))
         self.radius = self.image.get_width()/3
         self.check_spawn_point(self.radius)
 
 class Bush(DeadBush):
-
+    """Spawning on grass- and sand-maps"""
     def __init__(self, world):
         DeadBush.__init__(self, world)
         self.name = 'Bush'
@@ -155,6 +163,7 @@ class Bush(DeadBush):
         self.check_spawn_point(self.radius)
 
 class Stone(Object):
+    """Spawning in various shapes and sizes. Is completely solid --> Can't be driven through"""
     def __init__(self, world):
         Object.__init__(self, world)
         self.name = "Stone"
@@ -169,5 +178,3 @@ class Stone(Object):
         self.radius = self.image.get_width()/4
 
         self.check_spawn_point(self.radius)
-
-

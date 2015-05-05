@@ -64,7 +64,7 @@ class Bullet(Ammo):
 					player.health -= self.damage
 					Animation(self.player.screen, "explosion", (self.x, self.y), 4)
 
-		if self.x > SCREEN_SIZE[0] or self.x < 0 or self.y > SCREEN_SIZE[0] or self.y < 0:
+		if self.x > SCREEN_SIZE[0] or self.x < 0 or self.y > SCREEN_SIZE[1] or self.y < 0:
 			self.controller.ammo.remove(self)
 
 

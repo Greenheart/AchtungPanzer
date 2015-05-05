@@ -1,4 +1,3 @@
-
 '''
 This file contains all the constant variables
 When adding variables, make sure to place them in an alphabetical order
