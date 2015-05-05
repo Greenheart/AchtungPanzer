@@ -5,8 +5,13 @@ from pygame.locals import *
 from constants import *   # constants are CAPITALIZED
 import os
 from agent import Player
-import map
+<<<<<<< HEAD
+from map import World
 from menu import MainMenu, PreGameMenu, AfterGameMenu
+=======
+import map
+from menu import MainMenu
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
 from sound import *
 from animation import *
 from functions import *
@@ -15,11 +20,14 @@ from functions import *
 S_MENU = 1
 S_GAME = 2
 S_UPGRADES = 3
+<<<<<<< HEAD
 S_ABOUT = 4
 S_SETTINGS = 5
 S_PREGAME = 6
 S_BETWEENGAME = 7
 S_AFTERGAME = 8
+=======
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
 
 class Controller():
 
@@ -48,9 +56,13 @@ class Controller():
         self.clock = pygame.time.Clock()
 
         #SELF DEPENDANT
+<<<<<<< HEAD
+        
+=======
         self.map = map.World(self)
         self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
        
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
         self.register_eventhandler(pygame.QUIT, self.quit)
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
 
@@ -151,10 +163,7 @@ class Controller():
 
                     player.draw()
 
-                for animation in Animation.List:
-                    animation.animate()
-                    animation.draw()
-
+<<<<<<< HEAD
                 if len(self.agents) == 1:
                     self.state = S_AFTERGAME
 
@@ -180,6 +189,14 @@ class Controller():
                     for event_key in self.keymap_singlepress.iterkeys():
                         if event.key == event_key:
                             self.keymap_singlepress[(event_key)](event)
+=======
+                for animation in Animation.List:
+                    animation.animate()
+                    animation.draw()
+
+                if detect_collision(self.agents[0], self.agents[1]):
+                    print "PLAYERS COLLIDING MAHGAAAAADDDDDD"
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
 
             """-------------------------------UPGRADES------------------------------------"""
 
@@ -187,17 +204,6 @@ class Controller():
                 pygame.quit()
                 sys.exit()
 
-            """-------------------------------ABOUT------------------------------------"""
-
-            if self.state == S_ABOUT:
-                self.menu = Menu()
-                self.menu.about()
-
-            """-------------------------------SETTINGS------------------------------------"""
-
-            if self.state == S_SETTINGS:
-                self.menu = Menu()
-                self.menu.settings()
             
             if self.displaytime:
                 self.screen.blit(self.font.render(str(int(self.clock.get_fps())), True, (255,255,255)), (10,10))

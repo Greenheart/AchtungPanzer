@@ -1,15 +1,19 @@
 import logging
 import pygame
 import random
+<<<<<<< HEAD
 from pygame.locals import *
 from menu import MainMenu, PreGameMenu
+=======
 from powerup import *
 import math
 from agent import Player
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
 from constants import *
 
 
 class World():
+<<<<<<< HEAD
     def __init__(self, screen, map_type, player1, player2):
         self.screen = screen
         self.objects = []
@@ -17,21 +21,41 @@ class World():
         self.font = pygame.font.Font("fonts/8bitwonder.ttf", 14)
 
         if map_type == "grass":
-            logging.debug(player1 + " vs " + player2)
+            print player1 + " vs " + player2
             #Create sprite for ground
+            self.ground_sprite = pygame.image.load("images/grass.png")
+            
+=======
+    def __init__(self, controller):
+        self.screen = controller.screen
+        self.controller = controller
+        self.objects = []       # World objects = (image, (x, y), phi, radius, obj_type) State 0=water, 1=deadtree
+        self.map_type = random.choice(['grass', 'sand'])
+
+        if self.map_type == "grass":
             self.ground_sprite = pygame.image.load("images/grass.png")
             for i in range(random.randint(1, 4)):
                 self.objects.append(Water(self))
             
             for i in range(random.randint(1, 10)):
                 self.objects.append(Bush(self))
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
 
             for i in range(random.randint(1, 15)):
                 self.objects.append(Stone(self))
 
+<<<<<<< HEAD
+            # TODO
+            # 1. Store which WorldObjects and how many of each type that shall be used 
+            #    in this map_type
+            # 2. Create subclasses for each object
+            # 3. Draw background/ environment/ map/ terrain/ WHATEVER
+
         elif map_type == "sand":
-            logging.debug(player1 + " vs " + player2)
+            print player1 + " vs " + player2
+=======
         elif self.map_type == "sand":
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
             self.ground_sprite = pygame.image.load("images/sand.png")
             for i in range(random.randint(1, 3)):
                 self.objects.append(Water(self))
@@ -42,6 +66,11 @@ class World():
             for i in range(random.randint(1, 10)):
                 self.objects.append(DeadBush(self))
 
+<<<<<<< HEAD
+
+        else: #Add more map_types here
+        	pass
+=======
             for i in range(random.randint(1, 10)):
                 self.objects.append(Stone(self))
 
@@ -70,13 +99,13 @@ class World():
                     collision_with.append(obj)
 
         return collision_with if len(collision_with) > 0 else None
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
 
     def draw(self):
 
         for x in range(0, SCREEN_SIZE[0], self.ground_sprite.get_width()):
             for y in range(0, SCREEN_SIZE[1], self.ground_sprite.get_height()):
-                self.screen.blit(self.ground_sprite, (x,y))
-    	
+                self.screen.blit(self.ground_sprite,(x,y))
 
         for obj in self.objects:
             obj.draw()

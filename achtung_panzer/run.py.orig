@@ -1,0 +1,13 @@
+import logging
+from controller import Controller
+
+logging.basicConfig(filename='example.log', level=logging.DEBUG)
+
+if __name__ == "__main__":
+<<<<<<< HEAD
+	logging.info('Starting...')
+	c = Controller()
+=======
+	c = Controller(debug=True)
+>>>>>>> 93ffddf2760b33960b667376cfc7506c497dc131
+	c.run()
