@@ -34,6 +34,8 @@ class Controller():
         self.state = S_MENU
         self.fps = FPS
         self.paused = False
+        self.score1 = 0
+        self.score2 = 0
 
         self.keymap = {} #REGISTER KEPRESS CONSTANTLY
         self.keymap_singlepress = {} #REGISTER KEYPRESS ONE TIME
@@ -46,10 +48,6 @@ class Controller():
         self.font = pygame.font.Font("fonts/8BITWONDER.TTF", 14)
         self.keys = pygame.key.get_pressed()
         self.clock = pygame.time.Clock()
-
-        #SELF DEPENDANT
-        self.map = map.World(self)
-        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
        
         self.register_eventhandler(pygame.QUIT, self.quit)
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
@@ -92,6 +90,8 @@ class Controller():
 
             """-------------------------------PREGAME MENU-----------------------------"""
 
+            self.keys = pygame.key.get_pressed()
+
             if self.state == S_PREGAME:
                 if self.pregame_menu == False:
                     del(self.menu)
@@ -100,9 +100,6 @@ class Controller():
 
                 self.pregame_menu.draw()
 
-            self.keys = pygame.key.get_pressed()
-
-            if self.state == S_PREGAME:
                 for event in pygame.event.get():
                     # Handle generic events
                     for event_type, callback in self.events.iteritems():
@@ -156,6 +153,19 @@ class Controller():
                     animation.draw()
 
                 if len(self.agents) == 1:
+                    for player in self.agents:
+                        if player.color == "purple":
+                            print("Purple wins!")
+                            self.score1 += 1
+                        elif player.color == "green":
+                            print("Green wins!")
+                            self.score2 += 1
+                    print str(self.score1) + " - " + str(self.score2)
+                    self.agents[0].dead = True
+                    self.agents.remove(self.agents[0])
+                    del self.ammo[:]
+                    del Animation.List[:]
+                    self.aftergame_menu = False
                     self.state = S_AFTERGAME
 
             """------------------------------AFTERGAME-----------------------------------"""
@@ -212,12 +222,15 @@ class Controller():
         sys.exit()
 
     def start_game(self, map_type, player1, player2):
-        self.agents = [Player(self.screen, 'green', self, pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g), Player(self.screen, 'purple', self, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l)]
-        self.map = World(self.screen, map_type, player1, player2)
+        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
+        self.map = map.World(self, map_type, player1, player2)
         self.state = S_GAME
 
     def start_pregame(self):
+        self.pregame_menu = False # Make sure there's no old menu
         self.state = S_PREGAME
+
+
 
     def register_key(self, event_key, callback, singlepress = False):
         if singlepress == False:

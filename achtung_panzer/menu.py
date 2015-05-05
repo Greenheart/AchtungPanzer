@@ -229,7 +229,7 @@ class AfterGameMenu(Menu):
         Menu.__init__(self, controller)
 
         self.buttons = []
-        self.buttons.append(Button(self, AfterGameMenu.start_press, AfterGameMenu.S_AFTERGAME, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+        self.buttons.append(Button(self, self.start_press, AfterGameMenu.S_AFTERGAME, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
 
 
         self.state = AfterGameMenu.S_AFTERGAME

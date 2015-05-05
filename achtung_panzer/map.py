@@ -10,8 +10,9 @@ from constants import *
 
 
 class World():
-    def __init__(self, screen, map_type, player1, player2):
-        self.screen = screen
+    def __init__(self, controller, map_type, player1, player2):
+        self.screen = controller.screen
+        self.controller = controller
         self.objects = []
         self.map_type = map_type
         self.font = pygame.font.Font("fonts/8bitwonder.ttf", 14)
@@ -31,7 +32,6 @@ class World():
 
         elif map_type == "sand":
             logging.debug(player1 + " vs " + player2)
-        elif self.map_type == "sand":
             self.ground_sprite = pygame.image.load("images/sand.png")
             for i in range(random.randint(1, 3)):
                 self.objects.append(Water(self))
