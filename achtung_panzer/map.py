@@ -138,6 +138,7 @@ class Water(Area):
         Area.__init__(self, world)
         self.color = (0, random.randint(0, 100), random.randint(110, 255))
         self.name = "Water"
+        self.solid = 40
 
     def draw(self):
         for circle in self.circles:
@@ -148,7 +149,7 @@ class DeadBush(Object):
     def __init__(self, world):
         Object.__init__(self, world)
         self.name = "DeadBush"
-        self.solid = 100
+        self.solid = 20
         self.image = pygame.transform.scale(pygame.image.load("images/deadtree.png"), (DEAD_BUSH_SIZE, DEAD_BUSH_SIZE))
         self.radius = self.image.get_width()/3
         self.check_spawn_point(self.radius)
@@ -158,6 +159,7 @@ class Bush(DeadBush):
     def __init__(self, world):
         DeadBush.__init__(self, world)
         self.name = 'Bush'
+        self.solid = 100
         self.image = pygame.image.load('images/busksten.png')
         self.radius = self.image.get_width()/2
         self.check_spawn_point(self.radius)
@@ -167,6 +169,7 @@ class Stone(Object):
     def __init__(self, world):
         Object.__init__(self, world)
         self.name = "Stone"
+        self.solid = 100
         self.width = random.randint(100, STONE_MAX_SIZE)
         self.height = self.width #values are the same to not trash image quality or collisions
 

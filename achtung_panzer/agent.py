@@ -99,25 +99,24 @@ class Player():
 
     def move(self):
         """Updates posisition of player. Use different rules for movement when player is colliding"""
-        if not self.current_collisions:
-            if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
-                self.x -= math.cos(math.radians(self.rotation)) * self.speed
-                self.y += math.sin(math.radians(self.rotation)) * self.speed
-            elif self.direction == "Backward": #If the player is moving backward, add to x, subtract from y
-                self.x += math.cos(math.radians(self.rotation)) * self.speed
-                self.y -= math.sin(math.radians(self.rotation)) * self.speed
+        if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
+            self.x -= math.cos(math.radians(self.rotation)) * self.speed
+            self.y += math.sin(math.radians(self.rotation)) * self.speed
+        elif self.direction == "Backward": #If the player is moving backward, add to x, subtract from y
+            self.x += math.cos(math.radians(self.rotation)) * self.speed
+            self.y -= math.sin(math.radians(self.rotation)) * self.speed
 
-            if self.moving == False and self.speed > 0: #Retardate if player isnt pressing keys
-                self.speed -= self.acceleration
+        if self.moving == False and self.speed > 0: #Retardate if player isnt pressing keys
+            self.speed -= self.acceleration
 
-            if self.speed == 0: #If the players current speed is 0, set the moving direction to None
-                self.direction = None
+        if self.speed == 0: #If the players current speed is 0, set the moving direction to None
+            self.direction = None
 
-            self.moving = False
-            self.rotating = False
+        self.pushback()
 
-        else: #Movement when colliding with objects
-            pass
+        self.moving = False
+        self.rotating = False
+
 
     def die(self):
         """Animate death and play sound"""
@@ -129,8 +128,6 @@ class Player():
         
     def update(self):
         """Update the player's attributes, move player, check if still alive"""
-        self.rotation_speed = TANK_ROTATION_SPEED   #Reset attributes each frame
-        self.current_collisions = []
 
         if not self.dead:
             
@@ -146,16 +143,29 @@ class Player():
         if self.health <= 0:
             self.die()
 
-        for pUp in self.controller.map.powerups:
+        """for pUp in self.controller.map.powerups:
             if self.x > pUp.x and self.x < pUp.x + pUp.image.get_width() and self.y > pUp.y and self.y < pUp.y + pUp.image.get_height():
-                pUp.pickup(self)
+                pUp.pickup(self)"""
+
+        #Reset attributes each frame
+        self.rotation_speed = TANK_ROTATION_SPEED
+        self.current_collisions = []
+
+    def pushback(self):
+        for obj in self.current_collisions:
+            if obj.solid == 100:
+                self.speed = 0
+                deltax = self.x - obj.x
+                deltay = obj.y - self.y
+                self.x += deltax * SOLID_OBJ_PUSHBACK
+                self.y -= deltay * SOLID_OBJ_PUSHBACK
 
     def collision(self, collisions):
         """Handle collisions between the player and other object/player"""
         self.current_collisions = collisions
 
-        for obj in collisions:  #Used for collision-detection-testing
-            print "collision with --> {} - {}".format(obj.name, obj.type)
+        """for obj in collisions:  #Used for collision-detection-testing
+            print "collision with --> {} - {}".format(obj.name, obj.type)"""
 
     def draw(self):
         """Render the player and other connected graphics (like health-bar or hitbox) on the screen"""
