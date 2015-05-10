@@ -151,17 +151,35 @@ class Player():
         self.current_collisions = []
 
     def pushback(self):
+        """Make sure that players can't drive through WorldObjects or outside of the maps borders by using a pushback"""
         for obj in self.current_collisions:
             if obj.solid == 100:
                 self.speed = 0
-                deltax = self.x - obj.x
-                deltay = obj.y - self.y
+                deltax = (self.x - obj.x) / 3
+                deltay = (obj.y - self.y) / 3
                 self.x += deltax * SOLID_OBJ_PUSHBACK
                 self.y -= deltay * SOLID_OBJ_PUSHBACK
 
+            else:   #Player will lose speed depending on how solid the WorldObject is
+                print obj.solid
+                self.speed = self.speed * 1-(obj.solid/100)
+                print self.speed   
+
+        if self.x > SCREEN_SIZE[0]-self.radius or self.x < self.radius or self.y > SCREEN_SIZE[1]-self.radius or self.y < self.radius:
+            self.speed = 0
+
+            if self.x > SCREEN_SIZE[0]-self.radius:
+                self.x -= 10 * MAP_BORDER_PUSHBACK
+            elif self.x < self.radius:
+                self.x += 10 * MAP_BORDER_PUSHBACK
+            elif self.y > SCREEN_SIZE[1]-self.radius:
+                self.y -= 10 * MAP_BORDER_PUSHBACK
+            else:
+                self.y += 10 * MAP_BORDER_PUSHBACK
+
     def collision(self):
         """Detect and handle collisions between the player and object/ other player"""
-        
+
         for player in self.controller.agents:
             if player != self:
                 other_player = player
