@@ -22,10 +22,8 @@ class Player():
         self.direction = None
         self.moving = False
         self.rotating = False
-        self.can_drive = True
         self.solid = 100
         self.current_collisions = []
-
         self.dead = False
 
         if TANK_WIDTH > TANK_HEIGHT:
@@ -137,6 +135,7 @@ class Player():
                 else:
                     self.animationindex = 0
 
+            self.collision()    #Detect and handle collisions with WorldObjects or other player
             self.move()
             self.sprite = pygame.transform.rotate(self.MasterSprites[self.animationindex/ANIMATION_SPEED], self.rotation)
 
@@ -160,9 +159,20 @@ class Player():
                 self.x += deltax * SOLID_OBJ_PUSHBACK
                 self.y -= deltay * SOLID_OBJ_PUSHBACK
 
-    def collision(self, collisions):
-        """Handle collisions between the player and other object/player"""
-        self.current_collisions = collisions
+    def collision(self):
+        """Detect and handle collisions between the player and object/ other player"""
+        
+        for player in self.controller.agents:
+            if player != self:
+                other_player = player
+
+        for obj in self.controller.map.objects:
+            if detect_collision(self, obj):
+                self.current_collisions.append(obj)
+
+        if len(self.controller.agents) == 2:
+            if detect_collision(self, other_player):
+                self.current_collisions.append(other_player)
 
         """for obj in collisions:  #Used for collision-detection-testing
             print "collision with --> {} - {}".format(obj.name, obj.type)"""
