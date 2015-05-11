@@ -142,9 +142,9 @@ class Player():
         if self.health <= 0:
             self.die()
 
-        """for pUp in self.controller.map.powerups:
+        for pUp in self.controller.map.powerups:
             if self.x > pUp.x and self.x < pUp.x + pUp.image.get_width() and self.y > pUp.y and self.y < pUp.y + pUp.image.get_height():
-                pUp.pickup(self)"""
+                pUp.pickup(self)
 
         #Reset attributes each frame
         self.rotation_speed = TANK_ROTATION_SPEED
@@ -155,15 +155,14 @@ class Player():
         for obj in self.current_collisions:
             if obj.solid == 100:
                 self.speed = 0
-                deltax = (self.x - obj.x) / 3
-                deltay = (obj.y - self.y) / 3
-                self.x += deltax * SOLID_OBJ_PUSHBACK
-                self.y -= deltay * SOLID_OBJ_PUSHBACK
+                deltax = (self.x - obj.x)
+                deltay = (obj.y - self.y)
+                self.x += (deltax/3) * SOLID_OBJ_PUSHBACK
+                self.y -= (deltay/3) * SOLID_OBJ_PUSHBACK
 
             else:   #Player will lose speed depending on how solid the WorldObject is
-                print obj.solid
-                self.speed = self.speed * 1-(obj.solid/100)
-                print self.speed   
+                self.speed -= (self.speed * (obj.solid/100.0))
+                break
 
         if self.x > SCREEN_SIZE[0]-self.radius or self.x < self.radius or self.y > SCREEN_SIZE[1]-self.radius or self.y < self.radius:
             self.speed = 0

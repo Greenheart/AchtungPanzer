@@ -40,7 +40,7 @@ class World():
 
         self.powerups = []
         """for pup in range(0, random.randint(0, 10)):
-            self.powerups.append(Mine(self, "random", "random"))"""
+            self.powerups.append(Health(self, "random", "random"))"""
 
     def draw(self):
         """Draw the game-world and all it's obejcts"""
@@ -138,7 +138,7 @@ class Water(Area):
         Area.__init__(self, world)
         self.color = (0, random.randint(0, 100), random.randint(110, 255))
         self.name = "Water"
-        self.solid = 40
+        self.solid = 10
 
     def draw(self):
         for circle in self.circles:
@@ -149,7 +149,7 @@ class DeadBush(Object):
     def __init__(self, world):
         Object.__init__(self, world)
         self.name = "DeadBush"
-        self.solid = 20
+        self.solid = 100
         self.image = pygame.transform.scale(pygame.image.load("images/deadtree.png"), (DEAD_BUSH_SIZE, DEAD_BUSH_SIZE))
         self.radius = self.image.get_width()/3
         self.check_spawn_point(self.radius)

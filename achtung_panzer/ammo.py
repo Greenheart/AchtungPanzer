@@ -89,12 +89,16 @@ class Bullet(Ammo):
                     player.health -= self.damage
                     Animation(self.player.screen, "explosion", (self.x, self.y), 4)
 
-        for obj in self.controller.map.objects:     #Detect and handle collisions with WorldObjects
-            if obj.solid == 100:    #Completely solid objects stops bullets
-                
-                if detect_collision(self, obj):
+        for obj in self.controller.map.objects:  #Detect and handle collisions with WorldObjects
+            if detect_collision(self, obj):
+                if obj.solid == 100: #Completely solid objects stops bullets
                     self.controller.ammo.remove(self)
-                    """Maybe add animation here?"""
+
+                elif obj.name == "DeadBush":
+                    self.x -= self.sx * 0.8
+                    self.y -= self.sy * 0.8
+                    self.sx -= 10
+                    self.sy += 10
 
         """for obj in collisions:  #Used for collision-detection-testing
             print "collision with --> {} - {}".format(obj.name, obj.type)"""
@@ -107,7 +111,7 @@ class NormalShot(Bullet):
 
     def __init__(self, player):
 
-        speed = 13
+        speed = 10
         damage = 10
         width = 5
         height = 5
@@ -131,13 +135,40 @@ class Mine(Bullet):
         super(Mine, self).__init__(player, speed, damage, width, height, sprite)
 
 
-class AtomicBomb(Bullet):
+class StickyBomb(Bullet):
     def __init__(self, player):
 
-        speed = 0
-        damage = 70
-        width = 50
-        height = 50
+        speed = 10
+        damage = 10
+        width = 20
+        height = 20
         sprite = pygame.image.load("images/ammo/mine.png")
 
-        super(Mine, self).__init__(player, speed, damage, width, height, sprite)
+        super(StickyBomb, self).__init__(player, speed, damage, width, height, sprite)
+
+        self.deacceleration = 0.1
+        self.radius = 10
+        self.max_distance = 100
+        self.startx, self.starty = self.player.x, self.player.y
+
+    def update(self):       
+        self.x += self.sx
+        self.y += self.sy
+
+        deltax = math.fabs(self.x - self.startx)
+        deltay = math.fabs(self.y - self.starty)
+
+        if deltax > self.max_distance or deltay > self.max_distance:
+            if self.sx > 0:
+                self.sx -= math.fabs(self.sx) * self.deacceleration
+            else:
+                self.sx += math.fabs(self.sx) * self.deacceleration
+            if self.sy > 0:
+                self.sy -= math.fabs(self.sy) * self.deacceleration
+            else:
+                self.sy += math.fabs(self.sy) * self.deacceleration
+
+        self.collision()    #Check for and handle current collisions
+
+        if self.x > SCREEN_SIZE[0] or self.x < 0 or self.y > SCREEN_SIZE[1] or self.y < 0:
+            self.controller.ammo.remove(self)

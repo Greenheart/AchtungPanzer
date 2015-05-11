@@ -33,7 +33,7 @@ class Mine(PowerUp):
 	def __init__(self, world, x, y):
 		super(Mine, self).__init__(world, x, y)
 
-		self.image = pygame.image.load("images/mine.png")
+		self.image = pygame.image.load("images/ammo/mine.png")
 
 	def callback(self, player):
 		player.health = 0
@@ -43,7 +43,7 @@ class Health(PowerUp):
 	def __init__(self, world, x, y):
 		super(Health, self).__init__(world, x, y)
 
-		self.image = pygame.image.load("images/mine.png")
+		self.image = pygame.image.load("images/ammo/mine.png")
 		self.value = 20
 
 	def callback(self, player):
