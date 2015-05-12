@@ -217,22 +217,22 @@ class PreGameMenu(Menu):
         if pygame.key.name(event.key) == "return" or pygame.key.name(event.key) == "tab":
             self.player_choice += 1
 
-class BetweenGameMenu(Menu):
+class AfterGameMenu(Menu):
 
     def __init__(self, controller):
         Menu.__init__(self, controller)
 
-class AfterGameMenu(Menu):
-    S_AFTERGAME = 1
+class BetweenGameMenu(Menu):
+    S_BETWEENGAME = 1
 
     def __init__(self, controller):
         Menu.__init__(self, controller)
 
         self.buttons = []
-        self.buttons.append(Button(self, self.start_press, AfterGameMenu.S_AFTERGAME, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+        self.buttons.append(Button(self, self.start_press, BetweenGameMenu.S_BETWEENGAME, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
 
 
-        self.state = AfterGameMenu.S_AFTERGAME
+        self.state = BetweenGameMenu.S_BETWEENGAME
 
     def draw(self):
 

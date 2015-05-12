@@ -6,7 +6,7 @@ from constants import *   # constants are CAPITALIZED
 import os
 from agent import Player
 import map
-from menu import MainMenu, PreGameMenu, AfterGameMenu
+from menu import MainMenu, PreGameMenu, BetweenGameMenu, AfterGameMenu
 from sound import *
 from animation import *
 from functions import *
@@ -54,6 +54,7 @@ class Controller():
 
         self.menu = MainMenu(self)
         self.pregame_menu = False
+        self.betweengame_menu = False
         self.aftergame_menu = False
         Sound.sounds_init()
         Sound.Sounds["menumusic"].play()
@@ -176,21 +177,21 @@ class Controller():
                     self.agents.remove(self.agents[0])
                     del self.ammo[:]
                     del Animation.List[:]
-                    self.aftergame_menu = False
-                    self.state = S_AFTERGAME
+                    self.betweengame_menu = False
+                    self.state = S_BETWEENGAME
 
-            """------------------------------AFTERGAME-----------------------------------"""
-            if self.state == S_AFTERGAME:
-                if self.aftergame_menu == False:
+            """------------------------------BETWEEN-----------------------------------"""
+            if self.state == S_BETWEENGAME:
+                if self.betweengame_menu == False:
                     del(self.menu)
                     self.menu = False
-                    self.aftergame_menu = AfterGameMenu(self)
+                    self.betweengame_menu = BetweenGameMenu(self)
 
-                self.aftergame_menu.draw()
+                self.betweengame_menu.draw()
 
             self.keys = pygame.key.get_pressed()
 
-            if self.state == S_AFTERGAME:
+            if self.state == S_BETWEENGAME:
                 for event in pygame.event.get():
                     for event_type, callback in self.events.iteritems():
                         if event.type == event_type:
