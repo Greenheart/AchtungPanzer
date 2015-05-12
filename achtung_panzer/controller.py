@@ -34,9 +34,6 @@ class Controller():
         self.state = S_MENU
         self.fps = FPS
         self.paused = False
-        self.score1 = 0
-        self.score2 = 0
-        self.rounds = 0
 
         self.keymap = {} #REGISTER KEPRESS CONSTANTLY
         self.keymap_singlepress = {} #REGISTER KEYPRESS ONE TIME
@@ -165,32 +162,29 @@ class Controller():
                     animation.animate()
                     animation.draw()
 
-                if len(self.agents) == 1:
+                if [x.dead for x in self.agents].count(True) == 1:
                     for player in self.agents:
-                        if player.color == "purple":
-                            print("Purple wins!")
-                            self.score1 += 1
-                            self.rounds += 1
-                        elif player.color == "green":
-                            print("Green wins!")
-                            self.score2 += 1
-                            self.rounds += 1
-                    print str(self.score1) + " - " + str(self.score2)
-                    print "Round: " + str(self.rounds)
+                        if not player.dead:
+                            self.stats.inform(player, score = 1)
+                    print str(self.stats.data[self.agents[0]].get('score', 0)) + " - " + str(self.stats.data[self.agents[1]].get('score', 0))
+                    print 'Distance: {}, Distance: {}'.format(self.stats.data[self.agents[0]].get('move', '--'), 
+                                                              self.stats.data[self.agents[1]].get('move', '--'))
+                    print 'Shots: {}, Shots: {}'.format(self.stats.data[self.agents[0]].get('shots_fired', '--'), 
+                                                        self.stats.data[self.agents[1]].get('shots_fired', '--'))
                     self.agents[0].dead = True
                     self.agents.remove(self.agents[0])
                     del self.ammo[:]
                     del Animation.List[:]
-                    if self.round_check(self.score1, self.score2):
-                        if self.score1 > self.score2:
-                            print("Purple Wins The Game!")
-                        else:
-                            print("Green Wins The Game!")
-                        self.aftergame_menu = False
-                        self.state = S_AFTERGAME
-                    else:
-                        self.betweengame_menu = False
-                        self.state = S_BETWEENGAME
+#                    if self.round_check(self.score1, self.score2):
+#                        if self.score1 > self.score2:
+#                            print("Purple Wins The Game!")
+#                        else:
+#                            print("Green Wins The Game!")
+#                        self.aftergame_menu = False
+#                        self.state = S_AFTERGAME
+#                    else:
+                    self.betweengame_menu = False
+                    self.state = S_BETWEENGAME
 
             """------------------------------BETWEEN-----------------------------------"""
             if self.state == S_BETWEENGAME:
@@ -270,6 +264,7 @@ class Controller():
     def start_game(self, map_type, player1, player2):
         self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
         self.map = map.World(self, map_type, player1, player2)
+        self.stats = Stats(*self.agents)
         self.state = S_GAME
 
     def continue_game(self):
@@ -282,8 +277,13 @@ class Controller():
         self.state = S_PREGAME
 
     def round_check(self, score1, score2):
-        if score1 >= 2 or score2 >= 2:
-            return True
+        if score1 >= 9 or score2 >= 9:
+            if score1 - 2 >= score2:
+                return True
+            elif score2 - 2 >= score1:
+                return True
+            else:
+                return False
         else:
             return False
 
@@ -305,3 +305,39 @@ class Controller():
         if value is not None and value == callback:
             logging.debug('{}: Unregistering eventhandler ({}, {})'.format(self.__class__.__name__, event_type, callback))
             del(self.events[event_type])
+
+class UnknownStatError(Exception):
+    pass
+
+class Stats():
+    VALID_STATS = ('shots_fired', 'move', 'score')
+
+    def __init__(self, *args):
+        self.data = {}
+
+        for player in args:
+            self.data[player] = {}
+
+
+    def inform(self, player, **kwargs):
+        # Increments stat with given number. 
+        #
+        # Example: 
+        # inform(player, score = 7)
+        #
+        # Will increase score stat with 7.
+        #
+        
+        if not (len(kwargs) == 1 and kwargs.keys()[0] in Stats.VALID_STATS):
+            raise UnknownStatError('Unknown keyword argument to stat.')
+
+        # Fetch the dictionary associated with player, create a new if it doesn't exist.
+        stats = self.data.get(player)
+        if stats == None:
+            self.data[player] = {}
+            stats = self.data[player]
+
+        key, value = kwargs.keys()[0], kwargs.values()[0]
+
+        # Register the stat
+        stats[key] = value + stats.get(key, 0)

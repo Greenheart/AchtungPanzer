@@ -89,6 +89,7 @@ class Player():
         if not self.dead:
             self.controller.ammo.append(NormalShot(self))
             Sound.Sounds["shoot"].play()
+            self.controller.stats.inform(self, shots_fired = 1)
 
     def weapon2(self, event):
         if not self.dead:
@@ -111,11 +112,13 @@ class Player():
         self.moving = False
         self.rotating = False
 
+        self.controller.stats.inform(self, move = self.speed)
+
     def die(self):
         self.dead = True
         Animation(self.screen, "explosion", (self.x, self.y), 9)
         Sound.Sounds["explosion"].play()
-        self.controller.agents.remove(self)
+#        self.controller.agents.remove(self)
 
         
     def update(self):

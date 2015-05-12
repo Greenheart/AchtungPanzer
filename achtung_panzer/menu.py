@@ -169,11 +169,15 @@ class PreGameMenu(Menu):
         self.map_type = "grass"
         self.controller.start_game(self.map_type, self.player1, self.player2)
         self.state = None
+        self.controller.agents[0].name = self.player1
+        self.controller.agents[1].name = self.player2
 
     def startmap_sand(self, event):
         self.map_type = "sand"
         self.controller.start_game(self.map_type, self.player1, self.player2)
         self.state = None
+        self.controller.agents[0].name = self.player1
+        self.controller.agents[1].name = self.player2
 
     def checkwrite(self, event):
         if pygame.key.name(event.key) not in ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"):
@@ -216,6 +220,7 @@ class PreGameMenu(Menu):
 
         if pygame.key.name(event.key) == "return" or pygame.key.name(event.key) == "tab":
             self.player_choice += 1
+
 
 class AfterGameMenu(Menu):
     S_AFTERGAME = 1
