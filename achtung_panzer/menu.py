@@ -218,9 +218,30 @@ class PreGameMenu(Menu):
             self.player_choice += 1
 
 class AfterGameMenu(Menu):
+    S_AFTERGAME = 1
 
     def __init__(self, controller):
         Menu.__init__(self, controller)
+
+        self.buttons = []
+        self.buttons.append(Button(self, self.quit, AfterGameMenu.S_AFTERGAME, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+
+        self.state = AfterGameMenu.S_AFTERGAME
+
+    def draw(self):
+        
+        Menu.draw(self)
+
+        for buttons in self.buttons:
+            buttons.draw()
+
+        for button in self.buttons:
+            button.active = True if self.state == button.active_state else False
+
+    def quit(self, event):
+        pygame.quit()
+        sys.exit()
+
 
 class BetweenGameMenu(Menu):
     S_BETWEENGAME = 1
@@ -229,7 +250,7 @@ class BetweenGameMenu(Menu):
         Menu.__init__(self, controller)
 
         self.buttons = []
-        self.buttons.append(Button(self, self.start_press, BetweenGameMenu.S_BETWEENGAME, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
+        self.buttons.append(Button(self, self.continue_press, BetweenGameMenu.S_BETWEENGAME, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
 
 
         self.state = BetweenGameMenu.S_BETWEENGAME
@@ -246,6 +267,10 @@ class BetweenGameMenu(Menu):
 
     def start_press(self, event):
         self.controller.start_pregame()
+        self.state = None
+
+    def continue_press(self, event):
+        self.controller.continue_game()
         self.state = None
 
 class Button():

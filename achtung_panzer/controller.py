@@ -36,6 +36,7 @@ class Controller():
         self.paused = False
         self.score1 = 0
         self.score2 = 0
+        self.rounds = 0
 
         self.keymap = {} #REGISTER KEPRESS CONSTANTLY
         self.keymap_singlepress = {} #REGISTER KEYPRESS ONE TIME
@@ -169,16 +170,27 @@ class Controller():
                         if player.color == "purple":
                             print("Purple wins!")
                             self.score1 += 1
+                            self.rounds += 1
                         elif player.color == "green":
                             print("Green wins!")
                             self.score2 += 1
+                            self.rounds += 1
                     print str(self.score1) + " - " + str(self.score2)
+                    print "Round: " + str(self.rounds)
                     self.agents[0].dead = True
                     self.agents.remove(self.agents[0])
                     del self.ammo[:]
                     del Animation.List[:]
-                    self.betweengame_menu = False
-                    self.state = S_BETWEENGAME
+                    if self.round_check(self.score1, self.score2):
+                        if self.score1 > self.score2:
+                            print("Purple Wins The Game!")
+                        else:
+                            print("Green Wins The Game!")
+                        self.aftergame_menu = False
+                        self.state = S_AFTERGAME
+                    else:
+                        self.betweengame_menu = False
+                        self.state = S_BETWEENGAME
 
             """------------------------------BETWEEN-----------------------------------"""
             if self.state == S_BETWEENGAME:
@@ -197,6 +209,28 @@ class Controller():
                         if event.type == event_type:
                             callback(event)
 
+
+                if event.type == pygame.KEYDOWN:
+                    for event_key in self.keymap_singlepress.iterkeys():
+                        if event.key == event_key:
+                            self.keymap_singlepress[(event_key)](event)
+
+            """-------------------------------AFTER---------------------------------------"""
+            if self.state == S_AFTERGAME:
+                if self.aftergame_menu == False:
+                    del(self.menu)
+                    self.menu = False
+                    self.aftergame_menu = AfterGameMenu(self)
+
+                self.aftergame_menu.draw()
+
+            self.keys = pygame.key.get_pressed()
+
+            if self.state == S_AFTERGAME:
+                for event in pygame.event.get():
+                    for event_type, callback in self.events.iteritems():
+                        if event.type == event_type:
+                            callback(event)
 
                 if event.type == pygame.KEYDOWN:
                     for event_key in self.keymap_singlepress.iterkeys():
@@ -238,9 +272,20 @@ class Controller():
         self.map = map.World(self, map_type, player1, player2)
         self.state = S_GAME
 
+    def continue_game(self):
+        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
+        self.map = map.World(self, "grass", "hult", "nisse")
+        self.state = S_GAME
+
     def start_pregame(self):
         self.pregame_menu = False # Make sure there's no old menu
         self.state = S_PREGAME
+
+    def round_check(self, score1, score2):
+        if score1 >= 2 or score2 >= 2:
+            return True
+        else:
+            return False
 
 
 
