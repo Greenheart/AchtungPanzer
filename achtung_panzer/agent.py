@@ -93,24 +93,40 @@ class Player():
     def weapon2(self, event):
         """Fire weapon from slot 2"""
         if not self.dead:
-            self.controller.ammo.append(Mine(self))
+            stickybombs = None
+
+            for ammo in self.controller.ammo:
+                if ammo.name == "StickyBomb":
+                    if ammo.player == self:
+                        stickybombs = ammo
+                        break
+
+            if stickybombs:
+                stickybombs.detonate()
+            else:
+                self.controller.ammo.append(StickyBomb(self))
 
     def move(self):
+        self.pushback()
+
         """Updates posisition of player. Use different rules for movement when player is colliding"""
         if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
             self.x -= math.cos(math.radians(self.rotation)) * self.speed
             self.y += math.sin(math.radians(self.rotation)) * self.speed
+            if self.speed > self.max_speed:
+                self.speed -= self.acceleration
         elif self.direction == "Backward": #If the player is moving backward, add to x, subtract from y
             self.x += math.cos(math.radians(self.rotation)) * self.speed
             self.y -= math.sin(math.radians(self.rotation)) * self.speed
+            if self.speed > self.max_speed_back:
+                self.speed -= self.acceleration
+                    
 
         if self.moving == False and self.speed > 0: #Retardate if player isnt pressing keys
             self.speed -= self.acceleration
 
         if self.speed == 0: #If the players current speed is 0, set the moving direction to None
             self.direction = None
-
-        self.pushback()
 
         self.moving = False
         self.rotating = False
@@ -128,6 +144,9 @@ class Player():
         """Update the player's attributes, move player, check if still alive"""
 
         if not self.dead:
+
+            self.max_speed = TANK_SPEED
+            self.max_speed_back = TANK_SPEED_BACK
             
             if self.moving or self.rotating:
                 if self.animationindex != (len(self.MasterSprites) - 1) * ANIMATION_SPEED:
@@ -161,8 +180,9 @@ class Player():
                 self.y -= (deltay/3) * SOLID_OBJ_PUSHBACK
 
             else:   #Player will lose speed depending on how solid the WorldObject is
-                self.speed -= (self.speed * (obj.solid/100.0))
-                break
+                if (TANK_SPEED - (TANK_SPEED * (obj.solid/100.0))) < self.max_speed:
+                    self.max_speed = TANK_SPEED - (TANK_SPEED * (obj.solid/100.0))
+                    self.max_speed_back = TANK_SPEED_BACK - (TANK_SPEED_BACK * (obj.solid/100.0))
 
         if self.x > SCREEN_SIZE[0]-self.radius or self.x < self.radius or self.y > SCREEN_SIZE[1]-self.radius or self.y < self.radius:
             self.speed = 0

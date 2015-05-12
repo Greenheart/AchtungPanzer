@@ -121,6 +121,7 @@ class NormalShot(Bullet):
 
         self.sprite.set_alpha(200)
         self.radius = 5
+        self.name = "NormalShot"
 
 
 class Mine(Bullet):
@@ -134,12 +135,14 @@ class Mine(Bullet):
 
         super(Mine, self).__init__(player, speed, damage, width, height, sprite)
 
+        self.name = "Mine"
+
 
 class StickyBomb(Bullet):
     def __init__(self, player):
 
         speed = 10
-        damage = 10
+        damage = 30
         width = 20
         height = 20
         sprite = pygame.image.load("images/ammo/mine.png")
@@ -147,9 +150,10 @@ class StickyBomb(Bullet):
         super(StickyBomb, self).__init__(player, speed, damage, width, height, sprite)
 
         self.deacceleration = 0.1
-        self.radius = 10
+        self.radius = 20
         self.max_distance = 100
         self.startx, self.starty = self.player.x, self.player.y
+        self.name = "StickyBomb"
 
     def update(self):       
         self.x += self.sx
@@ -168,7 +172,16 @@ class StickyBomb(Bullet):
             else:
                 self.sy += math.fabs(self.sy) * self.deacceleration
 
-        self.collision()    #Check for and handle current collisions
-
         if self.x > SCREEN_SIZE[0] or self.x < 0 or self.y > SCREEN_SIZE[1] or self.y < 0:
             self.controller.ammo.remove(self)
+
+    def detonate(self):
+        for player in self.controller.agents:
+            if player != self.player:
+                deltax = self.x - player.x
+                deltay = self.y - player.y
+                if (deltax**2 + deltay**2) <= (self.radius + player.radius)**2:
+                    player.health -= self.damage
+
+        self.controller.ammo.remove(self)
+        Animation(self.player.screen, "explosion", (self.x, self.y), 4)

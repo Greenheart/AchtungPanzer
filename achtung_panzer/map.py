@@ -138,7 +138,7 @@ class Water(Area):
         Area.__init__(self, world)
         self.color = (0, random.randint(0, 100), random.randint(110, 255))
         self.name = "Water"
-        self.solid = 10
+        self.solid = 50
 
     def draw(self):
         for circle in self.circles:
@@ -149,7 +149,7 @@ class DeadBush(Object):
     def __init__(self, world):
         Object.__init__(self, world)
         self.name = "DeadBush"
-        self.solid = 100
+        self.solid = 20
         self.image = pygame.transform.scale(pygame.image.load("images/deadtree.png"), (DEAD_BUSH_SIZE, DEAD_BUSH_SIZE))
         self.radius = self.image.get_width()/3
         self.check_spawn_point(self.radius)
