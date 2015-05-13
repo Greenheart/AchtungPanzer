@@ -15,13 +15,13 @@ class World():
 
         if self.map_type == "grass":
             self.ground_sprite = pygame.image.load("images/grass.png")
-            for i in range(random.randint(1, 4)):
+            for i in range(random.randint(1, 5)):
                 self.objects.append(Water(self))
             
-            for i in range(random.randint(1, 10)):
+            for i in range(random.randint(2, 10)):
                 self.objects.append(Bush(self))
 
-            for i in range(random.randint(1, 15)):
+            for i in range(random.randint(3, 15)):
                 self.objects.append(Stone(self))
 
         elif self.map_type == "sand":
@@ -35,17 +35,22 @@ class World():
             for i in range(random.randint(1, 10)):
                 self.objects.append(DeadBush(self))
 
-            for i in range(random.randint(1, 10)):
+            for i in range(random.randint(3, 10)):
                 self.objects.append(Stone(self))
 
+            for i in range(random.randint(10, 20)):
+                self.objects.append(DesertStone(self))
+
         self.powerups = []
+        self.ground_sprite_width = self.ground_sprite.get_width()
+        self.ground_sprite_height = self.ground_sprite.get_height()
         """for pup in range(0, random.randint(0, 10)):
             self.powerups.append(Health(self, "random", "random"))"""
 
     def draw(self):
         """Draw the game-world and all it's obejcts"""
-        for x in range(0, SCREEN_SIZE[0], self.ground_sprite.get_width()):
-            for y in range(0, SCREEN_SIZE[1], self.ground_sprite.get_height()):
+        for x in range(0, SCREEN_SIZE[0], self.ground_sprite_width):
+            for y in range(0, SCREEN_SIZE[1], self.ground_sprite_height):
                 self.screen.blit(self.ground_sprite,(x,y))
 
         for obj in self.objects:
@@ -53,6 +58,7 @@ class World():
 
         for powerup in self.powerups:
             powerup.draw()
+
 
 class WorldObject(object):
     """General attributes and methods for all WorldObjects"""
@@ -71,6 +77,7 @@ class WorldObject(object):
         if self.controller.debug:   #Collision-detection-testing
             pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)
 
+
 class Object(WorldObject):
     """Normal objects -> An image that only exists on one coordinate"""
     def __init__(self, world):
@@ -78,17 +85,38 @@ class Object(WorldObject):
         self.type = 0 #worldobject
         self.name = "Undefined Standard-object"
 
-    def check_spawn_point(self, radius):    #Add collision det. between worldobjects here instead of collison()
+    def check_spawn_point(self):    #Add collision det. between worldobjects here instead of collison()
         """Makes sure that Normal Objects only spawn on the screen"""
         while True:
-            self.x = random.randint(radius, SCREEN_SIZE[0])
-            self.y = random.randint(radius, SCREEN_SIZE[0])
+            self.x = random.randint(self.radius, SCREEN_SIZE[0])
+            self.y = random.randint(self.radius, SCREEN_SIZE[0])
             
-            if self.x > SCREEN_SIZE[0]-radius or self.x < radius or self.y > SCREEN_SIZE[1]-radius or self.y < radius:
-                self.x = random.randint(radius, SCREEN_SIZE[0])
-                self.y = random.randint(radius, SCREEN_SIZE[0])
+            if self.x > SCREEN_SIZE[0]-self.radius or self.x < self.radius or self.y > SCREEN_SIZE[1]-self.radius or self.y < self.radius:
+                self.x = random.randint(self.radius, SCREEN_SIZE[0])
+                self.y = random.randint(self.radius, SCREEN_SIZE[0])
             else:   #object IS spawning on screen
                 break
+
+    def get_random_sprite(self, sprites_list, folder, width, height):
+        """Pick a random sprite from sprites_list and set it as the objects sprite.
+
+        Inputs: 
+            * List with strings of filenames of images
+            * String with folder-path
+            * Width and height of sprite
+        Result:
+            Set a random sprite for the object"""
+        image = random.choice(sprites_list)
+        full_path = folder + image
+        return pygame.transform.scale(pygame.image.load(full_path), (width, height))
+
+    def get_shot(self, damage):
+        """Update health of WorldObject. Remove if it gets destroyed"""
+        self.health -= damage
+        print self, self.health
+        if self.health <= 0:
+            self.controller.map.objects.remove(self) 
+
 
 class Area(WorldObject):
     """Area Objects that is made out of several smaller circle-objets to take up an area"""
@@ -124,6 +152,7 @@ class Area(WorldObject):
             circle = Circle(x, y, phi, radius)
             self.circles.append(circle)
 
+
 class Circle():
     """These circle-objects make up Area-objects"""
     def __init__(self, x, y, phi, radius):
@@ -131,6 +160,7 @@ class Circle():
         self.y = y
         self.phi = phi
         self.radius = radius
+
 
 class Water(Area):
     """Spawns in various sizes, shapes and colors"""
@@ -144,6 +174,7 @@ class Water(Area):
         for circle in self.circles:
             pygame.draw.circle(self.screen, self.color, (int(circle.x), int(circle.y)), int(circle.radius), 0)
 
+
 class DeadBush(Object):
     """Only spawning on sand-maps"""
     def __init__(self, world):
@@ -152,7 +183,8 @@ class DeadBush(Object):
         self.solid = 20
         self.image = pygame.transform.scale(pygame.image.load("images/deadtree.png"), (DEAD_BUSH_SIZE, DEAD_BUSH_SIZE))
         self.radius = self.image.get_width()/3
-        self.check_spawn_point(self.radius)
+        self.check_spawn_point()
+
 
 class Bush(DeadBush):
     """Spawning on grass- and sand-maps"""
@@ -162,22 +194,35 @@ class Bush(DeadBush):
         self.solid = 100
         self.image = pygame.image.load('images/busksten.png')
         self.radius = self.image.get_width()/2
-        self.check_spawn_point(self.radius)
+        self.check_spawn_point()
+
 
 class Stone(Object):
-    """Spawning in various shapes and sizes. Is completely solid --> Can't be driven through"""
+    """Spawning in various shapes, sizes and with randomized sprites depending on world.map_type. 
+        Is completely solid --> Can't be driven through"""
     def __init__(self, world):
         Object.__init__(self, world)
         self.name = "Stone"
         self.solid = 100
-        self.width = random.randint(100, STONE_MAX_SIZE)
+        self.width = random.randint(80, STONE_MAX_SIZE)
         self.height = self.width #values are the same to not trash image quality or collisions
-
+        self.health = self.width * 4
+        sprites_list = ['a10010.png', 'a10011.png', 'a10015.png', 'a10002.png']
         folder = 'images/stones/'
-        image = random.choice(['a10010.png', 'a10011.png', 'a10015.png', 'a10002.png'])
-        full_path = folder + image
-        
-        self.image = pygame.transform.scale(pygame.image.load(full_path), (self.width, self.height))
-        self.radius = self.image.get_width()/4
+        self.image = self.get_random_sprite(sprites_list, folder, self.width, self.height)
+        self.radius = self.image.get_width()/5
+        self.check_spawn_point()
 
-        self.check_spawn_point(self.radius)
+
+class DesertStone(Stone):
+    """Much like a Stone, but a different sprite and size"""
+    def __init__(self, world):
+        Stone.__init__(self, world)
+        self.name = "DesertStone"
+        self.width = random.randint(50, DESERT_STONE_MAX_SIZE)
+        self.height = self.width
+        sprites_list = ['c40007.png', 'c30011.png', 'c40000.png', 'c40010.png']
+        folder = 'images/stones/'
+        self.image = self.get_random_sprite(sprites_list, folder, self.width, self.height)
+        self.radius = self.image.get_width()/4
+        self.check_spawn_point()

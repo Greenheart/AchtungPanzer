@@ -94,6 +94,8 @@ class Bullet(Ammo):
             if detect_collision(self, obj):
                 if obj.solid == 100: #Completely solid objects stops bullets
                     self.controller.ammo.remove(self)
+                    if obj.health:
+                        obj.get_shot(self.damage)
                     return  #if collision and cur ammo-object is removed, exit function
 
                 elif obj.name == "DeadBush":
@@ -180,10 +182,16 @@ class StickyBomb(Bullet):
     def detonate(self):
         for player in self.controller.agents:
             if player != self.player:
-                deltax = self.x - player.x
-                deltay = self.y - player.y
-                if (deltax**2 + deltay**2) <= (self.radius + player.radius)**2:
+                if detect_collision(self, player):
                     player.health -= self.damage
+
+        for obj in self.controller.map.objects:
+            if detect_collision(self, obj):
+                try:
+                    if obj.health:
+                        obj.get_shot(self.damage)
+                except:
+                    pass
 
         self.controller.ammo.remove(self)
         Animation(self.player.screen, "explosion", (self.x, self.y), 4)
