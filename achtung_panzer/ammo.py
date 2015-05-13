@@ -88,11 +88,13 @@ class Bullet(Ammo):
                     self.controller.ammo.remove(self)
                     player.health -= self.damage
                     Animation(self.player.screen, "explosion", (self.x, self.y), 4)
+                    return  #if collision and cur ammo-object is removed, exit function
 
         for obj in self.controller.map.objects:  #Detect and handle collisions with WorldObjects
             if detect_collision(self, obj):
                 if obj.solid == 100: #Completely solid objects stops bullets
                     self.controller.ammo.remove(self)
+                    return  #if collision and cur ammo-object is removed, exit function
 
                 elif obj.name == "DeadBush":
                     self.x -= self.sx * 0.8
