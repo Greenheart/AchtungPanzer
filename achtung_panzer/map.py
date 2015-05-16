@@ -4,15 +4,21 @@ from powerup import *
 import math
 from agent import Player
 from constants import *
+from functions import *
 
 class World():
-    """The game world. Connects """
+    """The game world. Connects the logic of all WorldObjects with controller and the rest of the game"""
     def __init__(self, controller):
         self.screen = controller.screen
         self.controller = controller
         self.objects = []       # Collection of all current World Objects
         self.map_type = random.choice(['grass', 'sand'])
+        self.powerups = []
+        """for pup in range(0, random.randint(0, 10)):
+            self.powerups.append(Health(self, "random", "random"))"""
 
+    def generate(self):
+        """Generate the game world and it's objects"""
         if self.map_type == "grass":
             self.ground_sprite = pygame.image.load("images/grass.png")
             for i in range(random.randint(1, 5)):
@@ -41,14 +47,11 @@ class World():
             for i in range(random.randint(10, 20)):
                 self.objects.append(DesertStone(self))
 
-        self.powerups = []
         self.ground_sprite_width = self.ground_sprite.get_width()
         self.ground_sprite_height = self.ground_sprite.get_height()
-        """for pup in range(0, random.randint(0, 10)):
-            self.powerups.append(Health(self, "random", "random"))"""
 
     def draw(self):
-        """Draw the game-world and all it's obejcts"""
+        """Draw the game-world and all it's objects"""
         for x in range(0, SCREEN_SIZE[0], self.ground_sprite_width):
             for y in range(0, SCREEN_SIZE[1], self.ground_sprite_height):
                 self.screen.blit(self.ground_sprite,(x,y))
@@ -85,16 +88,17 @@ class Object(WorldObject):
         self.type = 0 #worldobject
         self.name = "Undefined Standard-object"
 
-    def check_spawn_point(self):    #Add collision det. between worldobjects here instead of collison()
-        """Makes sure that Normal Objects only spawn on the screen"""
+    def check_spawn_point(self):
+        """Makes sure that Normal Objects only spawn on the screen and not on top of other WorldObjects"""
         while True:
-            self.x = random.randint(self.radius, SCREEN_SIZE[0])
-            self.y = random.randint(self.radius, SCREEN_SIZE[0])
+            self.x = random.randint(self.radius, SCREEN_SIZE[0]-self.radius)
+            self.y = random.randint(self.radius, SCREEN_SIZE[1]-self.radius)
             
-            if self.x > SCREEN_SIZE[0]-self.radius or self.x < self.radius or self.y > SCREEN_SIZE[1]-self.radius or self.y < self.radius:
-                self.x = random.randint(self.radius, SCREEN_SIZE[0])
-                self.y = random.randint(self.radius, SCREEN_SIZE[0])
-            else:   #object IS spawning on screen
+            for obj in self.controller.map.objects:
+                if detect_collision(self, obj):
+                    break   #exit the for-loop and get new pos for self
+
+            else:   #object IS spawning on screen and NOT on top of other WorldObject
                 break
 
     def get_random_sprite(self, sprites_list, folder, width, height):
@@ -113,7 +117,6 @@ class Object(WorldObject):
     def get_shot(self, damage):
         """Update health of WorldObject. Remove if it gets destroyed"""
         self.health -= damage
-        print self, self.health
         if self.health <= 0:
             self.controller.map.objects.remove(self) 
 
@@ -210,7 +213,7 @@ class Stone(Object):
         sprites_list = ['a10010.png', 'a10011.png', 'a10015.png', 'a10002.png']
         folder = 'images/stones/'
         self.image = self.get_random_sprite(sprites_list, folder, self.width, self.height)
-        self.radius = self.image.get_width()/5
+        self.radius = self.image.get_height()/4
         self.check_spawn_point()
 
 

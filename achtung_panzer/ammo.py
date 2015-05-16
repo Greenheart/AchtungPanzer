@@ -73,14 +73,14 @@ class Bullet(Ammo):
         self.x += self.sx
         self.y += self.sy
 
-        self.collision()    #Check for and handle current collisions
-
-        if self.x > SCREEN_SIZE[0] or self.x < 0 or self.y > SCREEN_SIZE[1] or self.y < 0:
-            self.controller.ammo.remove(self)
+        if self.collision():   #Check for and handle current collisions
+            pass
+        else:   #Only check if self hasn't had any collision with obj or player
+            if self.x > SCREEN_SIZE[0] or self.x < 0 or self.y > SCREEN_SIZE[1] or self.y < 0:
+                self.controller.ammo.remove(self)
 
     def collision(self):
         """Detect and handle collisions between the bullet-object and players or WorldObjects"""
-
         for player in self.controller.agents:
             if player != self.player:
 
@@ -88,21 +88,24 @@ class Bullet(Ammo):
                     self.controller.ammo.remove(self)
                     player.health -= self.damage
                     Animation(self.player.screen, "explosion", (self.x, self.y), 4)
-                    return  #if collision and cur ammo-object is removed, exit function
+                    return True #if collision and cur ammo-object is removed, exit function
 
         for obj in self.controller.map.objects:  #Detect and handle collisions with WorldObjects
             if detect_collision(self, obj):
                 if obj.solid == 100: #Completely solid objects stops bullets
                     self.controller.ammo.remove(self)
-                    if obj.health:
-                        obj.get_shot(self.damage)
-                    return  #if collision and cur ammo-object is removed, exit function
+                    try:
+                        if obj.health:
+                            obj.get_shot(self.damage)
+                    except:
+                        pass
+                    return True #if collision and cur ammo-object is removed, exit function
 
-                elif obj.name == "DeadBush":
+                """elif obj.name == "DeadBush":
                     self.x -= self.sx * 0.8
                     self.y -= self.sy * 0.8
                     self.sx -= 10
-                    self.sy += 10
+                    self.sy += 10"""
 
         """for obj in collisions:  #Used for collision-detection-testing
             print "collision with --> {} - {}".format(obj.name, obj.type)"""
@@ -187,11 +190,12 @@ class StickyBomb(Bullet):
 
         for obj in self.controller.map.objects:
             if detect_collision(self, obj):
-                try:
-                    if obj.health:
-                        obj.get_shot(self.damage)
-                except:
-                    pass
+                if obj.solid == 100:
+                    try:
+                        if obj.health:
+                            obj.get_shot(self.damage)
+                    except:
+                        pass
 
         self.controller.ammo.remove(self)
         Animation(self.player.screen, "explosion", (self.x, self.y), 4)

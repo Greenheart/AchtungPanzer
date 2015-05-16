@@ -6,7 +6,7 @@ from ammo import *
 
 class Player():
     """The tank controlled by players"""
-    def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_weapon1, k_weapon2, x, y):
+    def __init__(self, controller, color, k_right, k_backward, k_left, k_forward, k_weapon1, k_weapon2, x, y, rotation = 0):
         self.controller = controller
         self.screen = self.controller.screen
         self.name = "Agent"
@@ -18,7 +18,7 @@ class Player():
         self.acceleration = TANK_ACCELERATION
         self.rotation_speed = TANK_ROTATION_SPEED
         self.speed = 0
-        self.rotation = 0
+        self.rotation = rotation
         self.direction = None
         self.moving = False
         self.rotating = False
@@ -107,9 +107,8 @@ class Player():
                 self.controller.ammo.append(StickyBomb(self))
 
     def move(self):
-        self.pushback()
-
         """Updates posisition of player. Use different rules for movement when player is colliding"""
+
         if self.direction == "Forward": #If the player is moving forward, subtract from x, add to y
             self.x -= math.cos(math.radians(self.rotation)) * self.speed
             self.y += math.sin(math.radians(self.rotation)) * self.speed
@@ -119,8 +118,7 @@ class Player():
             self.x += math.cos(math.radians(self.rotation)) * self.speed
             self.y -= math.sin(math.radians(self.rotation)) * self.speed
             if self.speed > self.max_speed_back:
-                self.speed -= self.acceleration
-                    
+                self.speed -= self.acceleration        
 
         if self.moving == False and self.speed > 0: #Retardate if player isnt pressing keys
             self.speed -= self.acceleration
@@ -154,7 +152,8 @@ class Player():
                 else:
                     self.animationindex = 0
 
-            self.collision()    #Detect and handle collisions with WorldObjects or other player
+            self.detect_collisions()
+            self.handle_collisions()
             self.move()
             self.sprite = pygame.transform.rotate(self.MasterSprites[self.animationindex/ANIMATION_SPEED], self.rotation)
 
@@ -169,8 +168,9 @@ class Player():
         self.rotation_speed = TANK_ROTATION_SPEED
         self.current_collisions = []
 
-    def pushback(self):
-        """Make sure that players can't drive through WorldObjects or outside of the maps borders by using a pushback"""
+    def handle_collisions(self):
+        """Handle the agent's current collisions. Also make sure that players can't drive through 
+           WorldObjects or outside of the maps borders by using a pushback"""
         for obj in self.current_collisions:
             if obj.solid == 100:
                 self.speed = 0
@@ -196,16 +196,16 @@ class Player():
             else:
                 self.y += 10 * MAP_BORDER_PUSHBACK
 
-    def collision(self):
-        """Detect and handle collisions between the player and object/ other player"""
-
-        for player in self.controller.agents:
-            if player != self:
-                other_player = player
+    def detect_collisions(self):
+        """Detect collisions between the player and WorldObjects or other player"""
 
         for obj in self.controller.map.objects:
             if detect_collision(self, obj):
                 self.current_collisions.append(obj)
+        
+        for player in self.controller.agents:
+            if player != self:
+                other_player = player
 
         if len(self.controller.agents) == 2:
             if detect_collision(self, other_player):
