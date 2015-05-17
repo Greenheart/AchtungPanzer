@@ -1,6 +1,7 @@
 import logging
 import sys
 import pygame
+import random
 from pygame.locals import *
 from constants import *   # constants are CAPITALIZED
 import os
@@ -59,6 +60,8 @@ class Controller():
 
         self.displaytime = False
         self.ammo = []
+
+        self.maps = ["grass", "sand"]
 
         if self.debug:
             self.displaytime = True
@@ -171,7 +174,6 @@ class Controller():
                                                               self.stats.data[self.agents[1]].get('move', '--'))
                     print 'Shots: {}, Shots: {}'.format(self.stats.data[self.agents[0]].get('shots_fired', '--'), 
                                                         self.stats.data[self.agents[1]].get('shots_fired', '--'))
-                    self.agents[0].dead = True
                     self.agents.remove(self.agents[0])
                     del self.ammo[:]
                     del Animation.List[:]
@@ -269,7 +271,7 @@ class Controller():
 
     def continue_game(self):
         self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
-        self.map = map.World(self, "grass", "hult", "nisse")
+        self.map = map.World(self, random.choice(self.maps), "hult", "nisse")
         self.state = S_GAME
 
     def start_pregame(self):
