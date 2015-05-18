@@ -35,6 +35,7 @@ class Controller():
         self.state = S_MENU
         self.fps = FPS
         self.paused = False
+        self.all_player_names = []
 
         self.keymap = {} #REGISTER KEPRESS CONSTANTLY
         self.keymap_singlepress = {} #REGISTER KEYPRESS ONE TIME
@@ -165,15 +166,17 @@ class Controller():
                     animation.animate()
                     animation.draw()
 
-                if [x.dead for x in self.agents].count(True) == 1:
-                    for player in self.agents:
-                        if not player.dead:
-                            self.stats.inform(player, score = 1)
-                    print str(self.stats.data[self.agents[0]].get('score', 0)) + " - " + str(self.stats.data[self.agents[1]].get('score', 0))
-                    print 'Distance: {}, Distance: {}'.format(self.stats.data[self.agents[0]].get('move', '--'), 
-                                                              self.stats.data[self.agents[1]].get('move', '--'))
-                    print 'Shots: {}, Shots: {}'.format(self.stats.data[self.agents[0]].get('shots_fired', '--'), 
-                                                        self.stats.data[self.agents[1]].get('shots_fired', '--'))
+                if len(self.agents) == 1:
+                    if self.agents[0].name == self.all_player_names[0]:
+                        print "elo"
+                    elif self.agents[0].name == self.all_player_names[1]:
+                        print "yolo"
+#                    print str(self.stats.data[self.agents[0]].get('score', 0)) + " - " + str(self.stats.data[self.agents[1]].get('score', 0))
+#                    print 'Distance: {}, Distance: {}'.format(self.stats.data[self.agents[0]].get('move', '--'), 
+#                                                              self.stats.data[self.agents[1]].get('move', '--'))
+#                    print 'Shots: {}, Shots: {}'.format(self.stats.data[self.agents[0]].get('shots_fired', '--'), 
+#                                                        self.stats.data[self.agents[1]].get('shots_fired', '--'))
+                    self.agents[0].dead = True
                     self.agents.remove(self.agents[0])
                     del self.ammo[:]
                     del Animation.List[:]
@@ -263,15 +266,17 @@ class Controller():
         pygame.quit()
         sys.exit()
 
-    def start_game(self, map_type, player1, player2):
-        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
-        self.map = map.World(self, map_type, player1, player2)
+    def start_game(self, map_type):
+        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), 
+                       Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
+        self.map = map.World(self, map_type)
         self.stats = Stats(*self.agents)
         self.state = S_GAME
 
     def continue_game(self):
-        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
-        self.map = map.World(self, random.choice(self.maps), "hult", "nisse")
+        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), 
+                       Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
+        self.map = map.World(self, random.choice(self.maps))
         self.state = S_GAME
 
     def start_pregame(self):

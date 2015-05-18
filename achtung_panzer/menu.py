@@ -168,16 +168,22 @@ class PreGameMenu(Menu):
         self.controller.screen.blit(self.controller.font.render(self.player2, True, (255, 255, 255)), (355, 420))
 
     def startmap_grass(self, event):
+        self.player_choice = 3
         self.map_type = "grass"
-        self.controller.start_game(self.map_type, self.player1, self.player2)
+        self.controller.start_game(self.map_type)
         self.state = None
+        self.controller.all_player_names.append(self.player1)
+        self.controller.all_player_names.append(self.player2)
         self.controller.agents[0].name = self.player1
         self.controller.agents[1].name = self.player2
 
     def startmap_sand(self, event):
+        self.player_choice = 3
         self.map_type = "sand"
-        self.controller.start_game(self.map_type, self.player1, self.player2)
+        self.controller.start_game(self.map_type)
         self.state = None
+        self.controller.all_player_names.append(self.player1)
+        self.controller.all_player_names.append(self.player2)
         self.controller.agents[0].name = self.player1
         self.controller.agents[1].name = self.player2
 
@@ -246,10 +252,6 @@ class BetweenGameMenu(Menu):
 
         for button in self.buttons:
             button.active = True if self.state == button.active_state else False
-
-    def start_press(self, event):
-        self.controller.start_pregame()
-        self.state = None
 
     def continue_press(self, event):
         self.controller.continue_game()

@@ -118,7 +118,7 @@ class Player():
         self.dead = True
         Animation(self.screen, "explosion", (self.x, self.y), 9)
         Sound.Sounds["explosion"].play()
-#        self.controller.agents.remove(self)
+        self.controller.agents.remove(self)
 
         
     def update(self):
