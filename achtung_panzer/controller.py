@@ -23,7 +23,7 @@ S_BETWEENGAME = 7
 S_AFTERGAME = 8
 
 class Controller():
-
+    """The core game logic that switches states and connects all other internal modules"""
     def __init__(self, debug=False):        
 
         self.debug = debug
@@ -68,7 +68,7 @@ class Controller():
             self.displaytime = True
 
     def run(self):
-
+        """The main game loop"""
         while True:
 
             """-------------------------------MENU------------------------------------"""
@@ -142,26 +142,10 @@ class Controller():
                     bullet.update()
                     bullet.draw()
 
-                current_player_index = 1
                 for player in self.agents:
                     player.update()
-
-                    collision_with = []
-                    for obj in self.map.objects:
-                        if detect_collision(player, obj):
-                            collision_with.append(obj)
-
-                    if len(self.agents) > 1:
-                        if detect_collision(player, self.agents[current_player_index]):
-                            collision_with.append(self.agents[current_player_index])
-
-                    if collision_with:
-                        player.collision(collision_with)
-
                     player.draw()
-                    current_player_index = 0
 
-                current_player_index = 1    #Reset variable
                 for animation in Animation.List:
                     animation.animate()
                     animation.draw()
@@ -272,6 +256,7 @@ class Controller():
         self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), 
                        Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
         self.map = map.World(self, map_type)
+        self.map.generate()
         self.stats = Stats(*self.agents)
         self.state = S_GAME
 
@@ -281,6 +266,7 @@ class Controller():
         self.agents[0].name = self.all_player_names[0]
         self.agents[1].name = self.all_player_names[1]
         self.map = map.World(self, random.choice(self.maps))
+        self.map.generate()
         self.state = S_GAME
 
     def start_pregame(self):
@@ -288,6 +274,7 @@ class Controller():
         self.state = S_PREGAME
 
     def register_key(self, event_key, callback, singlepress = False):
+        """Binds keys to callback-functions"""
         if singlepress == False:
             self.keymap[(event_key)] = callback
         else:
@@ -295,6 +282,7 @@ class Controller():
 
 
     def register_eventhandler(self, event_type, callback):
+        """Binds events to callback-functions"""
         logging.debug('{}: Registering eventhandler ({}, {})'.format(self.__class__.__name__, event_type, callback))
         self.events[event_type] = callback
 
