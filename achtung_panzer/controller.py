@@ -167,19 +167,20 @@ class Controller():
                     animation.draw()
 
                 if len(self.agents) == 1:
-                    if self.agents[0].name == self.all_player_names[0]:
-                        print "elo"
-                    elif self.agents[0].name == self.all_player_names[1]:
-                        print "yolo"
-#                    print str(self.stats.data[self.agents[0]].get('score', 0)) + " - " + str(self.stats.data[self.agents[1]].get('score', 0))
-#                    print 'Distance: {}, Distance: {}'.format(self.stats.data[self.agents[0]].get('move', '--'), 
-#                                                              self.stats.data[self.agents[1]].get('move', '--'))
-#                    print 'Shots: {}, Shots: {}'.format(self.stats.data[self.agents[0]].get('shots_fired', '--'), 
-#                                                        self.stats.data[self.agents[1]].get('shots_fired', '--'))
-                    self.agents[0].dead = True
-                    self.agents.remove(self.agents[0])
-                    del self.ammo[:]
-                    del Animation.List[:]
+
+                    self.stats.inform(self.agents[0].name, score = 1)
+
+                    logging.debug(self.stats.data)
+
+                    print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
+                    print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '--'), 
+                                                              self.stats.data[self.all_player_names[1]].get('move', '--'))
+                    print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '--'), 
+                                                        self.stats.data[self.all_player_names[1]].get('shots_fired', '--'))
+                    self.agents[0].dead = True                    
+                    self.agents = []
+                    self.ammo = []
+                    Animation.List = []
 #                    if self.round_check(self.score1, self.score2):
 #                        if self.score1 > self.score2:
 #                            print("Purple Wins The Game!")
@@ -190,6 +191,7 @@ class Controller():
 #                    else:
                     self.betweengame_menu = False
                     self.state = S_BETWEENGAME
+
 
             """------------------------------BETWEEN-----------------------------------"""
             if self.state == S_BETWEENGAME:
@@ -276,25 +278,14 @@ class Controller():
     def continue_game(self):
         self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), 
                        Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
+        self.agents[0].name = self.all_player_names[0]
+        self.agents[1].name = self.all_player_names[1]
         self.map = map.World(self, random.choice(self.maps))
         self.state = S_GAME
 
     def start_pregame(self):
         self.pregame_menu = False # Make sure there's no old menu
         self.state = S_PREGAME
-
-    def round_check(self, score1, score2):
-        if score1 >= 9 or score2 >= 9:
-            if score1 - 2 >= score2:
-                return True
-            elif score2 - 2 >= score1:
-                return True
-            else:
-                return False
-        else:
-            return False
-
-
 
     def register_key(self, event_key, callback, singlepress = False):
         if singlepress == False:
