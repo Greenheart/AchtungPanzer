@@ -14,6 +14,8 @@ class Ammo(object):
         self.speed = 1
         self.damage = 1
         self.solid = 0
+        self.cooldown = 1000 #MILISECONDS
+        self.cd_time = False
 
         self.x = 1
         self.y = 1
@@ -38,6 +40,13 @@ class Ammo(object):
 
     def collision(self):
         pass
+
+    def tick(self):
+        """Ticks cooldown off the players static ammo objects"""
+        if self.cd_time > 0:
+            self.cd_time -= self.player.controller.clock.get_time()
+        else:
+            self.cd_time = 0
 
     def draw(self):
         self.player.screen.blit(self.sprite, (self.x - self.width/2, self.y-self.height/2))
@@ -69,7 +78,8 @@ class Bullet(Ammo):
         self.sx = -math.cos(math.radians(self.player.rotation)) * self.speed
         self.sy = math.sin(math.radians(self.player.rotation)) * self.speed
 
-    def update(self):       
+    def update(self):    
+        """Function triggered every frame for ammo objects in controller.ammo"""   
         self.x += self.sx
         self.y += self.sy
 
@@ -129,6 +139,13 @@ class NormalShot(Bullet):
         self.sprite.set_alpha(200)
         self.radius = 5
         self.name = "NormalShot"
+        self.cooldown = 500
+
+    def fire(self):
+        """This is the function run when player presses the fire (1 or 2) button"""
+        if self.cd_time == 0:
+            self.player.controller.ammo.append(NormalShot(self.player))
+            self.cd_time = self.cooldown
 
 
 class Mine(Bullet):
@@ -143,6 +160,13 @@ class Mine(Bullet):
         super(Mine, self).__init__(player, speed, damage, width, height, sprite)
 
         self.name = "Mine"
+        self.cooldown = 5000
+
+    def fire(self):
+        """This is the function run when player presses the fire (1 or 2) button"""
+        if self.cd_time == 0:
+            self.player.controller.ammo.append(Mine(self.player))
+            self.cd_time = self.cooldown
 
 
 class StickyBomb(Bullet):
@@ -161,8 +185,10 @@ class StickyBomb(Bullet):
         self.max_distance = 100
         self.startx, self.starty = self.player.x, self.player.y
         self.name = "StickyBomb"
+        self.cooldown = 1000
 
-    def update(self):       
+    def update(self):    
+        """Function triggered every frame for ammo objects in controller.ammo"""   
         self.x += self.sx
         self.y += self.sy
 
@@ -183,6 +209,7 @@ class StickyBomb(Bullet):
             self.controller.ammo.remove(self)
 
     def detonate(self):
+        """Additional function for this ammo type, just to keep the fire function clean and simple"""
         for player in self.controller.agents:
             if player != self.player:
                 if detect_collision(self, player):
@@ -199,3 +226,20 @@ class StickyBomb(Bullet):
 
         self.controller.ammo.remove(self)
         Animation(self.player.screen, "explosion", (self.x, self.y), 4)
+
+    def fire(self):
+        """This is the function run when player presses the fire (1 or 2) button"""
+        stickybomb = None
+
+        for ammo in self.player.controller.ammo:
+            if ammo.name == "StickyBomb":
+                if ammo.player == self.player:
+                    stickybomb = ammo
+                    break
+
+        if stickybomb:
+            stickybomb.detonate()
+            self.cd_time = self.cooldown
+        else:
+            if self.cd_time == 0:
+                self.player.controller.ammo.append(StickyBomb(self.player))

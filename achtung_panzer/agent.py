@@ -27,10 +27,14 @@ class Player():
         self.current_collisions = []
         self.dead = False
 
+        """Gives the player static ammo object, these objects are copied in their fire() function.
+        These variables can be seen as weapons, so fiddle with these variables when adding/changing it"""
+        self.ammo1, self.ammo2 = NormalShot(self), StickyBomb(self)
+
         if TANK_WIDTH > TANK_HEIGHT:
-            self.radius = int(TANK_WIDTH * 0.5)
+            self.radius = int(TANK_WIDTH * 0.55)
         else:
-            self.radius = int(TANK_HEIGHT * 0.5)
+            self.radius = int(TANK_HEIGHT * 0.55)
 
         #Load and resize tank img with right color
         if color == 'green':
@@ -88,25 +92,13 @@ class Player():
     def weapon1(self, event):
         """Fire weapon from slot 1"""
         if not self.dead:
-            self.controller.ammo.append(NormalShot(self))
-            Sound.Sounds["shoot"].play()
+            self.ammo1.fire()
             self.controller.stats.inform(self.name, shots_fired = 1)
 
     def weapon2(self, event):
         """Fire weapon from slot 2"""
         if not self.dead:
-            stickybombs = None
-
-            for ammo in self.controller.ammo:
-                if ammo.name == "StickyBomb":
-                    if ammo.player == self:
-                        stickybombs = ammo
-                        break
-
-            if stickybombs:
-                stickybombs.detonate()
-            else:
-                self.controller.ammo.append(StickyBomb(self))
+            self.ammo2.fire()
 
     def move(self):
         """Updates posisition of player. Use different rules for movement when player is colliding"""
@@ -163,11 +155,11 @@ class Player():
         if self.health <= 0:
             self.die()
 
-        for pUp in self.controller.map.powerups:
-            if self.x > pUp.x and self.x < pUp.x + pUp.image.get_width() and self.y > pUp.y and self.y < pUp.y + pUp.image.get_height():
-                pUp.pickup(self)
+        """Call the tick() function to update cooldowns"""
+        for ammo in [self.ammo1, self.ammo2]:
+            ammo.tick()
 
-        #Reset attributes each frame
+        """Resetting some atributes each frame"""
         self.rotation_speed = TANK_ROTATION_SPEED
         self.current_collisions = []
 
@@ -175,6 +167,9 @@ class Player():
         """Handle the agent's current collisions. Also make sure that players can't drive through 
            WorldObjects or outside of the maps borders by using a pushback"""
         for obj in self.current_collisions:
+            if obj.type == 50: #if the obj is a powerup
+                obj.pickup(self)
+
             if obj.solid == 100:
                 self.speed = 0
                 deltax = (self.x - obj.x)
@@ -228,8 +223,13 @@ class Player():
 
         self.screen.blit(self.sprite, (self.x - self.sprite.get_width()/2, self.y - self.sprite.get_height()/2))
 
+        """Draw the cooldown bars if any of your ammo1/ammo2 variables are more than 0. Also Drawing the health bars"""
         if not self.dead:
             pygame.draw.rect(self.screen, (COLOR), (self.x - self.sprite.get_width()/2, self.y - 50, self.health * HEALTHBAR_SIZE[0], HEALTHBAR_SIZE[1]))
+            if self.ammo1.cd_time > 0:
+                pygame.draw.rect(self.screen, (150,150,150), (self.x - self.sprite.get_width()/2, self.y - 52, ((self.ammo1.cd_time + 0.0) / self.ammo1.cooldown) * 50, 2))
+            if self.ammo2.cd_time > 0:
+                pygame.draw.rect(self.screen, (255,100,100), (self.x - self.sprite.get_width()/2, self.y - 45, ((self.ammo2.cd_time + 0.0) / self.ammo2.cooldown) * 50, 2))
 
         if self.controller.debug:   #Collision-detection-testing
             pygame.draw.circle(self.screen, (255,0,0), (int(self.x), int(self.y)), self.radius, 2)

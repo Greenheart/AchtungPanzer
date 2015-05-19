@@ -11,14 +11,17 @@ from functions import *
 
 
 class World():
+    """The game world. Connects the logic of all WorldObjects with controller and the rest of the game"""
     def __init__(self, controller, map_type):
         self.screen = controller.screen
         self.controller = controller
-        self.objects = []
+        self.objects = []	# Collection of all current World Objects
         self.map_type = map_type
         self.powerups = []
         self.font = pygame.font.Font("fonts/8bitwonder.ttf", 14)
 
+        for pup in range(0, random.randint(0, 10)):
+            self.objects.append(Health(self, "random", "random"))
 
     def generate(self):
         """Generate the game world and it's objects"""
@@ -61,9 +64,6 @@ class World():
 
         for obj in self.objects:
             obj.draw()
-
-        for powerup in self.powerups:
-            powerup.draw()
 
 
 class WorldObject(object):
