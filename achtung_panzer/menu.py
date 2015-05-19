@@ -145,9 +145,11 @@ class PreGameMenu(Menu):
 
         self.state = PreGameMenu.S_PREGAME
 
-        self.player_choice = 1        
+        self.player_choice = 1
+        self.warning = ""     
         self.player1 = ""
         self.player2 = ""
+        self.selector = 585
 
     def draw(self):
 
@@ -166,6 +168,13 @@ class PreGameMenu(Menu):
         pygame.draw.rect(self.screen, (0,0,0), (350, 400, 300, 50))
         self.controller.screen.blit(self.controller.font.render(self.player1, True, (255, 255, 255)), (30, 420))
         self.controller.screen.blit(self.controller.font.render(self.player2, True, (255, 255, 255)), (355, 420))
+        self.controller.screen.blit(self.controller.font.render(self.warning, True, (0, 0, 0)), (25, 675))
+        pygame.draw.rect(self.screen, (255,255,255), (25, self.selector, 500, 30))
+        self.controller.screen.blit(self.controller.font.render("Instructions", True, (0, 0, 0)), (25, 550))
+        self.controller.screen.blit(self.controller.font.render("Player 1 Enter a name and press enter", True, (0, 0, 0)), (25, 590))
+        self.controller.screen.blit(self.controller.font.render("Player 2 Enter a name and press enter", True, (0, 0, 0)), (25, 620))
+        self.controller.screen.blit(self.controller.font.render("Select a map", True, (0, 0, 0)), (25, 650))
+
 
     def startmap_grass(self, event):
         self.player_choice = 3
@@ -176,6 +185,7 @@ class PreGameMenu(Menu):
         self.controller.all_player_names.append(self.player2)
         self.controller.agents[0].name = self.player1
         self.controller.agents[1].name = self.player2
+
 
     def startmap_sand(self, event):
         self.player_choice = 3
@@ -226,8 +236,19 @@ class PreGameMenu(Menu):
             else:
                 pass
 
-        if pygame.key.name(event.key) == "return" or pygame.key.name(event.key) == "tab":
+        if pygame.key.name(event.key) == "return":
             self.player_choice += 1
+            if self.player_choice == 2:
+                self.selector = 610
+            elif self.player_choice == 3:
+                if self.player1 == self.player2:
+                    self.warning = "You can not use the same player name"
+                    self.player1 = ""
+                    self.player2 = ""
+                    self.selector = 585
+                    self.player_choice = 1
+                else:  
+                    self.selector = 640
 
 """-------------------BETWEENGAMEMENU------------------"""
 
