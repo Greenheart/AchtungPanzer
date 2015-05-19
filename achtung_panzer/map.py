@@ -13,9 +13,9 @@ class World():
         self.controller = controller
         self.objects = []       # Collection of all current World Objects
         self.map_type = random.choice(['grass', 'sand'])
-        self.powerups = []
-        """for pup in range(0, random.randint(0, 10)):
-            self.powerups.append(Health(self, "random", "random"))"""
+
+        for pup in range(0, random.randint(0, 10)):
+            self.objects.append(Health(self, "random", "random"))
 
     def generate(self):
         """Generate the game world and it's objects"""
@@ -58,9 +58,6 @@ class World():
 
         for obj in self.objects:
             obj.draw()
-
-        for powerup in self.powerups:
-            powerup.draw()
 
 
 class WorldObject(object):
