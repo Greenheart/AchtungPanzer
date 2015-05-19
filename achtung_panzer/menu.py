@@ -177,25 +177,33 @@ class PreGameMenu(Menu):
 
 
     def startmap_grass(self, event):
-        self.player_choice = 3
-        self.map_type = "grass"
-        self.controller.start_game(self.map_type)
-        self.state = None
-        self.controller.all_player_names.append(self.player1)
-        self.controller.all_player_names.append(self.player2)
-        self.controller.agents[0].name = self.player1
-        self.controller.agents[1].name = self.player2
+        if self.player1 == self.player2:
+            self.warning = "Please enter a valid player name"
+            self.player_choice = 1
+        else:
+            self.player_choice = 3
+            self.map_type = "grass"
+            self.controller.start_game(self.map_type)
+            self.state = None
+            self.controller.all_player_names.append(self.player1)
+            self.controller.all_player_names.append(self.player2)
+            self.controller.agents[0].name = self.player1
+            self.controller.agents[1].name = self.player2
 
 
     def startmap_sand(self, event):
-        self.player_choice = 3
-        self.map_type = "sand"
-        self.controller.start_game(self.map_type)
-        self.state = None
-        self.controller.all_player_names.append(self.player1)
-        self.controller.all_player_names.append(self.player2)
-        self.controller.agents[0].name = self.player1
-        self.controller.agents[1].name = self.player2
+        if self.player1 == self.player2:
+            self.warning = "Please enter a valid player name"
+            self.player_choice = 1
+        else:
+            self.player_choice = 3
+            self.map_type = "sand"
+            self.controller.start_game(self.map_type)
+            self.state = None
+            self.controller.all_player_names.append(self.player1)
+            self.controller.all_player_names.append(self.player2)
+            self.controller.agents[0].name = self.player1
+            self.controller.agents[1].name = self.player2
 
     def checkwrite(self, event):
         if pygame.key.name(event.key) not in ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"):
