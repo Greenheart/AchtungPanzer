@@ -157,7 +157,7 @@ class Controller():
                         self.wait -= self.clock.get_time()
                     else:
                         self.stats.inform(self.agents[0].name, score = 1)
-
+                        self.wait = 2000
                         logging.debug(self.stats.data)
 
                         print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
