@@ -37,6 +37,8 @@ class Controller():
         self.paused = False
         self.all_player_names = []
 
+        self.wait = 2000 #WAITING TIME AFTER FIRST PLAYER DIES, BEFORE MENU SHOWS UP. IN MILLISECONDS.
+
         self.keymap = {} #REGISTER KEPRESS CONSTANTLY
         self.keymap_singlepress = {} #REGISTER KEYPRESS ONE TIME
         self.events = {} #REGISTER EVENT
@@ -151,30 +153,33 @@ class Controller():
                     animation.draw()
 
                 if len(self.agents) == 1:
+                    if self.wait > 0:
+                        self.wait -= self.clock.get_time()
+                    else:
+                        self.stats.inform(self.agents[0].name, score = 1)
 
-                    self.stats.inform(self.agents[0].name, score = 1)
+                        logging.debug(self.stats.data)
 
-                    logging.debug(self.stats.data)
+                        print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
+                        print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '--'), 
+                                                                  self.stats.data[self.all_player_names[1]].get('move', '--'))
+                        print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '--'), 
+                                                            self.stats.data[self.all_player_names[1]].get('shots_fired', '--'))
 
-                    print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
-                    print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '--'), 
-                                                              self.stats.data[self.all_player_names[1]].get('move', '--'))
-                    print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '--'), 
-                                                        self.stats.data[self.all_player_names[1]].get('shots_fired', '--'))
-                    self.agents[0].dead = True                    
-                    self.agents = []
-                    self.ammo = []
-                    Animation.List = []
-#                    if self.round_check(self.score1, self.score2):
-#                        if self.score1 > self.score2:
-#                            print("Purple Wins The Game!")
-#                        else:
-#                            print("Green Wins The Game!")
-#                        self.aftergame_menu = False
-#                        self.state = S_AFTERGAME
-#                    else:
-                    self.betweengame_menu = False
-                    self.state = S_BETWEENGAME
+                        self.agents[0].dead = True                    
+                        self.agents = []
+                        self.ammo = []
+                        Animation.List = []
+    #                    if self.round_check(self.score1, self.score2):
+    #                        if self.score1 > self.score2:
+    #                            print("Purple Wins The Game!")
+    #                        else:
+    #                            print("Green Wins The Game!")
+    #                        self.aftergame_menu = False
+    #                        self.state = S_AFTERGAME
+    #                    else:
+                        self.betweengame_menu = False
+                        self.state = S_BETWEENGAME
 
 
             """------------------------------BETWEEN-----------------------------------"""
