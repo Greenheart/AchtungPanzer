@@ -152,21 +152,24 @@ class Controller():
                     animation.animate()
                     animation.draw()
 
-                if len(self.agents) == 1:
+                if len(self.agents) < 2:
                     if self.wait > 0:
                         self.wait -= self.clock.get_time()
                     else:
-                        self.stats.inform(self.agents[0].name, score = 1)
                         self.wait = 1500
-                        logging.debug(self.stats.data)
+                        if len(self.agents) == 1:
+                            self.stats.inform(self.agents[0].name, score = 1)
+                            logging.debug(self.stats.data)
+                            self.agents[0].dead = True
+                        else:
+                            print ("draw")
 
                         print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
                         print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '--'), 
                                                                   self.stats.data[self.all_player_names[1]].get('move', '--'))
                         print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '--'), 
                                                             self.stats.data[self.all_player_names[1]].get('shots_fired', '--'))
-
-                        self.agents[0].dead = True                    
+                 
                         self.agents = []
                         self.ammo = []
                         Animation.List = []
