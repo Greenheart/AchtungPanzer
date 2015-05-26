@@ -37,7 +37,7 @@ class Controller():
         self.paused = False
         self.all_player_names = []
 
-        self.wait = 2000 #WAITING TIME AFTER FIRST PLAYER DIES, BEFORE MENU SHOWS UP. IN MILLISECONDS.
+        self.wait = 1500 #WAITING TIME AFTER FIRST PLAYER DIES, BEFORE MENU SHOWS UP. IN MILLISECONDS.
 
         self.keymap = {} #REGISTER KEPRESS CONSTANTLY
         self.keymap_singlepress = {} #REGISTER KEYPRESS ONE TIME
@@ -157,7 +157,7 @@ class Controller():
                         self.wait -= self.clock.get_time()
                     else:
                         self.stats.inform(self.agents[0].name, score = 1)
-                        self.wait = 2000
+                        self.wait = 1500
                         logging.debug(self.stats.data)
 
                         print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
