@@ -99,6 +99,7 @@ class Player():
         """Fire weapon from slot 2"""
         if not self.dead:
             self.ammo2.fire()
+            self.controller.stats.inform(self.name, stickybomb_fired = 1)
 
     def move(self):
         """Updates posisition of player. Use different rules for movement when player is colliding"""

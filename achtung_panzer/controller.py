@@ -165,10 +165,12 @@ class Controller():
                             print ("draw")
 
                         print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
-                        print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '--'), 
-                                                                  self.stats.data[self.all_player_names[1]].get('move', '--'))
-                        print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '--'), 
-                                                            self.stats.data[self.all_player_names[1]].get('shots_fired', '--'))
+                        print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '0'), 
+                                                                  self.stats.data[self.all_player_names[1]].get('move', '0'))
+                        print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '0'), 
+                                                            self.stats.data[self.all_player_names[1]].get('shots_fired', '0'))
+                        print 'Stickybombs: {}, Stickybombs: {}'.format(self.stats.data[self.all_player_names[0]].get('stickybomb_fired', '0'), 
+                                                            self.stats.data[self.all_player_names[1]].get('stickybomb_fired', '0'))
                  
                         self.agents = []
                         self.ammo = []
@@ -304,7 +306,7 @@ class UnknownStatError(Exception):
     pass
 
 class Stats():
-    VALID_STATS = ('shots_fired', 'move', 'score')
+    VALID_STATS = ('shots_fired', 'move', 'score', 'stickybomb_fired')
 
     def __init__(self, *args):
         self.data = {}

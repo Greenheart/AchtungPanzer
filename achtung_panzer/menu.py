@@ -282,6 +282,9 @@ class BetweenGameMenu(Menu):
         for button in self.buttons:
             button.active = True if self.state == button.active_state else False
 
+        self.controller.screen.blit(self.controller.font.render(str(self.controller.stats.data[self.controller.all_player_names[0]].get('score', 0)) + " - " + str(self.controller.stats.data[self.controller.all_player_names[1]].get('score', 0)), True, (255, 255, 255)), (355, 420))
+
+
     def continue_press(self, event):
         self.controller.continue_game()
         self.state = None
