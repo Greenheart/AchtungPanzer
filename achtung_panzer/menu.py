@@ -138,8 +138,8 @@ class PreGameMenu(Menu):
         Menu.__init__(self, controller)
 
         self.buttons = []
-        self.buttons.append(Button(self, self.startmap_grass, PreGameMenu.S_PREGAME, (25, 100, 325, 300), "images/menu/button_grass.png", "images/menu/button_grass_hover.png"))
-        self.buttons.append(Button(self, self.startmap_sand, PreGameMenu.S_PREGAME, (350, 100, 650, 300), "images/menu/button_sand.png", "images/menu/button_sand_hover.png"))
+        self.buttons.append(Button(self, self.startmap_grass, PreGameMenu.S_PREGAME, (25, 400, 325, 600), "images/menu/button_grass.png", "images/menu/button_grass_hover.png"))
+        self.buttons.append(Button(self, self.startmap_sand, PreGameMenu.S_PREGAME, (350, 400, 650, 600), "images/menu/button_sand.png", "images/menu/button_sand_hover.png"))
 
         self.controller.register_eventhandler(pygame.KEYDOWN, self.checkwrite)
 
@@ -149,7 +149,7 @@ class PreGameMenu(Menu):
         self.warning = ""     
         self.player1 = ""
         self.player2 = ""
-        self.selector = 585
+        self.selector = 75
 
     def draw(self):
 
@@ -164,21 +164,21 @@ class PreGameMenu(Menu):
         for button in self.buttons:
             button.active = True if self.state == button.active_state else False
 
-        pygame.draw.rect(self.screen, (0,0,0), (25, 400, 300, 50))
-        pygame.draw.rect(self.screen, (0,0,0), (350, 400, 300, 50))
-        self.controller.screen.blit(self.controller.font.render(self.player1, True, (255, 255, 255)), (30, 420))
-        self.controller.screen.blit(self.controller.font.render(self.player2, True, (255, 255, 255)), (355, 420))
-        self.controller.screen.blit(self.controller.font.render(self.warning, True, (0, 0, 0)), (25, 675))
-        pygame.draw.rect(self.screen, (255,255,255), (25, self.selector, 500, 30))
-        self.controller.screen.blit(self.controller.font.render("Instructions", True, (0, 0, 0)), (25, 550))
-        self.controller.screen.blit(self.controller.font.render("Player 1 Enter a name and press enter", True, (0, 0, 0)), (25, 590))
-        self.controller.screen.blit(self.controller.font.render("Player 2 Enter a name and press enter", True, (0, 0, 0)), (25, 620))
-        self.controller.screen.blit(self.controller.font.render("Select a map", True, (0, 0, 0)), (25, 650))
+        pygame.draw.rect(self.screen, (0,0,0), (25, 230, 300, 50))
+        pygame.draw.rect(self.screen, (0,0,0), (350, 230, 300, 50))
+        self.controller.screen.blit(self.controller.font.render(self.player1.upper(), True, (255, 255, 255)), (30, 250))
+        self.controller.screen.blit(self.controller.font.render(self.player2.upper(), True, (255, 255, 255)), (355, 250))
+        self.controller.screen.blit(self.controller.font.render(self.warning, True, (0, 0, 0)), (25, 180))
+        pygame.draw.rect(self.screen, (255,255,255), (20, self.selector, 500, 30))
+        self.controller.screen.blit(self.controller.font.render("INSTRUCTIONS", True, (0, 0, 0)), (25, 40))
+        self.controller.screen.blit(self.controller.font.render("PLAYER 1 - ENTER A NAME AND PRESS ENTER", True, (0, 0, 0)), (25, 80))
+        self.controller.screen.blit(self.controller.font.render("PLAYER 2 - ENTER A NAME AND PRESS ENTER", True, (0, 0, 0)), (25, 110))
+        self.controller.screen.blit(self.controller.font.render("CHOOSE A MAP", True, (0, 0, 0)), (25, 140))
 
 
     def startmap_grass(self, event):
         if self.player1 == self.player2:
-            self.warning = "Please enter a valid player name"
+            self.warning = "PLEASE, ENTER A VALID PLAYER NAME BEFORE YOU CHOOSE MAP."
             self.player_choice = 1
         else:
             self.player_choice = 3
@@ -193,7 +193,7 @@ class PreGameMenu(Menu):
 
     def startmap_sand(self, event):
         if self.player1 == self.player2:
-            self.warning = "Please enter a valid player name"
+            self.warning = "PLEASE, ENTER A VALID PLAYER NAME BEFORE YOU CHOOSE MAP."
             self.player_choice = 1
         else:
             self.player_choice = 3
@@ -247,16 +247,16 @@ class PreGameMenu(Menu):
         if pygame.key.name(event.key) == "return":
             self.player_choice += 1
             if self.player_choice == 2:
-                self.selector = 610
+                self.selector = 105
             elif self.player_choice == 3:
                 if self.player1 == self.player2:
-                    self.warning = "You can not use the same player name"
+                    self.warning = "YOU CAN NOT USE THE SAME PLAYER NAMES"
                     self.player1 = ""
                     self.player2 = ""
-                    self.selector = 585
+                    self.selector = 75
                     self.player_choice = 1
                 else:  
-                    self.selector = 640
+                    self.selector = 135
 
 """-------------------BETWEENGAMEMENU------------------"""
 
@@ -282,7 +282,7 @@ class BetweenGameMenu(Menu):
         for button in self.buttons:
             button.active = True if self.state == button.active_state else False
 
-        self.controller.screen.blit(self.controller.font.render(str(self.controller.stats.data[self.controller.all_player_names[0]].get('score', 0)) + " - " + str(self.controller.stats.data[self.controller.all_player_names[1]].get('score', 0)), True, (255, 255, 255)), (355, 420))
+        self.controller.screen.blit(self.controller.scorefont.render(str(self.controller.stats.data[self.controller.all_player_names[0]].get('score', 0)) + " - " + str(self.controller.stats.data[self.controller.all_player_names[1]].get('score', 0)), True, (255, 255, 255)), (355, 420))
 
 
     def continue_press(self, event):

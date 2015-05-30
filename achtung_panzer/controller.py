@@ -47,7 +47,8 @@ class Controller():
         pygame.init()
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         pygame.display.set_caption(CAPTION)
-        self.font = pygame.font.Font("fonts/8BITWONDER.TTF", 14)
+        self.font = pygame.font.Font("fonts/04B.TTF", 18)
+        self.scorefont = pygame.font.Font("fonts/04B.TTF", 42)
         self.keys = pygame.key.get_pressed()
         self.clock = pygame.time.Clock()
        
@@ -163,14 +164,14 @@ class Controller():
                             self.agents[0].dead = True
                         else:
                             print ("draw")
-
-                        print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
-                        print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '0'), 
-                                                                  self.stats.data[self.all_player_names[1]].get('move', '0'))
-                        print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '0'), 
-                                                            self.stats.data[self.all_player_names[1]].get('shots_fired', '0'))
-                        print 'Stickybombs: {}, Stickybombs: {}'.format(self.stats.data[self.all_player_names[0]].get('stickybomb_fired', '0'), 
-                                                            self.stats.data[self.all_player_names[1]].get('stickybomb_fired', '0'))
+                        if self.debug:
+                            print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
+                            print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '0'), 
+                                                                      self.stats.data[self.all_player_names[1]].get('move', '0'))
+                            print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '0'), 
+                                                                self.stats.data[self.all_player_names[1]].get('shots_fired', '0'))
+                            print 'Stickybombs: {}, Stickybombs: {}'.format(self.stats.data[self.all_player_names[0]].get('stickybomb_fired', '0'), 
+                                                                self.stats.data[self.all_player_names[1]].get('stickybomb_fired', '0'))
                  
                         self.agents = []
                         self.ammo = []

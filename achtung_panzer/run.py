@@ -1,7 +1,7 @@
 import logging
 from controller import Controller
 
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
 	logging.basicConfig(filename='example.log', level=logging.DEBUG)
