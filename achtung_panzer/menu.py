@@ -11,7 +11,9 @@ class Menu():
         self.controller = controller
         self.events = []
 
+        # Loads background image
         self.background = pygame.image.load("images/menu/background2.jpg")
+        # Transforms background image to fit screen_size
         self.background = pygame.transform.scale(self.background, (SCREEN_SIZE))
 
         # Register event at controller
@@ -38,23 +40,27 @@ class Menu():
                 callback(event)
 
     def draw(self):
-        ## Blits background and logo
+        # Blits background and logo
 
         self.screen.blit(self.background, (0,0))
 
 
 class MainMenu(Menu):
+    # States for MainMenu
     S_MENU_MAIN = 1
     S_MENU_ABOUT = 2
     S_MENU_SETTINGS = 3
 
     def __init__(self, controller):
         Menu.__init__(self, controller)
- 
+        
+        # Loads logo-image
         self.logo = pygame.image.load("images/menu/logo2.png")
 
+        # Loads Description-image
         self.about_description = pygame.image.load("images/menu/about_description.png")
 
+        # Append buttons with the following structure: Button(self, self.functionToRun, WhichMenu.WhichState, (), "default image directory", "hover image directory")
         self.buttons = []
         self.buttons.append(Button(self, self.start_press, MainMenu.S_MENU_MAIN, (351, 325, 649, 395), "images/menu/startbutton.png", "images/menu/startbutton_hover.png"))
         self.buttons.append(Button(self, self.about_press, MainMenu.S_MENU_MAIN, (351, 410, 649, 480), "images/menu/aboutbutton.png", "images/menu/aboutbutton_hover.png"))
@@ -74,7 +80,7 @@ class MainMenu(Menu):
 
 
     def draw(self):
-        ## Blits background and logo
+        # Blits background and logo
 
         Menu.draw(self)
 
@@ -137,6 +143,7 @@ class PreGameMenu(Menu):
     def __init__(self, controller):
         Menu.__init__(self, controller)
 
+        # Append map-buttons, append using the same pattern as the comment at line 63 describes.
         self.buttons = []
         self.buttons.append(Button(self, self.startmap_grass, PreGameMenu.S_PREGAME, (25, 400, 325, 600), "images/menu/button_grass.png", "images/menu/button_grass_hover.png"))
         self.buttons.append(Button(self, self.startmap_sand, PreGameMenu.S_PREGAME, (350, 400, 650, 600), "images/menu/button_sand.png", "images/menu/button_sand_hover.png"))
@@ -145,6 +152,7 @@ class PreGameMenu(Menu):
 
         self.state = PreGameMenu.S_PREGAME
 
+        # Player_Choice decides where selector are supposed to be, changes when enter is pressed. 
         self.player_choice = 1
         self.warning = ""     
         self.player1 = ""
