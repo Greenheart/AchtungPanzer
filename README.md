@@ -1,12 +1,14 @@
 # Achtung Panzer #
 
-#### Take control of your own Panzer in this intense multiplayer action-game and destroy your enemies! ###
+#### Take control of your own Panzer in this intense multiplayer action-game and destroy your enemies!
 
+![](http://i.markdownnotes.com/achtung_menu.jpg)
 
 ## Get Started
 1. Download the [latest release](https://github.com/Greenheart/AchtungPanzer/releases)
-2. Run the python script `run.py` to start the game.
-3. Find someone to challenge and may the best driver win!
+2. Make sure you have [python 2.x](https://www.python.org/downloads) installed **(The game won't work with python 3.x)**
+3. Run the python script `run.py` to start the game.
+4. Find someone to challenge and may the best driver win!
 
 ## Gameplay
 The basics of the game are really simple: 
@@ -16,7 +18,13 @@ The basics of the game are really simple:
   * Press again to detonate
   * The timing is crucial in order to deal devastating damage!
 
-### Controls
+![Screenshot of gameplay on a grass-map](http://i.markdownnotes.com/achtung_intense_battle_wow_1.jpg)
+**Gameplay on a grass-map**
+
+![Screenshot of gamplay on a sand-map](http://i.markdownnotes.com/achtung_intense_battle_wow_2.jpg)
+**Gameplay on a sand-map**
+
+## Controls
 |           Action           |    Player 1   |     Player 2    |
 | -------------------------- |:-------------:|:---------------:|
 | Move Forward               |      W        |     Up Arrow    |
