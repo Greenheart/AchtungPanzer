@@ -37,7 +37,7 @@ The basics of the game are really simple:
 ## Creators
 * Szymon Stypa
 * Hugo Lundin
-* Eric Collerstedt
+* Erik Collerstedt
 * Johan Lenning
 * Oskar Lundqvist
 * Samuel Plumppu
