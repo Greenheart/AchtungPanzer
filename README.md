@@ -2,7 +2,7 @@
 
 #### Take control of your own Panzer in this intense multiplayer action-game and destroy your enemies!
 
-![](http://i.markdownnotes.com/achtung_menu.jpg)
+![Main Menu of Achtung Panzer](http://i.markdownnotes.com/achtung_menu.jpg)
 
 ## Get Started
 1. Download the [latest release](https://github.com/Greenheart/AchtungPanzer/releases)
