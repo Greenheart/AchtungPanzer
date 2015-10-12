@@ -35,7 +35,7 @@ The basics of the game are really simple:
 | Fire/Detonate Sticky Bomb  |      G        |        L        |
 
 ## Creators
-* Szymon Stypa
+* [Szymon Stypa](www.github.com/Catagen)
 * Hugo Lundin
 * Erik Collerstedt
 * Johan Lenning
