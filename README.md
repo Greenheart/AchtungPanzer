@@ -36,7 +36,7 @@ The basics of the game are really simple:
 
 ## Creators
 * [Szymon Stypa](www.github.com/Catagen)
-* Hugo Lundin
+* [Hugo Lundin](www.github.com/hugolundin)
 * Erik Collerstedt
 * Johan Lenning
 * Oskar Lundqvist
