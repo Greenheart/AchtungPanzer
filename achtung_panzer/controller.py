@@ -24,7 +24,7 @@ S_AFTERGAME = 8
 
 class Controller():
     """The core game logic that switches states and connects all other internal modules"""
-    def __init__(self, debug=False):        
+    def __init__(self, debug=False):
 
         self.debug = debug
 
@@ -47,11 +47,11 @@ class Controller():
         pygame.init()
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         pygame.display.set_caption(CAPTION)
-        self.font = pygame.font.Font("fonts/04B.TTF", 18)
-        self.scorefont = pygame.font.Font("fonts/04B.TTF", 42)
+        self.font = pygame.font.Font("fonts/04b.ttf", 18)
+        self.scorefont = pygame.font.Font("fonts/04b.ttf", 42)
         self.keys = pygame.key.get_pressed()
         self.clock = pygame.time.Clock()
-       
+
         self.register_eventhandler(pygame.QUIT, self.quit)
         self.register_key(pygame.K_ESCAPE, self.quit, singlepress = True)
 
@@ -84,13 +84,13 @@ class Controller():
             if self.state == S_MENU:
                 for event in pygame.event.get():
                     # Handle generic events
-                    for event_type, callback in self.events.iteritems():
+                    for event_type, callback in self.events.items():
                         if event.type == event_type:
                             callback(event)
 
                     # Handle keyboard events
                     if event.type == pygame.KEYDOWN:
-                        for event_key in self.keymap_singlepress.iterkeys():
+                        for event_key in self.keymap_singlepress.keys():
                             if event.key == event_key:
                                 self.keymap_singlepress[(event_key)](event)
 
@@ -108,13 +108,13 @@ class Controller():
 
                 for event in pygame.event.get():
                     # Handle generic events
-                    for event_type, callback in self.events.iteritems():
+                    for event_type, callback in self.events.items():
                         if event.type == event_type:
                             callback(event)
 
                     # Handle keyboard events
                     if event.type == pygame.KEYDOWN:
-                        for event_key in self.keymap_singlepress.iterkeys():
+                        for event_key in self.keymap_singlepress.keys():
                             if event.key == event_key:
                                 self.keymap_singlepress[(event_key)](event)
 
@@ -123,19 +123,19 @@ class Controller():
             if self.state == S_GAME:
                 if not self.paused:
                     for event in pygame.event.get():
-                        for event_type, callback in self.events.iteritems():
+                        for event_type, callback in self.events.items():
                             if event.type == event_type:
                                 callback(event)
 
                         if event.type == pygame.KEYDOWN:
-                            for event_key in self.keymap_singlepress.iterkeys():
+                            for event_key in self.keymap_singlepress.keys():
                                 if event.key == event_key:
                                     self.keymap_singlepress[(event_key)](event)
 
-                    for event_key in self.keymap.iterkeys():
+                    for event_key in self.keymap.keys():
                         if self.keys[event_key]:
                             self.keymap[(event_key)]()
-                            
+
                 else:
                     pass
 
@@ -163,16 +163,16 @@ class Controller():
                             logging.debug(self.stats.data)
                             self.agents[0].dead = True
                         else:
-                            print ("draw")
+                            print("draw")
                         if self.debug:
-                            print str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0))
-                            print 'Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '0'), 
-                                                                      self.stats.data[self.all_player_names[1]].get('move', '0'))
-                            print 'Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '0'), 
-                                                                self.stats.data[self.all_player_names[1]].get('shots_fired', '0'))
-                            print 'Stickybombs: {}, Stickybombs: {}'.format(self.stats.data[self.all_player_names[0]].get('stickybomb_fired', '0'), 
-                                                                self.stats.data[self.all_player_names[1]].get('stickybomb_fired', '0'))
-                 
+                            print(str(self.stats.data[self.all_player_names[0]].get('score', 0)) + " - " + str(self.stats.data[self.all_player_names[1]].get('score', 0)))
+                            print('Distance: {}, Distance: {}'.format(self.stats.data[self.all_player_names[0]].get('move', '0'),
+                                                                      self.stats.data[self.all_player_names[1]].get('move', '0')))
+                            print('Shots: {}, Shots: {}'.format(self.stats.data[self.all_player_names[0]].get('shots_fired', '0'),
+                                                                self.stats.data[self.all_player_names[1]].get('shots_fired', '0')))
+                            print('Stickybombs: {}, Stickybombs: {}'.format(self.stats.data[self.all_player_names[0]].get('stickybomb_fired', '0'),
+                                                                self.stats.data[self.all_player_names[1]].get('stickybomb_fired', '0')))
+
                         self.agents = []
                         self.ammo = []
                         Animation.List = []
@@ -201,13 +201,13 @@ class Controller():
 
             if self.state == S_BETWEENGAME:
                 for event in pygame.event.get():
-                    for event_type, callback in self.events.iteritems():
+                    for event_type, callback in self.events.items():
                         if event.type == event_type:
                             callback(event)
 
 
                 if event.type == pygame.KEYDOWN:
-                    for event_key in self.keymap_singlepress.iterkeys():
+                    for event_key in self.keymap_singlepress.keys():
                         if event.key == event_key:
                             self.keymap_singlepress[(event_key)](event)
 
@@ -224,12 +224,12 @@ class Controller():
 
             if self.state == S_AFTERGAME:
                 for event in pygame.event.get():
-                    for event_type, callback in self.events.iteritems():
+                    for event_type, callback in self.events.items():
                         if event.type == event_type:
                             callback(event)
 
                 if event.type == pygame.KEYDOWN:
-                    for event_key in self.keymap_singlepress.iterkeys():
+                    for event_key in self.keymap_singlepress.keys():
                         if event.key == event_key:
                             self.keymap_singlepress[(event_key)](event)
 
@@ -250,7 +250,7 @@ class Controller():
             if self.state == S_SETTINGS:
                 self.menu = Menu()
                 self.menu.settings()
-            
+
             if self.displaytime:
                 self.screen.blit(self.font.render(str(int(self.clock.get_fps())), True, (255,255,255)), (10,10))
 
@@ -264,7 +264,7 @@ class Controller():
         sys.exit()
 
     def start_game(self, map_type):
-        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100, 180), 
+        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100, 180),
                        Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
         self.map = map.World(self, map_type)
         self.map.generate()
@@ -272,7 +272,7 @@ class Controller():
         self.state = S_GAME
 
     def continue_game(self):
-        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100), 
+        self.agents = [Player(self, 'green', pygame.K_d, pygame.K_s, pygame.K_a, pygame.K_w, pygame.K_f, pygame.K_g, 100, 100),
                        Player(self, 'purple', pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT, pygame.K_UP, pygame.K_k, pygame.K_l, 900, 600)]
         self.agents[0].name = self.all_player_names[0]
         self.agents[1].name = self.all_player_names[1]
@@ -317,15 +317,15 @@ class Stats():
 
 
     def inform(self, player, **kwargs):
-        # Increments stat with given number. 
+        # Increments stat with given number.
         #
-        # Example: 
+        # Example:
         # inform(player, score = 7)
         #
         # Will increase score stat with 7.
         #
-        
-        if not (len(kwargs) == 1 and kwargs.keys()[0] in Stats.VALID_STATS):
+
+        if not (len(kwargs) == 1 and list(kwargs.keys())[0] in Stats.VALID_STATS):
             raise UnknownStatError('Unknown keyword argument to stat.')
 
         # Fetch the dictionary associated with player, create a new if it doesn't exist.
@@ -334,7 +334,7 @@ class Stats():
             self.data[player] = {}
             stats = self.data[player]
 
-        key, value = kwargs.keys()[0], kwargs.values()[0]
+        key, value = list(kwargs.keys())[0], list(kwargs.values())[0]
 
         # Register the stat
         stats[key] = value + stats.get(key, 0)
