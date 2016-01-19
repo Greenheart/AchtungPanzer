@@ -113,7 +113,7 @@ class Player():
             self.x += math.cos(math.radians(self.rotation)) * self.speed
             self.y -= math.sin(math.radians(self.rotation)) * self.speed
             if self.speed > self.max_speed_back:
-                self.speed -= self.acceleration        
+                self.speed -= self.acceleration
 
         if self.moving == False and self.speed > 0: #Retardate if player isnt pressing keys
             self.speed -= self.acceleration
@@ -133,7 +133,7 @@ class Player():
         Sound.Sounds["explosion"].play()
         self.controller.agents.remove(self)
 
-        
+
     def update(self):
         """Update the player's attributes, move player, check if still alive"""
 
@@ -141,7 +141,7 @@ class Player():
 
             self.max_speed = TANK_SPEED
             self.max_speed_back = TANK_SPEED_BACK
-            
+
             if self.moving or self.rotating:
                 if self.animationindex != (len(self.MasterSprites) - 1) * ANIMATION_SPEED:
                     self.animationindex += 1
@@ -151,7 +151,7 @@ class Player():
             self.detect_collisions()
             self.handle_collisions()
             self.move()
-            self.sprite = pygame.transform.rotate(self.MasterSprites[self.animationindex/ANIMATION_SPEED], self.rotation)
+            self.sprite = pygame.transform.rotate(self.MasterSprites[self.animationindex//ANIMATION_SPEED], self.rotation)
 
         if self.health <= 0:
             self.die()
@@ -165,7 +165,7 @@ class Player():
         self.current_collisions = []
 
     def handle_collisions(self):
-        """Handle the agent's current collisions. Also make sure that players can't drive through 
+        """Handle the agent's current collisions. Also make sure that players can't drive through
            WorldObjects or outside of the maps borders by using a pushback"""
         for obj in self.current_collisions:
             if obj.type == 50: #if the obj is a powerup
@@ -201,7 +201,7 @@ class Player():
         for obj in self.controller.map.objects:
             if detect_collision(self, obj):
                 self.current_collisions.append(obj)
-        
+
         for player in self.controller.agents:
             if player != self:
                 other_player = player

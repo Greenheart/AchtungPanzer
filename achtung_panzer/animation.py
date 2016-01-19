@@ -23,7 +23,7 @@ class Animation():
 
     def animate(self):
         if self.animationindex != (len(self.sprites) - 1) * self.speed:
-            self.sprite = self.sprites[self.animationindex/self.speed]
+            self.sprite = self.sprites[self.animationindex//self.speed]
             self.animationindex += 1
         else:
             Animation.List.remove(self)

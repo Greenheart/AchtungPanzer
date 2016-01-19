@@ -18,7 +18,7 @@ class Sound(object):
             "explosion" : gameFX("explosion.wav"),
             "shoot" : gameFX("shoot.wav")
             })
-    
+
     def __init__(self, filename):
 
         self.sound = pygame.mixer.Sound(self.path + filename)
@@ -29,7 +29,7 @@ class Sound(object):
         volume = float(volume_)
 
         if channelnum == "all":
-            for name, obj in Sound.Sounds.iteritems():
+            for name, obj in Sound.Sounds.items():
                 obj.sound.set_volume(volume/100)
         else:
             try:
