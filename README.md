@@ -6,8 +6,8 @@
 
 ## Get Started
 1. Download the [latest release](https://github.com/Greenheart/AchtungPanzer/releases)
-2. Make sure you have [python 2.x](https://www.python.org/downloads) installed **(The game won't work with python 3.x)**
-3. Run the python script `run.py` to start the game.
+2. Make sure you have [python](https://www.python.org/downloads) installed
+3. Run the python script `run.py` to start the game. (Works with 3.x & 2.x)
 4. Find someone to challenge and may the best driver win!
 
 ## Gameplay
