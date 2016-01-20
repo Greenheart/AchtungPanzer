@@ -38,6 +38,6 @@ The basics of the game are really simple:
 * [Szymon Stypa](https://github.com/Catagen)
 * [Hugo Lundin](https://github.com/hugolundin)
 * Erik Collerstedt
-* Johan Lenning
+* [Johan Lenning](https://github.com/Kallshem)
 * Oskar Lundqvist
 * Samuel Plumppu
