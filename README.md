@@ -5,10 +5,11 @@
 ![Main Menu of Achtung Panzer](http://i.markdownnotes.com/achtung_menu.jpg)
 
 ## Get Started
-1. Download the [latest release](https://github.com/Greenheart/AchtungPanzer/releases)
-2. Make sure you have [python](https://www.python.org/downloads) installed
-3. Run the python script `run.py` to start the game. (Works with 3.x & 2.x)
-4. Find someone to challenge and may the best driver win!
+1. Download the [latest release](https://github.com/Greenheart/AchtungPanzer/release)s
+2. Make sure you have [python 3](https://www.python.org/downloads) installed
+3. [Install pygame](http://pygame.org/download.shtml)
+4. Run `python3 run.py` to start the game.
+5. Find someone to challenge and may the best driver win!
 
 ## Gameplay
 The basics of the game are really simple: 
